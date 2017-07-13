@@ -15,6 +15,7 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details <http://www.gnu.org/licenses/>.
 
+from __future__ import division
 
 import sys
 import os
@@ -22,9 +23,12 @@ import numpy as np
 import time
 import getopt
 
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import *
-from PyQt4.QtCore import Qt, QCoreApplication
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import *
+from PyQt5.QtCore import Qt, QCoreApplication
+from PyQt5.QtWidgets import QWidget, QFrame, QListWidget, QVBoxLayout
+
+from distributed.protocol import netcdf4
 
 from PIL import Image  
 
@@ -34,8 +38,8 @@ import FileDialog
 
 import matplotlib 
 from numpy import NAN
-matplotlib.rcParams['backend.qt4'] = 'PyQt4'
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+matplotlib.rcParams['backend.qt5'] = 'PyQt5'
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from mpl_toolkits.axes_grid import make_axes_locatable
@@ -107,7 +111,7 @@ class common:
         
         
 """ ------------------------------------------------------------------------------------------------"""
-class PageTomo(QtGui.QWidget):
+class PageTomo(QWidget):
     def __init__(self, common, data_struct, stack, anlz):
         super(PageTomo, self).__init__()
 
@@ -154,87 +158,87 @@ class PageTomo(QtGui.QWidget):
         
 
         #panel 1
-        sizer1 = QtGui.QGroupBox('Tomo Data')
-        vbox1 = QtGui.QVBoxLayout()
+        sizer1 = QtWidgets.QGroupBox('Tomo Data')
+        vbox1 = QtWidgets.QVBoxLayout()
 
         
-        self.button_spcomp = QtGui.QPushButton('Load Tomo Data for Spectral Components')
+        self.button_spcomp = QtWidgets.QPushButton('Load Tomo Data for Spectral Components')
         self.button_spcomp.clicked.connect( self.OnLoadTomoComponents)
         self.button_spcomp.setEnabled(False)
         vbox1.addWidget(self.button_spcomp)
         
-        self.button_engdata = QtGui.QPushButton('Load Tomo Data for each Energy')
+        self.button_engdata = QtWidgets.QPushButton('Load Tomo Data for each Energy')
         self.button_engdata.clicked.connect( self.OnLoadTomoEng)
         self.button_engdata.setEnabled(False)
         vbox1.addWidget(self.button_engdata)
         
-        self.button_expdata = QtGui.QPushButton('Export Tomo Data as .mrc')
+        self.button_expdata = QtWidgets.QPushButton('Export Tomo Data as .mrc')
         self.button_expdata.clicked.connect( self.OnExportData)
         self.button_expdata.setEnabled(False)
         vbox1.addWidget(self.button_expdata)
         
         
-        line = QtGui.QFrame()
-        line.setFrameShape(QtGui.QFrame.HLine)
-        line.setFrameShadow(QtGui.QFrame.Sunken) 
+        line = QtWidgets.QFrame()
+        line.setFrameShape(QtWidgets.QFrame.HLine)
+        line.setFrameShadow(QtWidgets.QFrame.Sunken)
         
         vbox1.addStretch(1)
         vbox1.addWidget(line) 
         vbox1.addStretch(1)  
         
-        self.button_loadmrc = QtGui.QPushButton('Load Single Tomo Dataset')
+        self.button_loadmrc = QtWidgets.QPushButton('Load Single Tomo Dataset')
         self.button_loadmrc.clicked.connect( self.OnLoadSingleMrc)
         vbox1.addWidget(self.button_loadmrc)        
 
         sizer1.setLayout(vbox1)
 
         #panel 2
-        sizer2 = QtGui.QGroupBox('Tomo Reconstruction')
-        vbox2 = QtGui.QVBoxLayout()
+        sizer2 = QtWidgets.QGroupBox('Tomo Reconstruction')
+        vbox2 = QtWidgets.QVBoxLayout()
 
         
-        self.button_calc1 = QtGui.QPushButton( 'Calculate One Dataset')
+        self.button_calc1 = QtWidgets.QPushButton( 'Calculate One Dataset')
         self.button_calc1.clicked.connect( self.OnCalcTomo1)
         self.button_calc1.setEnabled(False)
         vbox2.addWidget(self.button_calc1)
         
-        hbox21 = QtGui.QHBoxLayout()
-        tc1 = QtGui.QLabel(self)
+        hbox21 = QtWidgets.QHBoxLayout()
+        tc1 = QtWidgets.QLabel(self)
         hbox21.addWidget(tc1)
         tc1.setText('Choose Tomo Dataset:')
-        self.combonames = QtGui.QComboBox(self)
+        self.combonames = QtWidgets.QComboBox(self)
         self.combonames.activated[int].connect(self.OnSelect1Comp)
         hbox21.addWidget(self.combonames)
         vbox2.addLayout(hbox21)
         
-        hbox22 = QtGui.QHBoxLayout()
-        tc2 = QtGui.QLabel(self)
+        hbox22 = QtWidgets.QHBoxLayout()
+        tc2 = QtWidgets.QLabel(self)
         hbox22.addWidget(tc2)
         tc2.setText('Binning:  ')
-        self.combobin = QtGui.QComboBox(self)
+        self.combobin = QtWidgets.QComboBox(self)
         self.combobin.addItems(['1','2','4','8'])
         hbox22.addWidget(self.combobin)
         vbox2.addLayout(hbox22)
         
-        self.button_calcall = QtGui.QPushButton( 'Calculate All Datasets')
+        self.button_calcall = QtWidgets.QPushButton( 'Calculate All Datasets')
         self.button_calcall.clicked.connect( self.OnCalcTomoFull)
         self.button_calcall.setEnabled(False)
         vbox2.addWidget(self.button_calcall)
         
         
-        self.button_save = QtGui.QPushButton( 'Save as .mrc')
+        self.button_save = QtWidgets.QPushButton( 'Save as .mrc')
         self.button_save.clicked.connect( self.OnSave)
         self.button_save.setEnabled(False)
         vbox2.addWidget(self.button_save)
         
-        self.button_saveall = QtGui.QPushButton( 'Save All as .mrc')
+        self.button_saveall = QtWidgets.QPushButton( 'Save All as .mrc')
         self.button_saveall.clicked.connect( self.OnSaveAll)
         self.button_saveall.setEnabled(False)
         vbox2.addWidget(self.button_saveall)
         
-        line = QtGui.QFrame()
-        line.setFrameShape(QtGui.QFrame.HLine)
-        line.setFrameShadow(QtGui.QFrame.Sunken) 
+        line = QtWidgets.QFrame()
+        line.setFrameShape(QtWidgets.QFrame.HLine)
+        line.setFrameShadow(QtWidgets.QFrame.Sunken)
         
 
         vbox2.addStretch(1)
@@ -245,18 +249,18 @@ class PageTomo(QtGui.QWidget):
 #         tc1 = QtGui.QLabel(self)
 #         hbox21.addWidget(tc1)
 #         tc1.setText('Choose Tomo Dataset: ')
-        self.comboalgos = QtGui.QComboBox(self)
+        self.comboalgos = QtWidgets.QComboBox(self)
         self.comboalgos.activated[int].connect(self.OnSelectAlgo)
         self.comboalgos.addItems(self.algonames)
         vbox2.addWidget(self.comboalgos)
         
  
-        hbox22 = QtGui.QHBoxLayout()
-        text1 = QtGui.QLabel(self)
+        hbox22 = QtWidgets.QHBoxLayout()
+        text1 = QtWidgets.QLabel(self)
         text1.setText('Number of iterations')
         hbox22.addWidget(text1)
         hbox22.addStretch(1)
-        self.ntc_niterations = QtGui.QLineEdit(self)
+        self.ntc_niterations = QtWidgets.QLineEdit(self)
         self.ntc_niterations.setFixedWidth(65)
         self.ntc_niterations.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_niterations.setAlignment(QtCore.Qt.AlignRight)   
@@ -267,11 +271,11 @@ class PageTomo(QtGui.QWidget):
         vbox2.addLayout(hbox22) 
           
                 
-        hbox23 = QtGui.QHBoxLayout()
-        self.tc_par = QtGui.QLabel(self)
+        hbox23 = QtWidgets.QHBoxLayout()
+        self.tc_par = QtWidgets.QLabel(self)
         self.tc_par.setText("CS Parameter Beta")  
         hbox23.addWidget(self.tc_par)      
-        self.ntc_beta = QtGui.QLineEdit(self)
+        self.ntc_beta = QtWidgets.QLineEdit(self)
         self.ntc_beta.setFixedWidth(65)
         self.ntc_beta.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_beta.setAlignment(QtCore.Qt.AlignRight)         
@@ -282,14 +286,14 @@ class PageTomo(QtGui.QWidget):
         vbox2.addLayout(hbox23) 
         
 
-        hbox25 = QtGui.QHBoxLayout()
+        hbox25 = QtWidgets.QHBoxLayout()
    
-        self.cb_ereg = QtGui.QCheckBox('CS Energy Reg Parameter', self)
+        self.cb_ereg = QtWidgets.QCheckBox('CS Energy Reg Parameter', self)
         self.cb_ereg.setChecked(False)
         self.cb_ereg.stateChanged.connect(self.OnCBEngReg)
         hbox25.addWidget(self.cb_ereg)        
         
-        self.ntc_ereg = QtGui.QLineEdit(self)
+        self.ntc_ereg = QtWidgets.QLineEdit(self)
         self.ntc_ereg.setFixedWidth(65)
         self.ntc_ereg.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_ereg.setAlignment(QtCore.Qt.AlignRight)         
@@ -301,12 +305,12 @@ class PageTomo(QtGui.QWidget):
         vbox2.addLayout(hbox25) 
         
         
-        hbox24 = QtGui.QHBoxLayout()
-        text1 = QtGui.QLabel(self)
+        hbox24 = QtWidgets.QHBoxLayout()
+        text1 = QtWidgets.QLabel(self)
         text1.setText('Sample Thickness')
         hbox24.addWidget(text1)
         hbox24.addStretch(1)
-        self.ntc_samplethick = QtGui.QLineEdit(self)
+        self.ntc_samplethick = QtWidgets.QLineEdit(self)
         self.ntc_samplethick.setFixedWidth(65)
         self.ntc_samplethick.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_samplethick.setAlignment(QtCore.Qt.AlignRight)   
@@ -315,7 +319,7 @@ class PageTomo(QtGui.QWidget):
   
         vbox2.addLayout(hbox24) 
         
-        self.cb_nneg = QtGui.QCheckBox('Non-Negativity Constraints', self)
+        self.cb_nneg = QtWidgets.QCheckBox('Non-Negativity Constraints', self)
         self.cb_nneg.setChecked(True)
         self.cb_nneg.stateChanged.connect(self.OnNonNegConst)
         vbox2.addWidget(self.cb_nneg)     
@@ -325,37 +329,37 @@ class PageTomo(QtGui.QWidget):
         
 
         #panel 3
-        sizer3 = QtGui.QGroupBox('ROI')
-        vbox3 = QtGui.QVBoxLayout()
+        sizer3 = QtWidgets.QGroupBox('ROI')
+        vbox3 = QtWidgets.QVBoxLayout()
 
         
-        self.button_roi = QtGui.QPushButton( 'Select ROI')
+        self.button_roi = QtWidgets.QPushButton( 'Select ROI')
         self.button_roi.clicked.connect(self.OnSelectROI)
         self.button_roi.setEnabled(False)
         vbox3.addWidget(self.button_roi)
         
-        self.button_roihist = QtGui.QPushButton( 'Histogram ROI selection...')
+        self.button_roihist = QtWidgets.QPushButton( 'Histogram ROI selection...')
         self.button_roihist.clicked.connect(self.OnROIHistogram)
         self.button_roihist.setEnabled(False)
         vbox3.addWidget(self.button_roihist)
         
         
-        self.button_roispec = QtGui.QPushButton( 'Show ROI Spectrum')
+        self.button_roispec = QtWidgets.QPushButton( 'Show ROI Spectrum')
         self.button_roispec.clicked.connect(self.OnShowROISpec)
         self.button_roispec.setEnabled(False)
         vbox3.addWidget(self.button_roispec)
         
-        self.button_roidel = QtGui.QPushButton( 'Reset ROI')
+        self.button_roidel = QtWidgets.QPushButton( 'Reset ROI')
         self.button_roidel.clicked.connect(self.OnResetROI)
         self.button_roidel.setEnabled(False)
         vbox3.addWidget(self.button_roidel)
         
-        self.button_saveroi = QtGui.QPushButton( 'Save ROI as .mrc')
+        self.button_saveroi = QtWidgets.QPushButton( 'Save ROI as .mrc')
         self.button_saveroi.clicked.connect(self.OnSaveROI)
         self.button_saveroi.setEnabled(False)
         vbox3.addWidget(self.button_saveroi)
         
-        self.button_loadroi = QtGui.QPushButton( 'Load ROI from .mrc')
+        self.button_loadroi = QtWidgets.QPushButton( 'Load ROI from .mrc')
         self.button_loadroi.clicked.connect(self.OnLoadROI)
         self.button_loadroi.setEnabled(False)
         vbox3.addWidget(self.button_loadroi)
@@ -368,20 +372,20 @@ class PageTomo(QtGui.QWidget):
  
         #panel 5    
          
-        vbox5 = QtGui.QVBoxLayout()
+        vbox5 = QtWidgets.QVBoxLayout()
         vbox5.addStretch(1)
         
-        self.tc_imagecomp = QtGui.QLabel(self)
+        self.tc_imagecomp = QtWidgets.QLabel(self)
         self.tc_imagecomp.setText("Dataset: ")
         vbox5.addWidget(self.tc_imagecomp)
         
 
-        gridsizer5 = QtGui.QGridLayout()
+        gridsizer5 = QtWidgets.QGridLayout()
         gridsizer5.setSpacing(5)
         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.absimgfig = Figure((PlotH*0.9, PlotH*0.9))
 
@@ -395,7 +399,7 @@ class PageTomo(QtGui.QWidget):
         gridsizer5.addWidget(frame, 1, 1, QtCore .Qt. AlignLeft)
         
 
-        self.slider_slice = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slider_slice = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slider_slice.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_slice.valueChanged[int].connect(self.OnScrollSlice)
         self.slider_slice.setRange(0, 100)
@@ -403,23 +407,23 @@ class PageTomo(QtGui.QWidget):
         gridsizer5.addWidget(self.slider_slice, 1, 0, QtCore .Qt. AlignLeft)
         
         
-        self.slider_comp = QtGui.QScrollBar(QtCore.Qt.Horizontal)
+        self.slider_comp = QtWidgets.QScrollBar(QtCore.Qt.Horizontal)
         self.slider_comp.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_comp.valueChanged[int].connect(self.OnScrollComp)
         self.slider_comp.setRange(0, 100)    
         self.slider_comp.setEnabled(True) 
-        self.tc_comp = QtGui.QLabel(self)
+        self.tc_comp = QtWidgets.QLabel(self)
         self.tc_comp.setText("Component: ")
-        hbox51 = QtGui.QHBoxLayout()
+        hbox51 = QtWidgets.QHBoxLayout()
         hbox51.addWidget(self.tc_comp) 
         hbox51.addWidget(self.slider_comp)
         gridsizer5.addLayout(hbox51, 0, 1)
 
         
         
-        frame2 = QtGui.QFrame()
+        frame2 = QtWidgets.QFrame()
         frame2.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox2 = QtGui.QHBoxLayout()
+        fbox2 = QtWidgets.QHBoxLayout()
    
         self.absimgfig2 = Figure((PlotH*0.9, PlotH*0.9))
 
@@ -434,9 +438,9 @@ class PageTomo(QtGui.QWidget):
         gridsizer5.addWidget(frame2, 2, 1, QtCore .Qt. AlignLeft)        
         
         
-        frame3 = QtGui.QFrame()
+        frame3 = QtWidgets.QFrame()
         frame3.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox3 = QtGui.QHBoxLayout()
+        fbox3 = QtWidgets.QHBoxLayout()
    
         self.absimgfig3 = Figure((PlotH*0.9, PlotH*0.9))
 
@@ -456,10 +460,10 @@ class PageTomo(QtGui.QWidget):
         vbox5.addStretch(1)
         
        
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QVBoxLayout()
         
-        hboxtop = QtGui.QHBoxLayout()
-        vboxt1 = QtGui.QVBoxLayout()
+        hboxtop = QtWidgets.QHBoxLayout()
+        vboxt1 = QtWidgets.QVBoxLayout()
         vboxt1.addStretch (1)
         vboxt1.addWidget(sizer1)
         vboxt1.addStretch (1)
@@ -579,8 +583,8 @@ class PageTomo(QtGui.QWidget):
         wildcard = "Supported 4D formats (*.mrc *.ali *.ncb);;Mrc files (*.mrc *.ali);;NCB files (*.ncb);;"
 
 
-        OpenFileName = QtGui.QFileDialog.getOpenFileName(self, 'Load Tomo Dataset', '', wildcard,
-                                                         None, QtGui.QFileDialog.DontUseNativeDialog)
+        OpenFileName = QtWidgets.QFileDialog.getOpenFileName(self, 'Load Tomo Dataset', '', wildcard,
+                                                         None, QtWidgets.QFileDialog.DontUseNativeDialog)
 
         OpenFileName = str(OpenFileName)
         if OpenFileName == '':
@@ -600,8 +604,8 @@ class PageTomo(QtGui.QWidget):
     
             #Read energies from file
             wildcard = "Angle files (*.*);;"
-            OpenFileName2 = QtGui.QFileDialog.getOpenFileName(self, 'Load Angle data', '', wildcard,
-                                                             None, QtGui.QFileDialog.DontUseNativeDialog)
+            OpenFileName2 = QtWidgets.QFileDialog.getOpenFileName(self, 'Load Angle data', '', wildcard,
+                                                             None, QtWidgets.QFileDialog.DontUseNativeDialog)
     
             OpenFileName2 = str(OpenFileName2)
             if OpenFileName2 == '':
@@ -1007,7 +1011,7 @@ class PageTomo(QtGui.QWidget):
         
         wildcard = "Mrc files (*.mrc);;"
 
-        SaveFileName = QtGui.QFileDialog.getSaveFileName(self, 'Save Tomo Reconstructions', '', wildcard)
+        SaveFileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Tomo Reconstructions', '', wildcard)
 
         SaveFileName = str(SaveFileName)
         if SaveFileName == '':
@@ -1039,7 +1043,7 @@ class PageTomo(QtGui.QWidget):
         
         wildcard = "Mrc files (*.mrc);;"
 
-        SaveFileName = QtGui.QFileDialog.getSaveFileName(self, 'Save Tomo Reconstructions', '', wildcard)
+        SaveFileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Tomo Reconstructions', '', wildcard)
 
         SaveFileName = str(SaveFileName)
         if SaveFileName == '':
@@ -1057,7 +1061,7 @@ class PageTomo(QtGui.QWidget):
         
         wildcard = "Mrc files (*.mrc);;"
 
-        SaveFileName = QtGui.QFileDialog.getSaveFileName(self, 'Save Tomo Reconstructions', '', wildcard)
+        SaveFileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Tomo Reconstructions', '', wildcard)
 
         SaveFileName = str(SaveFileName)
         if SaveFileName == '':
@@ -1080,7 +1084,7 @@ class PageTomo(QtGui.QWidget):
         
         wildcard = "Mrc files (*.mrc);;"
 
-        SaveFileName = QtGui.QFileDialog.getSaveFileName(self, 'Save ROI Selection', '', wildcard)
+        SaveFileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save ROI Selection', '', wildcard)
 
         SaveFileName = str(SaveFileName)
         if SaveFileName == '':
@@ -1098,7 +1102,7 @@ class PageTomo(QtGui.QWidget):
         
         wildcard = "Mrc files (*.mrc);;"
 
-        OpenFileName = QtGui.QFileDialog.getOpenFileName(self, 'Load ROI Selection', '', wildcard)
+        OpenFileName = QtWidgets.QFileDialog.getOpenFileName(self, 'Load ROI Selection', '', wildcard)
 
         OpenFileName = str(OpenFileName)
         if OpenFileName == '':
@@ -1395,7 +1399,7 @@ class PageTomo(QtGui.QWidget):
 
 
 #---------------------------------------------------------------------- 
-class ROIHistogram(QtGui.QDialog):
+class ROIHistogram(QtWidgets.QDialog):
 
     def __init__(self, parent, image, n_cols, n_rows):   
         QtGui.QWidget.__init__(self, parent)
@@ -1622,13 +1626,13 @@ class File_GUI():
         self.filter_list = file_plugins.filter_list
     
     def SelectFile(self,action,data_type):
-        dlg=QtGui.QFileDialog(None)
+        dlg=QtWidgets.QFileDialog(None)
         dlg.setWindowTitle('Choose File')
-        dlg.setViewMode(QtGui.QFileDialog.Detail)
+        dlg.setViewMode(QtWidgets.QFileDialog.Detail)
         if action == "write":
-            dlg.setAcceptMode(QtGui.QFileDialog.AcceptSave)
+            dlg.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
         dlg.setDirectory(self.last_path[action][data_type])
-        dlg.setFilters(self.filter_list[action][data_type])
+        dlg.setFilter(self.filter_list[action][data_type])
         dlg.selectFilter(self.filter_list[action][data_type][self.last_filter[action][data_type]])
         if dlg.exec_(): #if not cancelled
             self.last_path[action][data_type] = os.path.split(str(dlg.selectedFiles()[0]))[0]
@@ -1648,7 +1652,7 @@ class File_GUI():
 
 
 #----------------------------------------------------------------------
-    class DataChoiceDialog(QtGui.QDialog):
+    class DataChoiceDialog(QtWidgets.QDialog):
 
         def __init__(self,filepath=None,filestruct=None):
             super(File_GUI.DataChoiceDialog, self).__init__()
@@ -1733,7 +1737,7 @@ class File_GUI():
             
 
     #-------------------------------------
-    class InfoItem(QtGui.QHBoxLayout):
+    class InfoItem(QtWidgets.QHBoxLayout):
         '''Row of widgets describing the contents of a file entry that appear within the EntryInfoBox'''
         def __init__(self,name,contents,allowed_application_definitions,index):
             super(File_GUI.InfoItem, self).__init__()
@@ -1781,7 +1785,7 @@ class File_GUI():
             return (self.checkbox.isChecked(),self.channel_combobox.currentIndex())
 
     #---------------------------------------
-    class EntryInfoBox(QtGui.QGroupBox):
+    class EntryInfoBox(QtWidgets.QGroupBox):
         '''Widgets giving a summary of the contents of a file via an InfoItem object per file entry.'''
         def __init__(self):
             super(File_GUI.EntryInfoBox, self).__init__('File Summary')
@@ -1822,7 +1826,7 @@ class File_GUI():
 File_GUI = File_GUI() #Create instance so that object can remember things (e.g. last path)
 
 """ ------------------------------------------------------------------------------------------------"""
-class PageNNMA(QtGui.QWidget):
+class PageNNMA(QtWidgets.QWidget):
     def __init__(self, common, data_struct, stack, anlz, nnma):
         super(PageNNMA, self).__init__()
 
@@ -1853,27 +1857,27 @@ class PageNNMA(QtGui.QWidget):
         
         
         #panel 1
-        sizer1 = QtGui.QGroupBox('NNMA analysis')
-        hbox1 = QtGui.QHBoxLayout()
-        vbox1 = QtGui.QVBoxLayout()
+        sizer1 = QtWidgets.QGroupBox('NNMA analysis')
+        hbox1 = QtWidgets.QHBoxLayout()
+        vbox1 = QtWidgets.QVBoxLayout()
        
         vbox1.addStretch(1) 
-        self.button_calcnnma = QtGui.QPushButton('Calculate NNMA')
+        self.button_calcnnma = QtWidgets.QPushButton('Calculate NNMA')
         self.button_calcnnma.clicked.connect( self.OnCalcNNMA)   
         self.button_calcnnma.setEnabled(False)
         vbox1.addWidget(self.button_calcnnma)
-        self.button_mucluster = QtGui.QPushButton('Load initial cluster spectra')
+        self.button_mucluster = QtWidgets.QPushButton('Load initial cluster spectra')
         self.button_mucluster.clicked.connect( self.OnLoadClusterSpectra)
         self.button_mucluster.setEnabled(False)
-        self.button_mufile = QtGui.QPushButton('Load initial standard spectra')
+        self.button_mufile = QtWidgets.QPushButton('Load initial standard spectra')
         self.button_mufile.clicked.connect( self.OnLoadStandardSpectra)
         self.button_mufile.setEnabled(False)   
-        self.button_murand = QtGui.QPushButton('Load initial random spectra')
+        self.button_murand = QtWidgets.QPushButton('Load initial random spectra')
         self.button_murand.clicked.connect( self.OnLoadRandomSpectra)         
         self.button_murand.setEnabled(False) 
-        self.tc_initspectra = QtGui.QLabel(self)
+        self.tc_initspectra = QtWidgets.QLabel(self)
         self.tc_initspectra.setText('Initial Spectra: ' + self.initMatrices)
-        self.button_savennma = QtGui.QPushButton('Save NNMA Results...')
+        self.button_savennma = QtWidgets.QPushButton('Save NNMA Results...')
         self.button_savennma.clicked.connect( self.OnSave)
         self.button_savennma.setEnabled(False)
         vbox1.addWidget(self.button_savennma)
@@ -1881,15 +1885,15 @@ class PageNNMA(QtGui.QWidget):
         vbox1.addStretch(1)
         
         
-        sizer11 = QtGui.QGroupBox('NNMA settings')
-        vbox11 = QtGui.QVBoxLayout()
+        sizer11 = QtWidgets.QGroupBox('NNMA settings')
+        vbox11 = QtWidgets.QVBoxLayout()
                 
-        hbox11 = QtGui.QHBoxLayout()
-        text1 = QtGui.QLabel(self)
+        hbox11 = QtWidgets.QHBoxLayout()
+        text1 = QtWidgets.QLabel(self)
         text1.setText('Number of components k')
         hbox11.addWidget(text1)
         hbox11.addStretch(1)
-        self.ncompspin = QtGui.QSpinBox()
+        self.ncompspin = QtWidgets.QSpinBox()
         self.ncompspin.setRange(2,20)
         self.ncompspin.setValue(self.nComponents)
         self.ncompspin.valueChanged[int].connect(self.OnNNMAspin)
@@ -1897,22 +1901,22 @@ class PageNNMA(QtGui.QWidget):
         
         vbox11.addLayout(hbox11) 
         
-        line = QtGui.QFrame()
-        line.setFrameShape(QtGui.QFrame.HLine)
-        line.setFrameShadow(QtGui.QFrame.Sunken) 
+        line = QtWidgets.QFrame()
+        line.setFrameShape(QtWidgets.QFrame.HLine)
+        line.setFrameShadow(QtWidgets.QFrame.Sunken)
         vbox11.addStretch(1)
         vbox11.addWidget(line) 
         vbox11.addStretch(1)    
         
-        text1 = QtGui.QLabel(self)
+        text1 = QtWidgets.QLabel(self)
         text1.setText('Regularization parameters')
         vbox11.addWidget(text1)   
         
-        hbox15a = QtGui.QHBoxLayout()
-        tc1 = QtGui.QLabel(self)
+        hbox15a = QtWidgets.QHBoxLayout()
+        tc1 = QtWidgets.QLabel(self)
         tc1.setText("\tSpectra similarity")  
         hbox15a.addWidget(tc1)      
-        self.ntc_lamsim = QtGui.QLineEdit(self)
+        self.ntc_lamsim = QtWidgets.QLineEdit(self)
         self.ntc_lamsim.setFixedWidth(65)
         self.ntc_lamsim.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_lamsim.setAlignment(QtCore.Qt.AlignRight)         
@@ -1922,11 +1926,11 @@ class PageNNMA(QtGui.QWidget):
         
         vbox11.addLayout(hbox15a) 
         
-        hbox15b = QtGui.QHBoxLayout()
-        tc1 = QtGui.QLabel(self)
+        hbox15b = QtWidgets.QHBoxLayout()
+        tc1 = QtWidgets.QLabel(self)
         tc1.setText("\tSpectra smoothness")  
         hbox15b.addWidget(tc1)      
-        self.ntc_lamsmooth = QtGui.QLineEdit(self)
+        self.ntc_lamsmooth = QtWidgets.QLineEdit(self)
         self.ntc_lamsmooth.setFixedWidth(65)
         self.ntc_lamsmooth.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_lamsmooth.setAlignment(QtCore.Qt.AlignRight)         
@@ -1936,11 +1940,11 @@ class PageNNMA(QtGui.QWidget):
         
         vbox11.addLayout(hbox15b) 
         
-        hbox15c = QtGui.QHBoxLayout()
-        tc1 = QtGui.QLabel(self)
+        hbox15c = QtWidgets.QHBoxLayout()
+        tc1 = QtWidgets.QLabel(self)
         tc1.setText("\tSparseness")  
         hbox15c.addWidget(tc1)      
-        self.ntc_lamspar = QtGui.QLineEdit(self)
+        self.ntc_lamspar = QtWidgets.QLineEdit(self)
         self.ntc_lamspar.setFixedWidth(65)
         self.ntc_lamspar.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_lamspar.setAlignment(QtCore.Qt.AlignRight)         
@@ -1950,19 +1954,19 @@ class PageNNMA(QtGui.QWidget):
         
         vbox11.addLayout(hbox15c) 
         
-        line = QtGui.QFrame()
-        line.setFrameShape(QtGui.QFrame.HLine)
-        line.setFrameShadow(QtGui.QFrame.Sunken) 
+        line = QtWidgets.QFrame()
+        line.setFrameShape(QtWidgets.QFrame.HLine)
+        line.setFrameShadow(QtWidgets.QFrame.Sunken)
         vbox11.addStretch(1)
         vbox11.addWidget(line) 
         vbox11.addStretch(1)           
          
-        hbox12 = QtGui.QHBoxLayout()
-        text1 = QtGui.QLabel(self)
+        hbox12 = QtWidgets.QHBoxLayout()
+        text1 = QtWidgets.QLabel(self)
         text1.setText('Number of iterations')
         hbox12.addWidget(text1)
         hbox12.addStretch(1)
-        self.ntc_niterations = QtGui.QLineEdit(self)
+        self.ntc_niterations = QtWidgets.QLineEdit(self)
         self.ntc_niterations.setFixedWidth(65)
         self.ntc_niterations.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_niterations.setAlignment(QtCore.Qt.AlignRight)   
@@ -1972,11 +1976,11 @@ class PageNNMA(QtGui.QWidget):
         vbox11.addLayout(hbox12) 
           
                 
-        hbox14a = QtGui.QHBoxLayout()
-        tc1 = QtGui.QLabel(self)
+        hbox14a = QtWidgets.QHBoxLayout()
+        tc1 = QtWidgets.QLabel(self)
         tc1.setText("Delta Error Threshold")  
         hbox14a.addWidget(tc1)      
-        self.ntc_dthresh = QtGui.QLineEdit(self)
+        self.ntc_dthresh = QtWidgets.QLineEdit(self)
         self.ntc_dthresh.setFixedWidth(65)
         self.ntc_dthresh.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_dthresh.setAlignment(QtCore.Qt.AlignRight)         
@@ -1987,9 +1991,9 @@ class PageNNMA(QtGui.QWidget):
         vbox11.addLayout(hbox14a) 
         sizer11.setLayout(vbox11)
 
-        line = QtGui.QFrame()
-        line.setFrameShape(QtGui.QFrame.HLine)
-        line.setFrameShadow(QtGui.QFrame.Sunken) 
+        line = QtWidgets.QFrame()
+        line.setFrameShape(QtWidgets.QFrame.HLine)
+        line.setFrameShadow(QtWidgets.QFrame.Sunken)
         
 
         vbox1.addStretch(1)
@@ -2008,17 +2012,17 @@ class PageNNMA(QtGui.QWidget):
        
        
         #panel 2       
-        vbox2 = QtGui.QVBoxLayout()
+        vbox2 = QtWidgets.QVBoxLayout()
         
-        self.tc_NNMAcomp = QtGui.QLabel(self)
+        self.tc_NNMAcomp = QtWidgets.QLabel(self)
         self.tc_NNMAcomp.setText("NNMA thickness map ")
         vbox2.addWidget(self.tc_NNMAcomp)
         
-        hbox21 = QtGui.QHBoxLayout()
+        hbox21 = QtWidgets.QHBoxLayout()
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
         self.nnmaimgfig = Figure((PlotH*1.10, PlotH))
         self.NNMAImagePan = FigureCanvas(self.nnmaimgfig)
         self.NNMAImagePan.setParent(self) 
@@ -2027,7 +2031,7 @@ class PageNNMA(QtGui.QWidget):
         frame.setLayout(fbox)
         hbox21.addWidget(frame)                        
             
-        self.slidershow = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slidershow = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slidershow.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slidershow.setRange(0,20)
         #self.slidershow.setEnabled(False)          
@@ -2040,15 +2044,15 @@ class PageNNMA(QtGui.QWidget):
         
         
         #panel 3
-        vbox3 = QtGui.QVBoxLayout()
+        vbox3 = QtWidgets.QVBoxLayout()
     
-        self.tc_nnmaspec = QtGui.QLabel(self)
+        self.tc_nnmaspec = QtWidgets.QLabel(self)
         self.tc_nnmaspec.setText("NNMA spectrum ") 
         vbox3.addWidget(self.tc_nnmaspec)
                         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
 
         self.nnmaspecfig = Figure((PlotW, PlotH))
         self.NNMASpecPan = FigureCanvas(self.nnmaspecfig)
@@ -2060,15 +2064,15 @@ class PageNNMA(QtGui.QWidget):
         
         
         #panel 4
-        vbox4 = QtGui.QVBoxLayout()  
+        vbox4 = QtWidgets.QVBoxLayout()
          
-        text4 = QtGui.QLabel(self)
+        text4 = QtWidgets.QLabel(self)
         text4.setText("Cost function")        
         vbox4.addWidget(text4)
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
        
         self.costffig = Figure((PlotW*0.7, PlotH*0.7))
         self.CostFPan = FigureCanvas(self.costffig)
@@ -2081,48 +2085,48 @@ class PageNNMA(QtGui.QWidget):
         
 
         #panel 5
-        sizer5 = QtGui.QGroupBox('Display')
-        vbox5 = QtGui.QVBoxLayout()         
+        sizer5 = QtWidgets.QGroupBox('Display')
+        vbox5 = QtWidgets.QVBoxLayout()
          
-        hbox51 = QtGui.QHBoxLayout()
-        self.cb_inputsp = QtGui.QCheckBox('Overlay input spectra', self)
+        hbox51 = QtWidgets.QHBoxLayout()
+        self.cb_inputsp = QtWidgets.QCheckBox('Overlay input spectra', self)
         self.cb_inputsp.stateChanged.connect(self.ShowSpectrum)
         hbox51.addWidget(self.cb_inputsp)
         vbox5.addLayout(hbox51)         
         
-        hbox52 = QtGui.QHBoxLayout()
-        self.cb_showallsp = QtGui.QCheckBox('Show all spectra', self)
+        hbox52 = QtWidgets.QHBoxLayout()
+        self.cb_showallsp = QtWidgets.QCheckBox('Show all spectra', self)
         self.cb_showallsp.stateChanged.connect(self.ShowSpectrum)
         hbox52.addWidget(self.cb_showallsp)
         vbox5.addLayout(hbox52)        
         
-        line = QtGui.QFrame()
-        line.setFrameShape(QtGui.QFrame.HLine)
-        line.setFrameShadow(QtGui.QFrame.Sunken) 
+        line = QtWidgets.QFrame()
+        line.setFrameShape(QtWidgets.QFrame.HLine)
+        line.setFrameShadow(QtWidgets.QFrame.Sunken)
         
         vbox5.addWidget(line)     
         
-        hbox52 = QtGui.QHBoxLayout()
-        self.cb_totalcost = QtGui.QCheckBox('Total cost', self)
+        hbox52 = QtWidgets.QHBoxLayout()
+        self.cb_totalcost = QtWidgets.QCheckBox('Total cost', self)
         self.cb_totalcost.setChecked(True)
         self.cb_totalcost.stateChanged.connect(self.ShowCostFunction)
         hbox52.addWidget(self.cb_totalcost)
         vbox5.addLayout(hbox52)  
         
-        hbox53 = QtGui.QHBoxLayout()
-        self.cb_simlcost = QtGui.QCheckBox('Similarity cost', self)
+        hbox53 = QtWidgets.QHBoxLayout()
+        self.cb_simlcost = QtWidgets.QCheckBox('Similarity cost', self)
         self.cb_simlcost.stateChanged.connect(self.ShowCostFunction)
         hbox53.addWidget(self.cb_simlcost)
         vbox5.addLayout(hbox53)  
         
-        hbox54 = QtGui.QHBoxLayout()
-        self.cb_smoothcost = QtGui.QCheckBox('Smoothness cost', self)
+        hbox54 = QtWidgets.QHBoxLayout()
+        self.cb_smoothcost = QtWidgets.QCheckBox('Smoothness cost', self)
         self.cb_smoothcost.stateChanged.connect(self.ShowCostFunction)
         hbox54.addWidget(self.cb_smoothcost)
         vbox5.addLayout(hbox54)  
 
-        hbox54 = QtGui.QHBoxLayout()
-        self.cb_sparcost = QtGui.QCheckBox('Sparsness cost', self)
+        hbox54 = QtWidgets.QHBoxLayout()
+        self.cb_sparcost = QtWidgets.QCheckBox('Sparsness cost', self)
         self.cb_sparcost.stateChanged.connect(self.ShowCostFunction)
         hbox54.addWidget(self.cb_sparcost)
         vbox5.addLayout(hbox54)  
@@ -2131,15 +2135,15 @@ class PageNNMA(QtGui.QWidget):
          
         
        
-        vboxtop = QtGui.QVBoxLayout()
-        hboxtopL = QtGui.QHBoxLayout()
-        vboxtopL = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QVBoxLayout()
+        hboxtopL = QtWidgets.QHBoxLayout()
+        vboxtopL = QtWidgets.QVBoxLayout()
         vboxtopL.addWidget(sizer1)
         hboxtopL.addLayout(vboxtopL)
         hboxtopL.addWidget(sizer5)
         hboxtopL.addStretch(1)
         
-        gridsizertop = QtGui.QGridLayout()
+        gridsizertop = QtWidgets.QGridLayout()
         gridsizertop.setContentsMargins(15,0,0,0)
 
         
@@ -2184,7 +2188,7 @@ class PageNNMA(QtGui.QWidget):
             
             wildcard = "Spectrum files (*.csv);;Spectrum files (*.xas);;"
             
-            filepath = QtGui.QFileDialog.getOpenFileNames(self, 'Choose Spectra files', '', wildcard)
+            filepath = QtWidgets.QFileDialog.getOpenFileNames(self, 'Choose Spectra files', '', wildcard)
 
             if filepath == '':
                 return
@@ -2685,7 +2689,7 @@ class PageNNMA(QtGui.QWidget):
 
 
 #---------------------------------------------------------------------- 
-class SaveWinP5(QtGui.QDialog):
+class SaveWinP5(QtWidgets.QDialog):
 
     def __init__(self, parent):    
         QtGui.QWidget.__init__(self, parent)
@@ -2843,7 +2847,7 @@ class SaveWinP5(QtGui.QDialog):
 #----------------------------------------------------------------------        
     def OnBrowseDir(self, evt):
         
-        directory = QtGui.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtGui.QFileDialog.ShowDirsOnly|QtGui.QFileDialog.ReadOnly)       
+        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtWidgets.QFileDialog.ShowDirsOnly|QtWidgets.QFileDialog.ReadOnly)       
                                                         
         
        
@@ -2893,7 +2897,7 @@ class SaveWinP5(QtGui.QDialog):
 
                 
 """ ------------------------------------------------------------------------------------------------"""
-class PageXrayPeakFitting(QtGui.QWidget):
+class PageXrayPeakFitting(QtWidgets.QWidget):
     def __init__(self, common, data_struct, stack, anlz):
         super(PageXrayPeakFitting, self).__init__()
 
@@ -2933,121 +2937,121 @@ class PageXrayPeakFitting(QtGui.QWidget):
         self.peak_engs = [285.0, 286.5, 288.5, 289.5, 290.5]
         self.peak_names = ['aromatic', 'phenolic', 'carboxyl', 'alkyl', 'carbonyl']       
         
-        vboxL = QtGui.QVBoxLayout()
-        vboxR = QtGui.QVBoxLayout()
-        hboxT = QtGui.QHBoxLayout()
+        vboxL = QtWidgets.QVBoxLayout()
+        vboxR = QtWidgets.QVBoxLayout()
+        hboxT = QtWidgets.QHBoxLayout()
     
 
         #panel 
-        sizer = QtGui.QGroupBox('Fit Parameters')
-        vbox = QtGui.QVBoxLayout()
+        sizer = QtWidgets.QGroupBox('Fit Parameters')
+        vbox = QtWidgets.QVBoxLayout()
                 
         font = QtGui.QFont()
         font.setPointSize(7)
 
-        fgs1 = QtGui.QGridLayout()
+        fgs1 = QtWidgets.QGridLayout()
         
 
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Position [eV]')  
         textctrl.setFont(font)
         fgs1.addWidget(textctrl, 0, 1)      
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Height [OD]')  
         textctrl.setFont(font)
         fgs1.addWidget(textctrl, 0, 2)   
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Sigma [eV]')  
         textctrl.setFont(font)
         fgs1.addWidget(textctrl, 0, 3)   
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Base')  
         textctrl.setFont(font)
         fgs1.addWidget(textctrl, 16, 0)   
 
 
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Step 1')
         fgs1.addWidget(textctrl, 1, 0)
         
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Step 2')
         fgs1.addWidget(textctrl, 2, 0)
 
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Height [OD]')  
         textctrl.setFont(font)
         fgs1.addWidget(textctrl, 3, 2)      
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Position [eV]')  
         textctrl.setFont(font)
         fgs1.addWidget(textctrl, 3, 1)   
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Sigma [eV]')  
         textctrl.setFont(font)
         fgs1.addWidget(textctrl, 3, 3)   
          
 
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 1')
         fgs1.addWidget(textctrl, 4, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 2')
         fgs1.addWidget(textctrl, 5, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 3')
         fgs1.addWidget(textctrl, 6, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 4')
         fgs1.addWidget(textctrl, 7, 0)        
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 5')
         fgs1.addWidget(textctrl, 8, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 6')
         fgs1.addWidget(textctrl, 9, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 7')
         fgs1.addWidget(textctrl, 10, 0)                
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 8')
         fgs1.addWidget(textctrl, 11, 0)    
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 9')
         fgs1.addWidget(textctrl, 12, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 10')
-        fgs1.addWidget(textctrl, 13, 0)        
-        textctrl =  QtGui.QLabel(self)
+        fgs1.addWidget(textctrl, 13, 0)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 11')
         fgs1.addWidget(textctrl, 14, 0)                    
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 12')
         fgs1.addWidget(textctrl, 15, 0)
         
         
-        self.le_sa1 = QtGui.QLineEdit(self)
+        self.le_sa1 = QtWidgets.QLineEdit(self)
         self.le_sa1.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_sa1.setAlignment(QtCore.Qt.AlignRight)
         self.le_sa1.setMaximumWidth(65)
         self.le_sa1.setText(str(self.stepfitparams[0]))
         fgs1.addWidget(self.le_sa1, 1, 1)
 
-        self.le_sp1 = QtGui.QLineEdit(self)
+        self.le_sp1 = QtWidgets.QLineEdit(self)
         self.le_sp1.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_sp1.setAlignment(QtCore.Qt.AlignRight)
         self.le_sp1.setMaximumWidth(65)
         self.le_sp1.setText(str(self.stepfitparams[1]))
         fgs1.addWidget(self.le_sp1, 1, 2)
         
-        self.le_sf1 = QtGui.QLineEdit(self)
+        self.le_sf1 = QtWidgets.QLineEdit(self)
         self.le_sf1.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_sf1.setAlignment(QtCore.Qt.AlignRight)
         self.le_sf1.setMaximumWidth(65)
         self.le_sf1.setText(str(self.stepfitparams[2]))
         fgs1.addWidget(self.le_sf1, 1, 3)
         
-        self.le_base = QtGui.QLineEdit(self)
+        self.le_base = QtWidgets.QLineEdit(self)
         self.le_base.setValidator(QtGui.QDoubleValidator(-99999, 99999, 2, self))
         self.le_base.setAlignment(QtCore.Qt.AlignRight)
         self.le_base.setMaximumWidth(65)
@@ -3055,21 +3059,21 @@ class PageXrayPeakFitting(QtGui.QWidget):
         fgs1.addWidget(self.le_base, 16, 1)
 
         
-        self.le_sa2 = QtGui.QLineEdit(self)
+        self.le_sa2 = QtWidgets.QLineEdit(self)
         self.le_sa2.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_sa2.setAlignment(QtCore.Qt.AlignRight)
         self.le_sa2.setMaximumWidth(65)
         self.le_sa2.setText(str(self.stepfitparams[3]))
         fgs1.addWidget(self.le_sa2, 2, 1)
 
-        self.le_sp2 = QtGui.QLineEdit(self)
+        self.le_sp2 = QtWidgets.QLineEdit(self)
         self.le_sp2.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_sp2.setAlignment(QtCore.Qt.AlignRight)
         self.le_sp2.setMaximumWidth(65)
         self.le_sp2.setText(str(self.stepfitparams[4]))
         fgs1.addWidget(self.le_sp2, 2, 2)
         
-        self.le_sf2 = QtGui.QLineEdit(self)
+        self.le_sf2 = QtWidgets.QLineEdit(self)
         self.le_sf2.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_sf2.setAlignment(QtCore.Qt.AlignRight)
         self.le_sf2.setMaximumWidth(65)
@@ -3082,252 +3086,252 @@ class PageXrayPeakFitting(QtGui.QWidget):
         self.le_mu = []
         self.le_sigma = []
 
-        self.le_ga1 = QtGui.QLineEdit(self)
+        self.le_ga1 = QtWidgets.QLineEdit(self)
         self.le_ga1.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga1.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga1.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga1, 4, 2)
         self.le_amplitudes.append(self.le_ga1)
 
-        self.le_gm1 = QtGui.QLineEdit(self)
+        self.le_gm1 = QtWidgets.QLineEdit(self)
         self.le_gm1.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm1.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm1.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm1, 4, 1)
         self.le_mu.append(self.le_gm1)
         
-        self.le_gs1 = QtGui.QLineEdit(self)
+        self.le_gs1 = QtWidgets.QLineEdit(self)
         self.le_gs1.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs1.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs1.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs1, 4, 3)
         self.le_sigma.append(self.le_gs1)
         
-        self.le_ga2 = QtGui.QLineEdit(self)
+        self.le_ga2 = QtWidgets.QLineEdit(self)
         self.le_ga2.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga2.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga2.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga2, 5, 2)
         self.le_amplitudes.append(self.le_ga2)
 
-        self.le_gm2 = QtGui.QLineEdit(self)
+        self.le_gm2 = QtWidgets.QLineEdit(self)
         self.le_gm2.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm2.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm2.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm2, 5, 1)
         self.le_mu.append(self.le_gm2)
         
-        self.le_gs2 = QtGui.QLineEdit(self)
+        self.le_gs2 = QtWidgets.QLineEdit(self)
         self.le_gs2.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs2.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs2.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs2, 5, 3)
         self.le_sigma.append(self.le_gs2)
         
-        self.le_ga3 = QtGui.QLineEdit(self)
+        self.le_ga3 = QtWidgets.QLineEdit(self)
         self.le_ga3.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga3.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga3.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga3, 6, 2)
         self.le_amplitudes.append(self.le_ga3)
 
-        self.le_gm3 = QtGui.QLineEdit(self)
+        self.le_gm3 = QtWidgets.QLineEdit(self)
         self.le_gm3.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm3.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm3.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm3, 6, 1)
         self.le_mu.append(self.le_gm3)
         
-        self.le_gs3 = QtGui.QLineEdit(self)
+        self.le_gs3 = QtWidgets.QLineEdit(self)
         self.le_gs3.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs3.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs3.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs3, 6, 3)
         self.le_sigma.append(self.le_gs3)                                                
 
-        self.le_ga4 = QtGui.QLineEdit(self)
+        self.le_ga4 = QtWidgets.QLineEdit(self)
         self.le_ga4.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga4.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga4.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga4, 7, 2)
         self.le_amplitudes.append(self.le_ga4)
 
-        self.le_gm4 = QtGui.QLineEdit(self)
+        self.le_gm4 = QtWidgets.QLineEdit(self)
         self.le_gm4.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm4.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm4.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm4, 7, 1)
         self.le_mu.append(self.le_gm4)
         
-        self.le_gs4 = QtGui.QLineEdit(self)
+        self.le_gs4 = QtWidgets.QLineEdit(self)
         self.le_gs4.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs4.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs4.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs4, 7, 3)
         self.le_sigma.append(self.le_gs4)
         
-        self.le_ga5 = QtGui.QLineEdit(self)
+        self.le_ga5 = QtWidgets.QLineEdit(self)
         self.le_ga5.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga5.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga5.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga5, 8, 2)
         self.le_amplitudes.append(self.le_ga5)
 
-        self.le_gm5 = QtGui.QLineEdit(self)
+        self.le_gm5 = QtWidgets.QLineEdit(self)
         self.le_gm5.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm5.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm5.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm5, 8, 1)
         self.le_mu.append(self.le_gm5)
         
-        self.le_gs5 = QtGui.QLineEdit(self)
+        self.le_gs5 = QtWidgets.QLineEdit(self)
         self.le_gs5.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs5.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs5.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs5, 8, 3)
         self.le_sigma.append(self.le_gs5)
                
-        self.le_ga6 = QtGui.QLineEdit(self)
+        self.le_ga6 = QtWidgets.QLineEdit(self)
         self.le_ga6.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga6.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga6.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga6, 9, 2)
         self.le_amplitudes.append(self.le_ga6)
 
-        self.le_gm6 = QtGui.QLineEdit(self)
+        self.le_gm6 = QtWidgets.QLineEdit(self)
         self.le_gm6.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm6.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm6.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm6, 9, 1)
         self.le_mu.append(self.le_gm6)
         
-        self.le_gs6 = QtGui.QLineEdit(self)
+        self.le_gs6 = QtWidgets.QLineEdit(self)
         self.le_gs6.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs6.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs6.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs6, 9, 3)
         self.le_sigma.append(self.le_gs6)
  
-        self.le_ga7 = QtGui.QLineEdit(self)
+        self.le_ga7 = QtWidgets.QLineEdit(self)
         self.le_ga7.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga7.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga7.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga7, 10, 2)
         self.le_amplitudes.append(self.le_ga7)
 
-        self.le_gm7 = QtGui.QLineEdit(self)
+        self.le_gm7 = QtWidgets.QLineEdit(self)
         self.le_gm7.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm7.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm7.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm7, 10, 1)
         self.le_mu.append(self.le_gm7)
         
-        self.le_gs7 = QtGui.QLineEdit(self)
+        self.le_gs7 = QtWidgets.QLineEdit(self)
         self.le_gs7.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs7.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs7.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs7, 10, 3)
         self.le_sigma.append(self.le_gs7) 
        
-        self.le_ga8 = QtGui.QLineEdit(self)
+        self.le_ga8 = QtWidgets.QLineEdit(self)
         self.le_ga8.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga8.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga8.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga8, 11, 2)
         self.le_amplitudes.append(self.le_ga8)
 
-        self.le_gm8 = QtGui.QLineEdit(self)
+        self.le_gm8 = QtWidgets.QLineEdit(self)
         self.le_gm8.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm8.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm8.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm8, 11, 1)
         self.le_mu.append(self.le_gm8)
         
-        self.le_gs8 = QtGui.QLineEdit(self)
+        self.le_gs8 = QtWidgets.QLineEdit(self)
         self.le_gs8.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs8.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs8.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs8, 11, 3)
         self.le_sigma.append(self.le_gs8) 
         
-        self.le_ga9 = QtGui.QLineEdit(self)
+        self.le_ga9 = QtWidgets.QLineEdit(self)
         self.le_ga9.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga9.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga9.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga9, 12, 2)
         self.le_amplitudes.append(self.le_ga9)
 
-        self.le_gm9 = QtGui.QLineEdit(self)
+        self.le_gm9 = QtWidgets.QLineEdit(self)
         self.le_gm9.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm9.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm9.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm9, 12, 1)
         self.le_mu.append(self.le_gm9)
         
-        self.le_gs9 = QtGui.QLineEdit(self)
+        self.le_gs9 = QtWidgets.QLineEdit(self)
         self.le_gs9.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs9.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs9.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs9, 12, 3)
         self.le_sigma.append(self.le_gs9)     
         
-        self.le_ga10 = QtGui.QLineEdit(self)
+        self.le_ga10 = QtWidgets.QLineEdit(self)
         self.le_ga10.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga10.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga10.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga10, 13, 2)
         self.le_amplitudes.append(self.le_ga10)
 
-        self.le_gm10 = QtGui.QLineEdit(self)
+        self.le_gm10 = QtWidgets.QLineEdit(self)
         self.le_gm10.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm10.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm10.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm10, 13, 1)
         self.le_mu.append(self.le_gm10)
         
-        self.le_gs10 = QtGui.QLineEdit(self)
+        self.le_gs10 = QtWidgets.QLineEdit(self)
         self.le_gs10.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs10.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs10.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs10, 13, 3)
         self.le_sigma.append(self.le_gs10)
 
-        self.le_ga11 = QtGui.QLineEdit(self)
+        self.le_ga11 = QtWidgets.QLineEdit(self)
         self.le_ga11.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga11.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga11.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga11, 14, 2)
         self.le_amplitudes.append(self.le_ga11)
 
-        self.le_gm11 = QtGui.QLineEdit(self)
+        self.le_gm11 = QtWidgets.QLineEdit(self)
         self.le_gm11.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm11.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm11.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm11, 14, 1)
         self.le_mu.append(self.le_gm11)
         
-        self.le_gs11 = QtGui.QLineEdit(self)
+        self.le_gs11 = QtWidgets.QLineEdit(self)
         self.le_gs11.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs11.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs11.setMaximumWidth(65)
         fgs1.addWidget(self.le_gs11, 14, 3)
         self.le_sigma.append(self.le_gs11)
                
-        self.le_ga12 = QtGui.QLineEdit(self)
+        self.le_ga12 = QtWidgets.QLineEdit(self)
         self.le_ga12.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_ga12.setAlignment(QtCore.Qt.AlignRight)
         self.le_ga12.setMaximumWidth(65)
         fgs1.addWidget(self.le_ga12, 15, 2)
         self.le_amplitudes.append(self.le_ga12)
 
-        self.le_gm12 = QtGui.QLineEdit(self)
+        self.le_gm12 = QtWidgets.QLineEdit(self)
         self.le_gm12.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gm12.setAlignment(QtCore.Qt.AlignRight)
         self.le_gm12.setMaximumWidth(65)
         fgs1.addWidget(self.le_gm12, 15, 1)
         self.le_mu.append(self.le_gm12)
         
-        self.le_gs12 = QtGui.QLineEdit(self)
+        self.le_gs12 = QtWidgets.QLineEdit(self)
         self.le_gs12.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.le_gs12.setAlignment(QtCore.Qt.AlignRight)
         self.le_gs12.setMaximumWidth(65)
@@ -3345,21 +3349,21 @@ class PageXrayPeakFitting(QtGui.QWidget):
         
         
         #panel 2
-        vbox2 = QtGui.QVBoxLayout()
+        vbox2 = QtWidgets.QVBoxLayout()
          
-        self.tc_spec = QtGui.QLabel(self)
+        self.tc_spec = QtWidgets.QLabel(self)
         self.tc_spec.setText("X-ray Spectrum: ")
-        hbox11 = QtGui.QHBoxLayout()       
+        hbox11 = QtWidgets.QHBoxLayout()
          
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
         self.Specfig = Figure((PlotW*1.25, PlotH*1.25))
         self.SpectrumPanel = FigureCanvas(self.Specfig)
         fbox.addWidget(self.SpectrumPanel)
         frame.setLayout(fbox)
         
-        self.slider_spec = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slider_spec = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slider_spec.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_spec.setEnabled(False)
         self.slider_spec.valueChanged[int].connect(self.OnSScroll)
@@ -3374,19 +3378,19 @@ class PageXrayPeakFitting(QtGui.QWidget):
          
          
         #panel 3
-        sizer3 = QtGui.QGroupBox('Load Spectrum')
-        vbox3 = QtGui.QVBoxLayout()    
+        sizer3 = QtWidgets.QGroupBox('Load Spectrum')
+        vbox3 = QtWidgets.QVBoxLayout()
         
-        self.button_addclspec = QtGui.QPushButton('Add Cluster Spectra')
+        self.button_addclspec = QtWidgets.QPushButton('Add Cluster Spectra')
         self.button_addclspec.clicked.connect( self.OnAddClusterSpectra)   
         self.button_addclspec.setEnabled(False)
         vbox3.addWidget(self.button_addclspec)    
          
-        self.button_loadtspec = QtGui.QPushButton('Load Spectrum')
+        self.button_loadtspec = QtWidgets.QPushButton('Load Spectrum')
         self.button_loadtspec.clicked.connect(self.OnSpecFromFile)
         vbox3.addWidget(self.button_loadtspec)            
  
-        self.button_save = QtGui.QPushButton('Save Images...')
+        self.button_save = QtWidgets.QPushButton('Save Images...')
         self.button_save.clicked.connect( self.OnSave)
         self.button_save.setEnabled(False)
         vbox3.addWidget(self.button_save)
@@ -3396,15 +3400,15 @@ class PageXrayPeakFitting(QtGui.QWidget):
  
          
         #panel 4
-        sizer4 = QtGui.QGroupBox('Fit Settings')
-        vbox4 = QtGui.QVBoxLayout()
+        sizer4 = QtWidgets.QGroupBox('Fit Settings')
+        vbox4 = QtWidgets.QVBoxLayout()
                 
            
-        hbox41 = QtGui.QHBoxLayout()
-        text1 = QtGui.QLabel(self)
+        hbox41 = QtWidgets.QHBoxLayout()
+        text1 = QtWidgets.QLabel(self)
         text1.setText('Number of steps')
         hbox41.addWidget(text1)
-        self.nstepsspin = QtGui.QSpinBox()
+        self.nstepsspin = QtWidgets.QSpinBox()
         self.nstepsspin.setMinimumWidth(85)
         self.nstepsspin.setRange(0,2)
         self.nstepsspin.setValue(0)
@@ -3413,11 +3417,11 @@ class PageXrayPeakFitting(QtGui.QWidget):
         hbox41.addWidget(self.nstepsspin)  
         vbox4.addLayout(hbox41)
         
-        hbox42 = QtGui.QHBoxLayout()
-        text2 = QtGui.QLabel(self)
+        hbox42 = QtWidgets.QHBoxLayout()
+        text2 = QtWidgets.QLabel(self)
         text2.setText('Number of peaks')
         hbox42.addWidget(text2)
-        self.ngaussspin = QtGui.QSpinBox()
+        self.ngaussspin = QtWidgets.QSpinBox()
         self.ngaussspin.setMinimumWidth(85)
         self.ngaussspin.setRange(0,12)
         self.ngaussspin.setValue(0)
@@ -3432,7 +3436,7 @@ class PageXrayPeakFitting(QtGui.QWidget):
 #         self.button_initfitparams.setEnabled(False)
 #         vbox4.addWidget(self.button_initfitparams)
         
-        self.button_fitspec = QtGui.QPushButton('Fit Spectrum')
+        self.button_fitspec = QtWidgets.QPushButton('Fit Spectrum')
         self.button_fitspec.clicked.connect( self.OnFitSpectrum)   
         self.button_fitspec.setEnabled(False)
         vbox4.addWidget(self.button_fitspec)
@@ -3442,18 +3446,18 @@ class PageXrayPeakFitting(QtGui.QWidget):
 
         #panel 5
         
-        sizer5 = QtGui.QGroupBox('Peak Positions [eV]')
-        vbox5 = QtGui.QVBoxLayout()
+        sizer5 = QtWidgets.QGroupBox('Peak Positions [eV]')
+        vbox5 = QtWidgets.QVBoxLayout()
                    
         self.tc_peakid = []
         for i in range(12):
-            tc = QtGui.QLabel(self)
+            tc = QtWidgets.QLabel(self)
             self.tc_peakid.append(tc)
             vbox5.addWidget(tc)          
             
         vbox5.addStretch(1)
         
-        self.cb_showengs = QtGui.QCheckBox('Show eV lines', self) 
+        self.cb_showengs = QtWidgets.QCheckBox('Show eV lines', self)
         self.cb_showengs.stateChanged.connect(self.OnShowEngs)
         vbox5.addWidget(self.cb_showengs)
        
@@ -3484,7 +3488,7 @@ class PageXrayPeakFitting(QtGui.QWidget):
             
             wildcard = "Spectrum files (*.csv)"
             
-            filepath = QtGui.QFileDialog.getOpenFileName(self, 'Choose Spectrum file', self.com.path, wildcard)
+            filepath = QtWidgets.QFileDialog.getOpenFileName(self, 'Choose Spectrum file', self.com.path, wildcard)
             
 
             filepath = str(filepath)
@@ -3625,7 +3629,7 @@ class PageXrayPeakFitting(QtGui.QWidget):
         #Save images      
         wildcard = "Portable Network Graphics (*.png);;Adobe PDF Files (*.pdf);; SVG (*.svg)"
 
-        fileName = QtGui.QFileDialog.getSaveFileName(self, 'Save Fit Plot', '', wildcard)
+        fileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Fit Plot', '', wildcard)
 
         fileName = str(fileName)
         if fileName == '':
@@ -3900,7 +3904,7 @@ class PageXrayPeakFitting(QtGui.QWidget):
                             
 
 #---------------------------------------------------------------------- 
-class FitParams(QtGui.QDialog):
+class FitParams(QtWidgets.QDialog):
 
     def __init__(self, parent, title, fitparams, readonly, initialization):    
         QtGui.QWidget.__init__(self, parent)
@@ -4292,7 +4296,7 @@ class FitParams(QtGui.QDialog):
                             
                 
 """ ------------------------------------------------------------------------------------------------"""
-class PagePeakID(QtGui.QWidget):
+class PagePeakID(QtWidgets.QWidget):
     def __init__(self, common, data_struct, stack, anlz):
         super(PagePeakID, self).__init__()
 
@@ -4325,15 +4329,15 @@ class PagePeakID(QtGui.QWidget):
         
           
         #panel 1        
-        vbox1 = QtGui.QVBoxLayout()
+        vbox1 = QtWidgets.QVBoxLayout()
                
-        self.tc_1 = QtGui.QLabel(self)
+        self.tc_1 = QtWidgets.QLabel(self)
         self.tc_1.setText("X-ray Spectrum")    
-        hbox11 = QtGui.QHBoxLayout() 
+        hbox11 = QtWidgets.QHBoxLayout()
         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.kespecfig = Figure((pw, ph))
         self.KESpecPan = FigureCanvas(self.kespecfig)
@@ -4341,7 +4345,7 @@ class PagePeakID(QtGui.QWidget):
         fbox.addWidget(self.KESpecPan)
         frame.setLayout(fbox)
 
-        self.slider_spec = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slider_spec = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slider_spec.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_spec.setEnabled(False)
         self.slider_spec.valueChanged[int].connect(self.OnSScroll)
@@ -4360,21 +4364,21 @@ class PagePeakID(QtGui.QWidget):
         
                     
         #panel 2
-        sizer2 = QtGui.QGroupBox('Load Spectrum')
-        vbox2 = QtGui.QVBoxLayout()     
+        sizer2 = QtWidgets.QGroupBox('Load Spectrum')
+        vbox2 = QtWidgets.QVBoxLayout()
         
-        self.button_addclspec = QtGui.QPushButton('Add Cluster Spectra')
+        self.button_addclspec = QtWidgets.QPushButton('Add Cluster Spectra')
         self.button_addclspec.clicked.connect( self.OnAddClusterSpectra)   
         self.button_addclspec.setEnabled(False)
         vbox2.addWidget(self.button_addclspec)
            
          
-        self.button_loadtspec = QtGui.QPushButton('Load Spectrum')
+        self.button_loadtspec = QtWidgets.QPushButton('Load Spectrum')
         self.button_loadtspec.clicked.connect(self.OnSpecFromFile)
         vbox2.addWidget(self.button_loadtspec)
             
  
-        self.button_save = QtGui.QPushButton('Save Images...')
+        self.button_save = QtWidgets.QPushButton('Save Images...')
         self.button_save.clicked.connect( self.OnSave)
         self.button_save.setEnabled(False)
         vbox2.addWidget(self.button_save)
@@ -4383,12 +4387,12 @@ class PagePeakID(QtGui.QWidget):
 
 
         #panel 3
-        vbox3 = QtGui.QVBoxLayout()
+        vbox3 = QtWidgets.QVBoxLayout()
     
-        t1 = QtGui.QLabel(self)
+        t1 = QtWidgets.QLabel(self)
         t1.setText("Peak ID Energies")       
          
-        self.lc_1 = QListWidget()   
+        self.lc_1 = QListWidget()
         self.lc_1.itemClicked.connect(self.OnEngListClick)
         self.lc_1.setMinimumSize(200, 400)
          
@@ -4397,17 +4401,17 @@ class PagePeakID(QtGui.QWidget):
                  
       
         #panel 4     
-        vbox4 = QtGui.QVBoxLayout()
+        vbox4 = QtWidgets.QVBoxLayout()
          
-        self.tc_imageeng = QtGui.QLabel(self)
+        self.tc_imageeng = QtWidgets.QLabel(self)
         self.tc_imageeng.setText("Image at peak energy: ")
         vbox4.addWidget(self.tc_imageeng)
          
-        hbox41 = QtGui.QHBoxLayout()
+        hbox41 = QtWidgets.QHBoxLayout()
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
   
         self.absimgfig = Figure((ph, ph))
         self.AbsImagePanel = FigureCanvas(self.absimgfig)
@@ -4416,7 +4420,7 @@ class PagePeakID(QtGui.QWidget):
         frame.setLayout(fbox)
         hbox41.addWidget(frame)       
 
-        self.slider_eng = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slider_eng = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slider_eng.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_eng.valueChanged[int].connect(self.OnScrollEng)
         self.slider_eng.setRange(0, len(self.peak_names)-1)
@@ -4428,21 +4432,21 @@ class PagePeakID(QtGui.QWidget):
 
         
 
-        vboxtop1 = QtGui.QVBoxLayout()
+        vboxtop1 = QtWidgets.QVBoxLayout()
                      
         vboxtop1.addStretch(1) 
         vboxtop1.addWidget(sizer2)
         vboxtop1.addStretch(1) 
         vboxtop1.addLayout(vbox3)
          
-        vboxtop2 = QtGui.QVBoxLayout()  
+        vboxtop2 = QtWidgets.QVBoxLayout()
         vboxtop2.addStretch(1)       
         vboxtop2.addLayout(vbox1)
         vboxtop2.addStretch(1)
         vboxtop2.addLayout(vbox4)
 
                 
-        hboxtop = QtGui.QHBoxLayout()  
+        hboxtop = QtWidgets.QHBoxLayout()
         hboxtop.addStretch(1)     
         hboxtop.addLayout(vboxtop1)
         hboxtop.addStretch(1) 
@@ -4466,7 +4470,7 @@ class PagePeakID(QtGui.QWidget):
             
             wildcard = "Spectrum files (*.csv)"
             
-            filepath = QtGui.QFileDialog.getOpenFileName(self, 'Choose Spectrum file', self.com.path, wildcard)
+            filepath = QtWidgets.QFileDialog.getOpenFileName(self, 'Choose Spectrum file', self.com.path, wildcard)
             
 
             filepath = str(filepath)
@@ -4737,7 +4741,7 @@ class PagePeakID(QtGui.QWidget):
         #Save images      
         wildcard = "Portable Network Graphics (*.png);;Adobe PDF Files (*.pdf);;"
 
-        fileName = QtGui.QFileDialog.getSaveFileName(self, 'Save OD Plot with Key Energies', '', wildcard)
+        fileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save OD Plot with Key Energies', '', wildcard)
 
         fileName = str(fileName)
         if fileName == '':
@@ -4782,7 +4786,7 @@ class PagePeakID(QtGui.QWidget):
     
 
 """ ------------------------------------------------------------------------------------------------"""
-class PageSpectral(QtGui.QWidget):
+class PageSpectral(QtWidgets.QWidget):
     def __init__(self, common, data_struct, stack, anlz):
         super(PageSpectral, self).__init__()
 
@@ -4802,14 +4806,14 @@ class PageSpectral(QtGui.QWidget):
         self.itheta = 0
         
 
-        vbox = QtGui.QVBoxLayout()
-        hboxT = QtGui.QHBoxLayout()
-        hboxB = QtGui.QHBoxLayout()
+        vbox = QtWidgets.QVBoxLayout()
+        hboxT = QtWidgets.QHBoxLayout()
+        hboxB = QtWidgets.QHBoxLayout()
     
     
         #panel 5
-        sizer5 = QtGui.QGroupBox('Target Spectra')
-        vbox5 = QtGui.QVBoxLayout()
+        sizer5 = QtWidgets.QGroupBox('Target Spectra')
+        vbox5 = QtWidgets.QVBoxLayout()
  
         self.tc_speclist =  QListWidget()  
         self.tc_speclist.itemClicked.connect(self.OnSpectraListClick)
@@ -4820,14 +4824,14 @@ class PageSpectral(QtGui.QWidget):
         
         
         #panel 1        
-        vbox1 = QtGui.QVBoxLayout()     
+        vbox1 = QtWidgets.QVBoxLayout()
   
-        self.tc_spmap = QtGui.QLabel(self)
+        self.tc_spmap = QtWidgets.QLabel(self)
         self.tc_spmap.setText("Spectrum composition map")
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
 
         self.mapfig = Figure((PlotH, PlotH))
         self.MapPanel = FigureCanvas(self.mapfig)
@@ -4842,21 +4846,21 @@ class PageSpectral(QtGui.QWidget):
      
      
         #panel 2
-        vbox2 = QtGui.QVBoxLayout()
+        vbox2 = QtWidgets.QVBoxLayout()
          
-        self.tc_tspec = QtGui.QLabel(self)
+        self.tc_tspec = QtWidgets.QLabel(self)
         self.tc_tspec.setText("Target Spectrum: ")
-        hbox11 = QtGui.QHBoxLayout()       
+        hbox11 = QtWidgets.QHBoxLayout()
          
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
         self.TSpecfig = Figure((PlotW, PlotH))
         self.TSpectrumPanel = FigureCanvas(self.TSpecfig)
         fbox.addWidget(self.TSpectrumPanel)
         frame.setLayout(fbox)
         
-        self.slider_tspec = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slider_tspec = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slider_tspec.setFocusPolicy(QtCore.Qt.StrongFocus)
         #self.slider_tspec.setEnabled(False)
         self.slider_tspec.valueChanged[int].connect(self.OnTSScroll)
@@ -4869,16 +4873,16 @@ class PageSpectral(QtGui.QWidget):
         vbox2.addWidget(self.tc_tspec)       
         vbox2.addLayout(hbox11)
         
-        self.slider_theta = QtGui.QScrollBar(QtCore.Qt.Horizontal)
+        self.slider_theta = QtWidgets.QScrollBar(QtCore.Qt.Horizontal)
         self.slider_theta.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_theta.valueChanged[int].connect(self.OnScrollTheta)
         self.slider_theta.setRange(0, 100)  
         self.slider_theta.setMinimumWidth(350)   
         self.slider_theta.setVisible(False)  
-        self.tc_imagetheta = QtGui.QLabel(self)
+        self.tc_imagetheta = QtWidgets.QLabel(self)
         self.tc_imagetheta.setText("4D Data Angle: ")
         self.tc_imagetheta.setVisible(False)
-        hbox21 = QtGui.QHBoxLayout()
+        hbox21 = QtWidgets.QHBoxLayout()
         hbox21.addWidget(self.tc_imagetheta) 
         hbox21.addStretch(1)
         hbox21.addWidget(self.slider_theta)
@@ -4888,41 +4892,41 @@ class PageSpectral(QtGui.QWidget):
          
          
         #panel 3
-        sizer3 = QtGui.QGroupBox('Target Spectra')
-        vbox3 = QtGui.QVBoxLayout()
+        sizer3 = QtWidgets.QGroupBox('Target Spectra')
+        vbox3 = QtWidgets.QVBoxLayout()
         
 
-        self.button_addclspec = QtGui.QPushButton('Add Cluster Spectra')
+        self.button_addclspec = QtWidgets.QPushButton('Add Cluster Spectra')
         self.button_addclspec.setMinimumSize (180 , 0)
         self.button_addclspec.clicked.connect( self.OnAddClusterSpectra)   
         self.button_addclspec.setEnabled(False)
         vbox3.addWidget(self.button_addclspec)         
-        self.button_loadtspec = QtGui.QPushButton('Load Spectrum')
+        self.button_loadtspec = QtWidgets.QPushButton('Load Spectrum')
         self.button_loadtspec.clicked.connect(self.OnTSpecFromFile)
         self.button_loadtspec.setEnabled(False)
         vbox3.addWidget(self.button_loadtspec)
-        self.button_addflat = QtGui.QPushButton('Add Flat Spectrum')
+        self.button_addflat = QtWidgets.QPushButton('Add Flat Spectrum')
         self.button_addflat.clicked.connect(self.OnFlatTSpec)
         self.button_addflat.setEnabled(False)
         vbox3.addWidget(self.button_addflat)
 
          
-        self.button_showrgb = QtGui.QPushButton('Composite RGB image...')
+        self.button_showrgb = QtWidgets.QPushButton('Composite RGB image...')
         self.button_showrgb.clicked.connect(self.OnCompositeRGB)   
         self.button_showrgb.setEnabled(False)
         vbox3.addWidget(self.button_showrgb)      
         
-        self.button_histogram = QtGui.QPushButton('Histogram Value Cutoff...')
+        self.button_histogram = QtWidgets.QPushButton('Histogram Value Cutoff...')
         self.button_histogram.clicked.connect(self.OnHistogram)   
         self.button_histogram.setEnabled(False)
         vbox3.addWidget(self.button_histogram)     
  
-        self.button_save = QtGui.QPushButton('Save Images...')
+        self.button_save = QtWidgets.QPushButton('Save Images...')
         self.button_save.clicked.connect(self.OnSave)
         self.button_save.setEnabled(False)
         vbox3.addWidget(self.button_save)
         
-        self.button_calc4d = QtGui.QPushButton('Calculate for all angles')
+        self.button_calc4d = QtWidgets.QPushButton('Calculate for all angles')
         self.button_calc4d.clicked.connect(self.OnCalc4D)
         self.button_calc4d.setEnabled(False)
         self.button_calc4d.setVisible(False)
@@ -4933,17 +4937,17 @@ class PageSpectral(QtGui.QWidget):
  
          
         #panel 4
-        sizer4 = QtGui.QGroupBox('Display')
-        vbox4 = QtGui.QVBoxLayout()
+        sizer4 = QtWidgets.QGroupBox('Display')
+        vbox4 = QtWidgets.QVBoxLayout()
                 
 
-        sb = QtGui.QGroupBox('Spectrum')
-        vbox41 = QtGui.QVBoxLayout()
+        sb = QtWidgets.QGroupBox('Spectrum')
+        vbox41 = QtWidgets.QVBoxLayout()
         vbox41.setSpacing(10)
 
-        self.textctrl_sp1 =  QtGui.QLabel(self)
+        self.textctrl_sp1 =  QtWidgets.QLabel(self)
         vbox41.addWidget(self.textctrl_sp1)
-        self.textctrl_sp2 =  QtGui.QLabel(self)
+        self.textctrl_sp2 =  QtWidgets.QLabel(self)
         vbox41.addWidget(self.textctrl_sp2)
                
         
@@ -4957,14 +4961,14 @@ class PageSpectral(QtGui.QWidget):
 
          
         
-        hbox4b = QtGui.QHBoxLayout() 
+        hbox4b = QtWidgets.QHBoxLayout()
           
-        sb = QtGui.QGroupBox('Composition Map')
-        vbox42 = QtGui.QVBoxLayout()
+        sb = QtWidgets.QGroupBox('Composition Map')
+        vbox42 = QtWidgets.QVBoxLayout()
         
         
-        self.rb_raw = QtGui.QRadioButton( 'Raw', self)
-        self.rb_fit = QtGui.QRadioButton('Fitted',self)
+        self.rb_raw = QtWidgets.QRadioButton( 'Raw', self)
+        self.rb_fit = QtWidgets.QRadioButton('Fitted',self)
         self.rb_raw.setChecked(True)
         self.rb_raw.toggled.connect(self.OnRBRawFit)
         
@@ -4973,7 +4977,7 @@ class PageSpectral(QtGui.QWidget):
         vbox42.addWidget(self.rb_fit)
 
 
-        self.add_scale_cb = QtGui.QCheckBox('Scalebar', self) 
+        self.add_scale_cb = QtWidgets.QCheckBox('Scalebar', self)
         #self.add_scale_cb.toggle()
         self.add_scale_cb.stateChanged.connect(self.OnShowScale)
         vbox42.addWidget(self.add_scale_cb)
@@ -4983,8 +4987,8 @@ class PageSpectral(QtGui.QWidget):
         
         
                   
-        sb = QtGui.QGroupBox('Fit Weights')
-        vbox43 = QtGui.QVBoxLayout()
+        sb = QtWidgets.QGroupBox('Fit Weights')
+        vbox43 = QtWidgets.QVBoxLayout()
 
         self.tc_spfitlist = QListWidget()
         vbox43.addWidget(self.tc_spfitlist)
@@ -4993,16 +4997,16 @@ class PageSpectral(QtGui.QWidget):
         hbox4b.addWidget(sb)
           
           
-        vbox44 = QtGui.QVBoxLayout()
-        self.button_removespec = QtGui.QPushButton('Remove Spectrum')
+        vbox44 = QtWidgets.QVBoxLayout()
+        self.button_removespec = QtWidgets.QPushButton('Remove Spectrum')
         self.button_removespec.clicked.connect(self.OnRemoveSpectrum)   
         self.button_removespec.setEnabled(False)    
         vbox44.addWidget(self.button_removespec)
-        self.button_movespup = QtGui.QPushButton('Move Spectrum Up')
+        self.button_movespup = QtWidgets.QPushButton('Move Spectrum Up')
         self.button_movespup.clicked.connect(self.OnMoveSpectrumUp)   
         self.button_movespup.setEnabled(False)  
         vbox44.addWidget(self.button_movespup)
-        self.button_movespdown = QtGui.QPushButton('Move Spectrum Down')
+        self.button_movespdown = QtWidgets.QPushButton('Move Spectrum Down')
         self.button_movespdown.clicked.connect(self.OnMoveSpectrumDown)   
         self.button_movespdown.setEnabled(False) 
         vbox44.addWidget(self.button_movespdown)
@@ -5042,8 +5046,8 @@ class PageSpectral(QtGui.QWidget):
             wildcard = "Supported spectrum formats (*.csv *.xas *.txt);;Spectrum files (*.csv);;Spectrum files (*.xas);;Spectrum files (*.txt);;"
             directory = self.com.path
             
-            filepath = QtGui.QFileDialog.getOpenFileName(self, 'Choose Spectrum file', directory, wildcard)
-            #filepath = QtGui.QFileDialog.getOpenFileName(self, 'Choose Spectrum file', '', wildcard)
+            filepath = QtWidgets.QFileDialog.getOpenFileName(self, 'Choose Spectrum file', directory, wildcard)
+            #filepath = QtWidgets.QFileDialog.getOpenFileName(self, 'Choose Spectrum file', '', wildcard)
             
 
             filepath = str(filepath)
@@ -5723,7 +5727,7 @@ class PageSpectral(QtGui.QWidget):
 
 
 #---------------------------------------------------------------------- 
-class ShowCompositeRBGmap(QtGui.QDialog):
+class ShowCompositeRBGmap(QtWidgets.QDialog):
 
     def __init__(self, parent, common, analz):    
         QtGui.QWidget.__init__(self, parent)
@@ -6204,7 +6208,7 @@ class ShowCompositeRBGmap(QtGui.QDialog):
 
         wildcard = "Portable Network Graphics (*.png);;Adobe PDF Files (*.pdf);;"
 
-        SaveFileName = QtGui.QFileDialog.getSaveFileName(self, 'Save Plot', '', wildcard)
+        SaveFileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Plot', '', wildcard)
 
         SaveFileName = str(SaveFileName)
         if SaveFileName == '':
@@ -6232,7 +6236,7 @@ class ShowCompositeRBGmap(QtGui.QDialog):
    
 
 #---------------------------------------------------------------------- 
-class ShowMapHistogram(QtGui.QDialog):
+class ShowMapHistogram(QtWidgets.QDialog):
 
     def __init__(self, parent, common, analz):    
         QtGui.QWidget.__init__(self, parent)
@@ -6421,7 +6425,7 @@ class ShowMapHistogram(QtGui.QDialog):
 
 
 #---------------------------------------------------------------------- 
-class SaveWinP4(QtGui.QDialog):
+class SaveWinP4(QtWidgets.QDialog):
 
     def __init__(self, parent):    
         QtGui.QWidget.__init__(self, parent)
@@ -6571,7 +6575,7 @@ class SaveWinP4(QtGui.QDialog):
 #----------------------------------------------------------------------        
     def OnBrowseDir(self, evt):
         
-        directory = QtGui.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtGui.QFileDialog.ShowDirsOnly|QtGui.QFileDialog.ReadOnly)       
+        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtWidgets.QFileDialog.ShowDirsOnly|QtWidgets.QFileDialog.ReadOnly)       
                                                         
         
        
@@ -6617,7 +6621,7 @@ class SaveWinP4(QtGui.QDialog):
     
     
 """ ------------------------------------------------------------------------------------------------"""
-class PageCluster(QtGui.QWidget):
+class PageCluster(QtWidgets.QWidget):
     def __init__(self, common, data_struct, stack, anlz):
         super(PageCluster, self).__init__()
 
@@ -6644,29 +6648,29 @@ class PageCluster(QtGui.QWidget):
          
         
         #panel 1
-        sizer1 = QtGui.QGroupBox('Cluster analysis')
-        vbox1 = QtGui.QVBoxLayout()
+        sizer1 = QtWidgets.QGroupBox('Cluster analysis')
+        vbox1 = QtWidgets.QVBoxLayout()
        
         
-        self.button_calcca = QtGui.QPushButton('Calculate Clusters')
+        self.button_calcca = QtWidgets.QPushButton('Calculate Clusters')
         self.button_calcca.clicked.connect( self.OnCalcClusters)   
         self.button_calcca.setEnabled(False)
         vbox1.addWidget(self.button_calcca)
-        self.button_scatterplots = QtGui.QPushButton('Show scatter plots...')
+        self.button_scatterplots = QtWidgets.QPushButton('Show scatter plots...')
         self.button_scatterplots.clicked.connect( self.OnShowScatterplots)
         self.button_scatterplots.setEnabled(False)
-        self.button_savecluster = QtGui.QPushButton('Save CA Results...')
+        self.button_savecluster = QtWidgets.QPushButton('Save CA Results...')
         self.button_savecluster.clicked.connect( self.OnSave)
         self.button_savecluster.setEnabled(False)
         
         vbox1.addStretch(1)
         
                 
-        hbox11 = QtGui.QHBoxLayout()
-        text1 = QtGui.QLabel(self)
+        hbox11 = QtWidgets.QHBoxLayout()
+        text1 = QtWidgets.QLabel(self)
         text1.setText('Number of clusters')
         hbox11.addWidget(text1)
-        self.nclusterspin = QtGui.QSpinBox()
+        self.nclusterspin = QtWidgets.QSpinBox()
         self.nclusterspin.setRange(2,20)
         self.nclusterspin.setValue(self.init_nclusters)
         self.nclusterspin.valueChanged[int].connect(self.OnNClusterspin)
@@ -6675,37 +6679,37 @@ class PageCluster(QtGui.QWidget):
         
         vbox1.addLayout(hbox11) 
          
-        hbox12 = QtGui.QHBoxLayout()
-        text1a = QtGui.QLabel(self)
+        hbox12 = QtWidgets.QHBoxLayout()
+        text1a = QtWidgets.QLabel(self)
         text1a.setText("Number of clusters found")
         hbox12.addWidget(text1a)
         
-        self.ntc_clusters_found = QtGui.QLabel(self)
+        self.ntc_clusters_found = QtWidgets.QLabel(self)
         self.ntc_clusters_found.setText(str(self.numclusters))
         hbox12.addWidget(self.ntc_clusters_found)
   
         vbox1.addLayout(hbox12) 
           
          
-        hbox13 = QtGui.QHBoxLayout()
-        self.remove1stpcacb = QtGui.QCheckBox('Reduce thickness effects', self)
+        hbox13 = QtWidgets.QHBoxLayout()
+        self.remove1stpcacb = QtWidgets.QCheckBox('Reduce thickness effects', self)
         self.remove1stpcacb.stateChanged.connect(self.OnRemove1stpca)
         hbox13.addWidget(self.remove1stpcacb)
         
         vbox1.addLayout(hbox13) 
  
-        hbox14 = QtGui.QHBoxLayout()
-        self.cb_splitclusters = QtGui.QCheckBox('Divide clusters with large Sigma', self)
+        hbox14 = QtWidgets.QHBoxLayout()
+        self.cb_splitclusters = QtWidgets.QCheckBox('Divide clusters with large Sigma', self)
         self.cb_splitclusters.stateChanged.connect(self.OnSplitClusters)
         hbox14.addWidget(self.cb_splitclusters)
         
         vbox1.addLayout(hbox14) 
                 
-        hbox14a = QtGui.QHBoxLayout()
-        tc1 = QtGui.QLabel(self)
+        hbox14a = QtWidgets.QHBoxLayout()
+        tc1 = QtWidgets.QLabel(self)
         tc1.setText("PC scaling factor")  
         hbox14a.addWidget(tc1)      
-        self.ntc_pcscaling = QtGui.QLineEdit(self)
+        self.ntc_pcscaling = QtWidgets.QLineEdit(self)
         self.ntc_pcscaling.setFixedWidth(65)
         self.ntc_pcscaling.setValidator(QtGui.QDoubleValidator(0, 99999, 2, self))
         self.ntc_pcscaling.setAlignment(QtCore.Qt.AlignRight)         
@@ -6715,9 +6719,9 @@ class PageCluster(QtGui.QWidget):
         hbox14a.addStretch(1)
         vbox1.addLayout(hbox14a) 
 
-        line = QtGui.QFrame()
-        line.setFrameShape(QtGui.QFrame.HLine)
-        line.setFrameShadow(QtGui.QFrame.Sunken) 
+        line = QtWidgets.QFrame()
+        line.setFrameShape(QtWidgets.QFrame.HLine)
+        line.setFrameShadow(QtWidgets.QFrame.Sunken)
         
 
         vbox1.addStretch(1)
@@ -6732,15 +6736,15 @@ class PageCluster(QtGui.QWidget):
                 
                  
         #panel 2        
-        vbox2 = QtGui.QVBoxLayout()
+        vbox2 = QtWidgets.QVBoxLayout()
          
-        tc_clustercomp = QtGui.QLabel(self)
+        tc_clustercomp = QtWidgets.QLabel(self)
         tc_clustercomp.setText("Composite cluster image")  
         vbox2.addWidget(tc_clustercomp)      
           
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.clusterimgfig = Figure((PlotH, PlotH))
         self.ClusterImagePan = FigureCanvas(self.clusterimgfig)
@@ -6751,16 +6755,16 @@ class PageCluster(QtGui.QWidget):
         vbox2.addWidget(frame)         
          
         #panel 3 
-        vbox3 = QtGui.QVBoxLayout()
-        fgs = QtGui.QGridLayout()
+        vbox3 = QtWidgets.QVBoxLayout()
+        fgs = QtWidgets.QGridLayout()
          
-        self.tc_cluster = QtGui.QLabel(self)
+        self.tc_cluster = QtWidgets.QLabel(self)
         self.tc_cluster.setText("Cluster ")
         fgs.addWidget(self.tc_cluster, 0, 0, QtCore .Qt. AlignLeft)
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
 
         self.clusterindvimgfig = Figure((PlotH*0.73, PlotH*0.73))
         self.ClusterIndvImagePan = FigureCanvas(self.clusterindvimgfig)
@@ -6769,7 +6773,7 @@ class PageCluster(QtGui.QWidget):
         frame.setLayout(fbox)   
         fgs.addWidget(frame, 1, 0, QtCore .Qt. AlignLeft)
              
-        self.slidershow = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slidershow = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slidershow.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slidershow.setEnabled(False)
         self.slidershow.valueChanged[int].connect(self.OnClusterScroll)
@@ -6777,12 +6781,12 @@ class PageCluster(QtGui.QWidget):
         fgs.addWidget(self.slidershow, 1, 1, QtCore .Qt. AlignLeft)
             
          
-        text3 = QtGui.QLabel(self)
+        text3 = QtWidgets.QLabel(self)
         text3.setText('Cluster Error Map')
         fgs.addWidget(text3, 0, 2, QtCore .Qt. AlignLeft)
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
         self.clusterdistmapfig = Figure((PlotH*0.73, PlotH*0.73))
         self.ClusterDistMapPan = FigureCanvas(self.clusterdistmapfig)
         self.ClusterDistMapPan.setParent(self)
@@ -6796,15 +6800,15 @@ class PageCluster(QtGui.QWidget):
         
 
         #panel 4 
-        vbox4 = QtGui.QVBoxLayout()
+        vbox4 = QtWidgets.QVBoxLayout()
          
-        self.tc_clustersp = QtGui.QLabel(self)
+        self.tc_clustersp = QtWidgets.QLabel(self)
         self.tc_clustersp.setText("Cluster spectrum")   
         vbox4.addWidget(self.tc_clustersp)      
  
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
 
         self.clusterspecfig = Figure((PlotW, PlotH))
         self.ClusterSpecPan = FigureCanvas(self.clusterspecfig)
@@ -6816,11 +6820,11 @@ class PageCluster(QtGui.QWidget):
          
 
         #panel 5
-        sizer5 = QtGui.QGroupBox('Display')
-        vbox5 = QtGui.QVBoxLayout()         
+        sizer5 = QtWidgets.QGroupBox('Display')
+        vbox5 = QtWidgets.QVBoxLayout()
          
-        hbox51 = QtGui.QHBoxLayout()
-        self.showallspectracb = QtGui.QCheckBox('Show all spectra', self)
+        hbox51 = QtWidgets.QHBoxLayout()
+        self.showallspectracb = QtWidgets.QCheckBox('Show all spectra', self)
         self.showallspectracb.stateChanged.connect(self.OnShowallspectra)
         hbox51.addWidget(self.showallspectracb)
         
@@ -6830,15 +6834,15 @@ class PageCluster(QtGui.QWidget):
         
         
         
-        vboxtop = QtGui.QVBoxLayout()
-        hboxtopL = QtGui.QHBoxLayout()
-        vboxtopL = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QVBoxLayout()
+        hboxtopL = QtWidgets.QHBoxLayout()
+        vboxtopL = QtWidgets.QVBoxLayout()
         vboxtopL.addWidget(sizer1)
         vboxtopL.addWidget(sizer5)
         hboxtopL.addLayout(vboxtopL)
         hboxtopL.addStretch(1)
         
-        gridsizertop = QtGui.QGridLayout()
+        gridsizertop = QtWidgets.QGridLayout()
         gridsizertop.setContentsMargins(15,0,0,0)
 
         
@@ -7562,7 +7566,7 @@ class PageCluster(QtGui.QWidget):
 
 
 #---------------------------------------------------------------------- 
-class Scatterplots(QtGui.QDialog):
+class Scatterplots(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, analz):    
         QtGui.QWidget.__init__(self, parent)
@@ -7687,7 +7691,7 @@ class Scatterplots(QtGui.QDialog):
   
      
 #---------------------------------------------------------------------- 
-class SaveWinP3(QtGui.QDialog):
+class SaveWinP3(QtWidgets.QDialog):
 
     def __init__(self, parent):    
         QtGui.QWidget.__init__(self, parent)
@@ -7863,7 +7867,7 @@ class SaveWinP3(QtGui.QDialog):
 #----------------------------------------------------------------------        
     def OnBrowseDir(self, evt):
         
-        directory = QtGui.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtGui.QFileDialog.ShowDirsOnly|QtGui.QFileDialog.ReadOnly)       
+        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtWidgets.QFileDialog.ShowDirsOnly|QtWidgets.QFileDialog.ReadOnly)       
                                                         
         
        
@@ -7921,7 +7925,7 @@ class SaveWinP3(QtGui.QDialog):
                  
     
 """ ------------------------------------------------------------------------------------------------"""
-class PagePCA(QtGui.QWidget):
+class PagePCA(QtWidgets.QWidget):
     def __init__(self, common, data_struct, stack, anlz):
         super(PagePCA, self).__init__()
 
@@ -7941,17 +7945,17 @@ class PagePCA(QtGui.QWidget):
         self.itheta = 0
         
         #panel 1        
-        vbox1 = QtGui.QVBoxLayout()
+        vbox1 = QtWidgets.QVBoxLayout()
         
-        self.tc_PCAcomp = QtGui.QLabel(self)
+        self.tc_PCAcomp = QtWidgets.QLabel(self)
         self.tc_PCAcomp.setText("PCA component ")
         vbox1.addWidget(self.tc_PCAcomp)
         
-        hbox11 = QtGui.QHBoxLayout()
+        hbox11 = QtWidgets.QHBoxLayout()
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
         self.pcaimgfig = Figure((PlotH*1.10, PlotH))
         self.PCAImagePan = FigureCanvas(self.pcaimgfig)
         self.PCAImagePan.setParent(self) 
@@ -7960,7 +7964,7 @@ class PagePCA(QtGui.QWidget):
         frame.setLayout(fbox)
         hbox11.addWidget(frame)                        
             
-        self.slidershow = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slidershow = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slidershow.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slidershow.setRange(1,20)
         self.slidershow.setEnabled(False)          
@@ -7971,16 +7975,16 @@ class PagePCA(QtGui.QWidget):
         vbox1.addLayout(hbox11)        
         
         
-        self.slider_theta = QtGui.QScrollBar(QtCore.Qt.Horizontal)
+        self.slider_theta = QtWidgets.QScrollBar(QtCore.Qt.Horizontal)
         self.slider_theta.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_theta.valueChanged[int].connect(self.OnScrollTheta)
         self.slider_theta.setRange(0, 100)  
         self.slider_theta.setMinimumWidth(250)   
         self.slider_theta.setVisible(False)  
-        self.tc_imagetheta = QtGui.QLabel(self)
+        self.tc_imagetheta = QtWidgets.QLabel(self)
         self.tc_imagetheta.setText("4D Data Angle: ")
         self.tc_imagetheta.setVisible(False)
-        hbox51 = QtGui.QHBoxLayout()
+        hbox51 = QtWidgets.QHBoxLayout()
         hbox51.addWidget(self.tc_imagetheta) 
         hbox51.addStretch(1)
         hbox51.addWidget(self.slider_theta)
@@ -7990,27 +7994,27 @@ class PagePCA(QtGui.QWidget):
    
                 
         #panel 2
-        vbox2 = QtGui.QVBoxLayout()
+        vbox2 = QtWidgets.QVBoxLayout()
         vbox2.setContentsMargins(20,20,20,20)
-        sizer2 = QtGui.QGroupBox('PCA')
-        vbox21 = QtGui.QVBoxLayout()        
+        sizer2 = QtWidgets.QGroupBox('PCA')
+        vbox21 = QtWidgets.QVBoxLayout()
         
-        self.button_calcpca = QtGui.QPushButton('Calculate PCA')
+        self.button_calcpca = QtWidgets.QPushButton('Calculate PCA')
         self.button_calcpca.clicked.connect( self.OnCalcPCA)     
         self.button_calcpca.setEnabled(False)   
         vbox21.addWidget(self.button_calcpca)
-        self.button_savepca = QtGui.QPushButton('Save PCA Results...')
+        self.button_savepca = QtWidgets.QPushButton('Save PCA Results...')
         self.button_savepca.clicked.connect( self.OnSave)
         self.button_savepca.setEnabled(False)
         vbox21.addWidget(self.button_savepca)
         
 
-        hbox21 = QtGui.QHBoxLayout()
-        text1 = QtGui.QLabel(self)
+        hbox21 = QtWidgets.QHBoxLayout()
+        text1 = QtWidgets.QLabel(self)
         text1.setText('Number of significant components')
     
         
-        self.npcaspin = QtGui.QSpinBox()
+        self.npcaspin = QtWidgets.QSpinBox()
         self.npcaspin.setRange(1,20)      
         self.npcaspin.valueChanged[int].connect(self.OnNPCAspin)
         
@@ -8018,17 +8022,17 @@ class PagePCA(QtGui.QWidget):
         hbox21.addWidget(self.npcaspin)
         vbox21.addLayout(hbox21)
               
-        hbox22 = QtGui.QHBoxLayout()
-        text2 = QtGui.QLabel(self)
+        hbox22 = QtWidgets.QHBoxLayout()
+        text2 = QtWidgets.QLabel(self)
         text2.setText( 'Cumulative variance')
-        self.vartc = QtGui.QLabel(self)
+        self.vartc = QtWidgets.QLabel(self)
         self.vartc.setText('0%')
         hbox22.addWidget(text2)
         hbox22.addWidget(self.vartc)
 
         vbox21.addLayout(hbox22)      
 
-        self.button_movepcup = QtGui.QPushButton('Move PC up')
+        self.button_movepcup = QtWidgets.QPushButton('Move PC up')
         self.button_movepcup.clicked.connect( self.OnMovePCUP)     
         self.button_movepcup.setEnabled(False)   
         vbox21.addWidget(self.button_movepcup)
@@ -8040,7 +8044,7 @@ class PagePCA(QtGui.QWidget):
 #         vbox21.addWidget(line) 
 
         
-        self.button_calcpca4D = QtGui.QPushButton('Calculate PCA for all angles')
+        self.button_calcpca4D = QtWidgets.QPushButton('Calculate PCA for all angles')
         self.button_calcpca4D.clicked.connect( self.OnCalcPCA4D)     
         self.button_calcpca4D.setEnabled(False)   
         self.button_calcpca4D.setVisible(False) 
@@ -8054,17 +8058,17 @@ class PagePCA(QtGui.QWidget):
 
         
         #panel 3
-        vbox3 = QtGui.QVBoxLayout()
+        vbox3 = QtWidgets.QVBoxLayout()
    
 
  
-        self.text_pcaspec = QtGui.QLabel(self)
+        self.text_pcaspec = QtWidgets.QLabel(self)
         self.text_pcaspec.setText("PCA spectrum ") 
         vbox3.addWidget(self.text_pcaspec)
                         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
 
         self.pcaspecfig = Figure((PlotW, PlotH))
         self.PCASpecPan = FigureCanvas(self.pcaspecfig)
@@ -8076,15 +8080,15 @@ class PagePCA(QtGui.QWidget):
     
         
         #panel 4
-        vbox4 = QtGui.QVBoxLayout()  
+        vbox4 = QtWidgets.QVBoxLayout()
          
-        text4 = QtGui.QLabel(self)
+        text4 = QtWidgets.QLabel(self)
         text4.setText("PCA eigenvalues ")        
         vbox4.addWidget(text4)
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
        
         self.pcaevalsfig = Figure((PlotW, PlotH*0.75))
         self.PCAEvalsPan = FigureCanvas(self.pcaevalsfig)
@@ -8097,8 +8101,8 @@ class PagePCA(QtGui.QWidget):
 
     
         
-        vboxtop = QtGui.QVBoxLayout()
-        gridsizertop = QtGui.QGridLayout()
+        vboxtop = QtWidgets.QVBoxLayout()
+        gridsizertop = QtWidgets.QGridLayout()
         
         gridsizertop.addLayout(vbox2, 0, 0, QtCore .Qt. AlignLeft)
         gridsizertop.addLayout(vbox4, 0, 1)
@@ -8579,7 +8583,7 @@ class PagePCA(QtGui.QWidget):
         
 
 #---------------------------------------------------------------------- 
-class SaveWinP2(QtGui.QDialog):
+class SaveWinP2(QtWidgets.QDialog):
 
     def __init__(self, parent):    
         QtGui.QWidget.__init__(self, parent)
@@ -8738,7 +8742,7 @@ class SaveWinP2(QtGui.QDialog):
 #----------------------------------------------------------------------        
     def OnBrowseDir(self, evt):
         
-        directory = QtGui.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtGui.QFileDialog.ShowDirsOnly|QtGui.QFileDialog.ReadOnly)       
+        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtWidgets.QFileDialog.ShowDirsOnly|QtWidgets.QFileDialog.ReadOnly)       
                                                         
         
        
@@ -8787,7 +8791,7 @@ class SaveWinP2(QtGui.QDialog):
         
 
 """ ------------------------------------------------------------------------------------------------"""
-class PageStack(QtGui.QWidget):
+class PageStack(QtWidgets.QWidget):
     def __init__(self, common, data_struct, stack):
         super(PageStack, self).__init__()
 
@@ -8832,34 +8836,34 @@ class PageStack(QtGui.QWidget):
         
 
         #panel 1
-        sizer1 = QtGui.QGroupBox('Preprocess')
-        vbox1 = QtGui.QVBoxLayout()
+        sizer1 = QtWidgets.QGroupBox('Preprocess')
+        vbox1 = QtWidgets.QVBoxLayout()
         vbox1.setSpacing(0)
         
-        self.button_align = QtGui.QPushButton('Align stack...')
+        self.button_align = QtWidgets.QPushButton('Align stack...')
         self.button_align.clicked.connect(self.OnAlignImgs)
         self.button_align.setEnabled(False)
         vbox1.addWidget(self.button_align) 
         
   
         
-        self.button_limitev = QtGui.QPushButton('Limit energy range...')
+        self.button_limitev = QtWidgets.QPushButton('Limit energy range...')
         self.button_limitev.clicked.connect( self.OnLimitEv)
         self.button_limitev.setEnabled(False)
         vbox1.addWidget(self.button_limitev)
         
-        self.button_subregion = QtGui.QPushButton('Clip to subregion...')
+        self.button_subregion = QtWidgets.QPushButton('Clip to subregion...')
         self.button_subregion.clicked.connect(self.OnCliptoSubregion)
         self.button_subregion.setEnabled(False)
         vbox1.addWidget(self.button_subregion)    
         
-        self.button_darksig = QtGui.QPushButton('Dark signal subtraction...')
+        self.button_darksig = QtWidgets.QPushButton('Dark signal subtraction...')
         self.button_darksig.clicked.connect(self.OnDarkSignal)
         self.button_darksig.setEnabled(False)
         vbox1.addWidget(self.button_darksig)     
         
             
-        self.button_savestack = QtGui.QPushButton('Save processed stack')
+        self.button_savestack = QtWidgets.QPushButton('Save processed stack')
         self.button_savestack.clicked.connect(self.OnSaveStack)
         self.button_savestack.setEnabled(False)          
         vbox1.addWidget(self.button_savestack)
@@ -8868,39 +8872,39 @@ class PageStack(QtGui.QWidget):
         
 
         #panel 1B
-        sizer1b = QtGui.QGroupBox('Normalize')
-        vbox1b = QtGui.QVBoxLayout()
+        sizer1b = QtWidgets.QGroupBox('Normalize')
+        vbox1b = QtWidgets.QVBoxLayout()
         vbox1b.setSpacing(0)
         
-        self.button_i0ffile = QtGui.QPushButton('I0 from file...')
+        self.button_i0ffile = QtWidgets.QPushButton('I0 from file...')
         self.button_i0ffile.clicked.connect(self.OnI0FFile)
         self.button_i0ffile.setEnabled(False)
         vbox1b.addWidget(self.button_i0ffile)
-        self.button_i0histogram = QtGui.QPushButton('I0 from histogram...')
+        self.button_i0histogram = QtWidgets.QPushButton('I0 from histogram...')
         self.button_i0histogram.clicked.connect( self.OnI0histogram)   
         self.button_i0histogram.setEnabled(False)     
         vbox1b.addWidget(self.button_i0histogram)
-        self.button_showi0 = QtGui.QPushButton('Show I0...')
+        self.button_showi0 = QtWidgets.QPushButton('Show I0...')
         self.button_showi0.clicked.connect( self.OnShowI0)   
         self.button_showi0.setEnabled(False)
         vbox1b.addWidget(self.button_showi0)
         
-        self.button_prenorm = QtGui.QPushButton('Use pre-normalized data')
+        self.button_prenorm = QtWidgets.QPushButton('Use pre-normalized data')
         self.button_prenorm.clicked.connect(self.OnPreNormalizedData)   
         self.button_prenorm.setEnabled(False)
         vbox1b.addWidget(self.button_prenorm)
         
-        self.button_refimgs = QtGui.QPushButton('Load Reference Images')
+        self.button_refimgs = QtWidgets.QPushButton('Load Reference Images')
         self.button_refimgs.clicked.connect(self.OnRefImgs)
         self.button_refimgs.setEnabled(False)
         vbox1b.addWidget(self.button_refimgs)    
         
-        self.button_reseti0 = QtGui.QPushButton('Reset I0')
+        self.button_reseti0 = QtWidgets.QPushButton('Reset I0')
         self.button_reseti0.clicked.connect(self.OnResetI0)   
         self.button_reseti0.setEnabled(False)
         vbox1b.addWidget(self.button_reseti0)
         
-        self.button_saveod = QtGui.QPushButton('Save OD data')
+        self.button_saveod = QtWidgets.QPushButton('Save OD data')
         self.button_saveod.clicked.connect(self.OnSaveOD)   
         self.button_saveod.setEnabled(False)
         vbox1b.addWidget(self.button_saveod)        
@@ -8909,16 +8913,16 @@ class PageStack(QtGui.QWidget):
 
 
         #panel 2
-        sizer2 = QtGui.QGroupBox('Display')
-        vbox2 = QtGui.QVBoxLayout()
+        sizer2 = QtWidgets.QGroupBox('Display')
+        vbox2 = QtWidgets.QVBoxLayout()
         vbox2.setSpacing(0)
         
-        hbox20 = QtGui.QHBoxLayout()
+        hbox20 = QtWidgets.QHBoxLayout()
         
-        sizer21 = QtGui.QGroupBox('File')
-        vbox21 = QtGui.QVBoxLayout()
+        sizer21 = QtWidgets.QGroupBox('File')
+        vbox21 = QtWidgets.QVBoxLayout()
 
-        self.textctrl = QtGui.QLabel(self)
+        self.textctrl = QtWidgets.QLabel(self)
         vbox21.addWidget(self.textctrl)
         self.textctrl.setText('File name')
         
@@ -8927,14 +8931,14 @@ class PageStack(QtGui.QWidget):
         hbox20.addWidget(sizer21)
         hbox20.addSpacing(15)
         
-        vbox22 = QtGui.QVBoxLayout()
-        self.button_slideshow = QtGui.QPushButton('Play stack movie')
+        vbox22 = QtWidgets.QVBoxLayout()
+        self.button_slideshow = QtWidgets.QPushButton('Play stack movie')
         self.button_slideshow.setMaximumSize (150 , 150)
         self.button_slideshow.clicked.connect( self.OnSlideshow)
         self.button_slideshow.setEnabled(False)
         vbox22.addWidget(self.button_slideshow)
         
-        self.button_save = QtGui.QPushButton( 'Save images...')
+        self.button_save = QtWidgets.QPushButton( 'Save images...')
         self.button_save.setMaximumSize (150 , 150)
         self.button_save.clicked.connect( self.OnSave)
         self.button_save.setEnabled(False)          
@@ -8945,13 +8949,13 @@ class PageStack(QtGui.QWidget):
         vbox2.addSpacing(5)
         
 
-        hbox21 = QtGui.QHBoxLayout()
+        hbox21 = QtWidgets.QHBoxLayout()
         
-        sizer22 = QtGui.QGroupBox('Image')
-        vbox23 = QtGui.QVBoxLayout()
+        sizer22 = QtWidgets.QGroupBox('Image')
+        vbox23 = QtWidgets.QVBoxLayout()
 
-        self.rb_flux = QtGui.QRadioButton( 'Flux', self)
-        self.rb_od = QtGui.QRadioButton('Optical Density',self)
+        self.rb_flux = QtWidgets.QRadioButton( 'Flux', self)
+        self.rb_od = QtWidgets.QRadioButton('Optical Density',self)
         self.rb_flux.setChecked(True)
         self.rb_flux.toggled.connect(self.OnRb_fluxod)
         
@@ -8963,20 +8967,20 @@ class PageStack(QtGui.QWidget):
         self.rb_flux.setEnabled(False)
         self.rb_od.setEnabled(False)
  
-        self.add_scale_cb = QtGui.QCheckBox('Scalebar', self) 
+        self.add_scale_cb = QtWidgets.QCheckBox('Scalebar', self)
         self.add_scale_cb.setChecked(True)
         self.add_scale_cb.stateChanged.connect(self.OnShowScale)
         vbox23.addWidget(self.add_scale_cb)
         
-        hbox211 = QtGui.QHBoxLayout()
+        hbox211 = QtWidgets.QHBoxLayout()
         hbox211.addSpacing(20)
-        self.cb_white_scale_bar = QtGui.QCheckBox('White', self) 
+        self.cb_white_scale_bar = QtWidgets.QCheckBox('White', self)
         self.cb_white_scale_bar.setChecked(False)
         self.cb_white_scale_bar.stateChanged.connect(self.OnWhiteScale)
         hbox211.addWidget(self.cb_white_scale_bar)
         vbox23.addLayout(hbox211)
          
-        self.add_colbar_cb = QtGui.QCheckBox('Colorbar', self)
+        self.add_colbar_cb = QtWidgets.QCheckBox('Colorbar', self)
         self.add_colbar_cb.stateChanged.connect(self.OnShowColBar)
         vbox23.addWidget(self.add_colbar_cb)
         sizer22.setLayout(vbox23)
@@ -8985,34 +8989,34 @@ class PageStack(QtGui.QWidget):
         hbox21.addSpacing(5)
         vbox2.addLayout(hbox21)
                  
-        sizer23 = QtGui.QGroupBox('Display settings')
-        hbox23 = QtGui.QHBoxLayout() 
+        sizer23 = QtWidgets.QGroupBox('Display settings')
+        hbox23 = QtWidgets.QHBoxLayout()
  
-        fgs21 = QtGui.QGridLayout()
+        fgs21 = QtWidgets.QGridLayout()
          
-        self.tc_min = QtGui.QLabel(self)
+        self.tc_min = QtWidgets.QLabel(self)
         self.tc_min.setText('Minimum: \t{0:5d}%'.format(int(100*self.brightness_min)))
          
-        self.tc_max = QtGui.QLabel(self)
+        self.tc_max = QtWidgets.QLabel(self)
         self.tc_max.setText('Maximum:{0:5d}%'.format(int(100*self.brightness_max)))
  
-        self.slider_brightness_min = QtGui.QSlider(QtCore.Qt.Horizontal, self)
+        self.slider_brightness_min = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
         self.slider_brightness_min.setRange(0,49)
         self.slider_brightness_min.setValue(self.dispbrightness_min)
         self.slider_brightness_min.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_brightness_min.valueChanged[int].connect(self.OnScrollBrightnessMin)
 
                  
-        self.slider_brightness_max = QtGui.QSlider(QtCore.Qt.Horizontal, self)      
+        self.slider_brightness_max = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
         self.slider_brightness_max.setRange(50,120)
         self.slider_brightness_max.setValue(self.dispbrightness_max)
         self.slider_brightness_max.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_brightness_max.valueChanged[int].connect(self.OnScrollBrightnessMax)  
          
-        self.tc_gamma = QtGui.QLabel(self)
+        self.tc_gamma = QtWidgets.QLabel(self)
         self.tc_gamma.setText('Gamma:  \t{0:5.2f}'.format(self.gamma))
          
-        self.slider_gamma = QtGui.QSlider(QtCore.Qt.Horizontal, self)
+        self.slider_gamma = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
         self.slider_gamma.setRange(1,20)
         self.slider_gamma.setValue(self.displaygamma)
         self.slider_gamma.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -9029,16 +9033,16 @@ class PageStack(QtGui.QWidget):
         hbox23.addLayout(fgs21)
                 
     
-        vbox24 = QtGui.QVBoxLayout()
-        self.button_despike = QtGui.QPushButton('Despike')
+        vbox24 = QtWidgets.QVBoxLayout()
+        self.button_despike = QtWidgets.QPushButton('Despike')
         self.button_despike.clicked.connect( self.OnDespike)   
         self.button_despike.setEnabled(False)     
         vbox24.addWidget(self.button_despike)
-        self.button_resetdisplay = QtGui.QPushButton( 'Reset')
+        self.button_resetdisplay = QtWidgets.QPushButton( 'Reset')
         self.button_resetdisplay.clicked.connect( self.OnResetDisplaySettings)   
         self.button_resetdisplay.setEnabled(False)     
         vbox24.addWidget(self.button_resetdisplay)
-        self.button_displaycolor = QtGui.QPushButton('Color Table...   ')
+        self.button_displaycolor = QtWidgets.QPushButton('Color Table...   ')
         self.button_displaycolor.clicked.connect( self.OnSetColorTable)   
         self.button_displaycolor.setEnabled(False)     
         vbox24.addWidget(self.button_displaycolor)
@@ -9053,43 +9057,43 @@ class PageStack(QtGui.QWidget):
         
         
         #panel 3
-        sizer3 = QtGui.QGroupBox('Region of Interest')
-        vbox3 = QtGui.QVBoxLayout()
+        sizer3 = QtWidgets.QGroupBox('Region of Interest')
+        vbox3 = QtWidgets.QVBoxLayout()
         vbox3.setSpacing(0)
 
         
-        self.button_addROI = QtGui.QPushButton('Select ROI (Lasso)')
+        self.button_addROI = QtWidgets.QPushButton('Select ROI (Lasso)')
         self.button_addROI.clicked.connect( self.OnAddROI)
         self.button_addROI.setEnabled(False)
         vbox3.addWidget(self.button_addROI)
         
-        self.button_acceptROI = QtGui.QPushButton('Accept ROI')
+        self.button_acceptROI = QtWidgets.QPushButton('Accept ROI')
         self.button_acceptROI.clicked.connect( self.OnAcceptROI)   
         self.button_acceptROI.setEnabled(False)   
         self.button_acceptROI.setVisible(False)
         vbox3.addWidget(self.button_acceptROI)
         
-        self.button_resetROI = QtGui.QPushButton('Reset ROI')
+        self.button_resetROI = QtWidgets.QPushButton('Reset ROI')
         self.button_resetROI.clicked.connect( self.OnResetROI)
         self.button_resetROI.setEnabled(False)
         vbox3.addWidget(self.button_resetROI) 
 
-        self.button_setROII0 = QtGui.QPushButton('Set ROI As I0')
+        self.button_setROII0 = QtWidgets.QPushButton('Set ROI As I0')
         self.button_setROII0.clicked.connect( self.OnSetROII0)
         self.button_setROII0.setEnabled(False)
         vbox3.addWidget(self.button_setROII0)
         
-        self.button_saveROIspectr = QtGui.QPushButton( 'Save ROI Spectrum...')
+        self.button_saveROIspectr = QtWidgets.QPushButton( 'Save ROI Spectrum...')
         self.button_saveROIspectr.clicked.connect( self.OnSaveROISpectrum)   
         self.button_saveROIspectr.setEnabled(False)     
         vbox3.addWidget(self.button_saveROIspectr)
         
-        self.button_ROIdosecalc = QtGui.QPushButton('ROI Dose Calculation...')
+        self.button_ROIdosecalc = QtWidgets.QPushButton('ROI Dose Calculation...')
         self.button_ROIdosecalc.clicked.connect( self.OnROI_DoseCalc)   
         self.button_ROIdosecalc.setEnabled(False)     
         vbox3.addWidget(self.button_ROIdosecalc)        
         
-        self.button_spectralROI = QtGui.QPushButton('Spectral ROI...')
+        self.button_spectralROI = QtWidgets.QPushButton('Spectral ROI...')
         self.button_spectralROI.clicked.connect( self.OnSpectralROI)   
         self.button_spectralROI.setEnabled(False)     
         vbox3.addWidget(self.button_spectralROI)
@@ -9099,17 +9103,17 @@ class PageStack(QtGui.QWidget):
         
 
         #panel 4     
-        #vbox4 = QtGui.QVBoxLayout()
-        gridsizer4 = QtGui.QGridLayout() 
+        #vbox4 = QtWidgets.QVBoxLayout()
+        gridsizer4 = QtWidgets.QGridLayout()
         
-        self.tc_imageeng = QtGui.QLabel(self)
+        self.tc_imageeng = QtWidgets.QLabel(self)
         self.tc_imageeng.setText("Image at energy: ")
         gridsizer4.addWidget(self.tc_imageeng, 0, 0, QtCore .Qt. AlignLeft)
         
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.absimgfig = Figure((PlotH, PlotH))
         self.AbsImagePanel = FigureCanvas(self.absimgfig)
@@ -9120,34 +9124,34 @@ class PageStack(QtGui.QWidget):
         gridsizer4.addWidget(frame, 1, 0, QtCore .Qt. AlignLeft)
        
 
-        self.slider_eng = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slider_eng = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slider_eng.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_eng.valueChanged[int].connect(self.OnScrollEng)
         self.slider_eng.setRange(0, 100)
         gridsizer4.addWidget(self.slider_eng, 1, 1, QtCore .Qt. AlignLeft)
 
-        self.slider_theta = QtGui.QScrollBar(QtCore.Qt.Horizontal)
+        self.slider_theta = QtWidgets.QScrollBar(QtCore.Qt.Horizontal)
         self.slider_theta.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_theta.valueChanged[int].connect(self.OnScrollTheta)
         self.slider_theta.setRange(0, 100)     
         self.slider_theta.setVisible(False)  
-        self.tc_imagetheta = QtGui.QLabel(self)
+        self.tc_imagetheta = QtWidgets.QLabel(self)
         self.tc_imagetheta.setText("4D Data Angle: ")
         self.tc_imagetheta.setVisible(False)
-        hbox41 = QtGui.QHBoxLayout()
+        hbox41 = QtWidgets.QHBoxLayout()
         hbox41.addWidget(self.tc_imagetheta) 
         hbox41.addWidget(self.slider_theta)
         gridsizer4.addLayout(hbox41, 2, 0)
         
 
         #panel 5             
-        self.tc_spec = QtGui.QLabel(self)
+        self.tc_spec = QtWidgets.QLabel(self)
         self.tc_spec.setText("Spectrum ")
         gridsizer4.addWidget(self.tc_spec, 0, 2, QtCore.Qt.AlignLeft)
         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
       
         self.specfig = Figure((PlotW, PlotH))
         self.SpectrumPanel = FigureCanvas(self.specfig)
@@ -9159,16 +9163,16 @@ class PageStack(QtGui.QWidget):
         gridsizer4.addWidget(frame, 1, 2,  QtCore.Qt.AlignLeft)             
     
     
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QVBoxLayout()
         
-        hboxtop = QtGui.QHBoxLayout()
+        hboxtop = QtWidgets.QHBoxLayout()
         hboxtop.addWidget(sizer1)
         hboxtop.addWidget(sizer1b)
         hboxtop.addWidget(sizer2)
         hboxtop.addWidget(sizer3)
         
-        hboxbott = QtGui.QHBoxLayout()
-        hboxbott2 = QtGui.QHBoxLayout()
+        hboxbott = QtWidgets.QHBoxLayout()
+        hboxbott2 = QtWidgets.QHBoxLayout()
         hboxbott2.addLayout(gridsizer4)
         hboxbott.addLayout(hboxbott2)
               
@@ -9191,7 +9195,7 @@ class PageStack(QtGui.QWidget):
         try:  
             wildcard = "I0 CSV files (*.csv);; I0 files (*.xas);;SDF I0 files (*.hdr)"
             
-            filepath = QtGui.QFileDialog.getOpenFileName(self, 'Open file', '', wildcard)
+            filepath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '', wildcard)
             
 
             filepath = str(filepath)
@@ -9322,7 +9326,7 @@ class PageStack(QtGui.QWidget):
         #if True:        
             wildcard = "Reference images (*.xrm)"
             
-            filepaths = QtGui.QFileDialog.getOpenFileNames(self, 'Select reference files', '', wildcard)
+            filepaths = QtWidgets.QFileDialog.getOpenFileNames(self, 'Select reference files', '', wildcard)
             
                         
             #Check reference files
@@ -9522,7 +9526,7 @@ class PageStack(QtGui.QWidget):
         #if True:
             wildcard = "TIFF files (.tif)"
 
-            filepath = QtGui.QFileDialog.getSaveFileName(self, 'Save OD', '', wildcard)
+            filepath = QtWidgets.QFileDialog.getSaveFileName(self, 'Save OD', '', wildcard)
 
             filepath = str(filepath)
             if filepath == '':
@@ -10246,7 +10250,7 @@ class PageStack(QtGui.QWidget):
 
         wildcard = "CSV files (*.csv)"
 
-        fileName = QtGui.QFileDialog.getSaveFileName(self, 'Save ROI Spectrum (.csv)', '', wildcard)
+        fileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save ROI Spectrum (.csv)', '', wildcard)
 
         fileName = str(fileName)
         if fileName == '':
@@ -10278,7 +10282,7 @@ class PageStack(QtGui.QWidget):
         specroiwin.show()     
      
 #---------------------------------------------------------------------- 
-class SaveWinP1(QtGui.QDialog):
+class SaveWinP1(QtWidgets.QDialog):
 
     def __init__(self, parent):    
         QtGui.QWidget.__init__(self, parent)
@@ -10443,7 +10447,7 @@ class SaveWinP1(QtGui.QDialog):
 #----------------------------------------------------------------------        
     def OnBrowseDir(self, evt):
         
-        directory = QtGui.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtGui.QFileDialog.ShowDirsOnly|QtGui.QFileDialog.ReadOnly)       
+        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose a directory", self.path, QtWidgets.QFileDialog.ShowDirsOnly|QtWidgets.QFileDialog.ReadOnly)       
                                                         
         
        
@@ -10492,7 +10496,7 @@ class SaveWinP1(QtGui.QDialog):
 
 
 #---------------------------------------------------------------------- 
-class ShowHistogram(QtGui.QDialog):
+class ShowHistogram(QtWidgets.QDialog):
 
     def __init__(self, parent, stack):    
         QtGui.QWidget.__init__(self, parent)
@@ -10695,7 +10699,7 @@ class ShowHistogram(QtGui.QDialog):
 
 
 #---------------------------------------------------------------------- 
-class LimitEv(QtGui.QDialog):
+class LimitEv(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, stack):    
         QtGui.QWidget.__init__(self, parent)
@@ -10902,7 +10906,7 @@ class LimitEv(QtGui.QDialog):
         
         
 #---------------------------------------------------------------------- 
-class CliptoSubregion(QtGui.QDialog):
+class CliptoSubregion(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, stack):    
         QtGui.QWidget.__init__(self, parent)
@@ -11148,7 +11152,7 @@ class CliptoSubregion(QtGui.QDialog):
 
 
 #---------------------------------------------------------------------- 
-class ImageRegistration(QtGui.QDialog):
+class ImageRegistration(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, stack):    
         QtGui.QWidget.__init__(self, parent)
@@ -11686,7 +11690,7 @@ class ImageRegistration(QtGui.QDialog):
         
         wildcard = "TIFF File (*.tif);;"
 
-        fileName = QtGui.QFileDialog.getSaveFileName(self, 'Save Reference Image', '', wildcard)
+        fileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Reference Image', '', wildcard)
 
         fileName = str(fileName)
         if fileName == '':
@@ -11702,7 +11706,7 @@ class ImageRegistration(QtGui.QDialog):
         
         wildcard = "TIFF File (*.tif);;"
 
-        fileName = QtGui.QFileDialog.getOpenFileName(self, 'Save Reference Image', '', wildcard)
+        fileName = QtWidgets.QFileDialog.getOpenFileName(self, 'Save Reference Image', '', wildcard)
 
         fileName = str(fileName)
         if fileName == '':
@@ -12427,7 +12431,7 @@ class ImageRegistration(QtGui.QDialog):
         
         wildcard = "Portable Network Graphics (*.png);;Adobe PDF Files (*.pdf);;"
 
-        self.SaveFileName = QtGui.QFileDialog.getSaveFileName(self, 'Save Image Shifts Plot', '', wildcard)
+        self.SaveFileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Image Shifts Plot', '', wildcard)
 
         self.SaveFileName = str(self.SaveFileName)
         if self.SaveFileName == '':
@@ -12573,7 +12577,7 @@ class ImageRegistration(QtGui.QDialog):
 
         wildcard = "CSV files (*.csv)"
 
-        filepath = QtGui.QFileDialog.getSaveFileName(self, 'Please select an alignment file (.csv)', '', wildcard)
+        filepath = QtWidgets.QFileDialog.getSaveFileName(self, 'Please select an alignment file (.csv)', '', wildcard)
 
         filepath = str(filepath)
         if filepath == '':
@@ -12608,7 +12612,7 @@ class ImageRegistration(QtGui.QDialog):
 
         wildcard = "I0 CSV files (*.csv)"
         
-        filepath = QtGui.QFileDialog.getOpenFileName(self, 'Please select an alignment file (.csv)', '', wildcard)
+        filepath = QtWidgets.QFileDialog.getOpenFileName(self, 'Please select an alignment file (.csv)', '', wildcard)
         
 
         filepath = str(filepath)
@@ -12724,7 +12728,7 @@ class ImageRegistration(QtGui.QDialog):
                 
         
 #---------------------------------------------------------------------- 
-class SpectralROI(QtGui.QDialog):
+class SpectralROI(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, stack):    
         QtGui.QWidget.__init__(self, parent)
@@ -12995,7 +12999,7 @@ class SpectralROI(QtGui.QDialog):
 
         wildcard = "Portable Network Graphics (*.png);;Adobe PDF Files (*.pdf);;TIFF File (*.tif);;"
 
-        fileName = QtGui.QFileDialog.getSaveFileName(self, 'Save OD Map', '', wildcard)
+        fileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save OD Map', '', wildcard)
 
         fileName = str(fileName)
         if fileName == '':
@@ -13039,7 +13043,7 @@ class SpectralROI(QtGui.QDialog):
 
 
 #---------------------------------------------------------------------- 
-class DoseCalculation(QtGui.QDialog):
+class DoseCalculation(QtWidgets.QDialog):
 
     def __init__(self, parent,  stack, ROIspectrum):    
         QtGui.QWidget.__init__(self, parent)
@@ -13163,7 +13167,7 @@ class DoseCalculation(QtGui.QDialog):
         
         
 #---------------------------------------------------------------------- 
-class DarkSignal(QtGui.QDialog):
+class DarkSignal(QtWidgets.QDialog):
 
     def __init__(self, parent, common, stack):    
         QtGui.QWidget.__init__(self, parent)
@@ -13263,7 +13267,7 @@ class DarkSignal(QtGui.QDialog):
         
                 
 #---------------------------------------------------------------------- 
-class PlotFrame(QtGui.QDialog):
+class PlotFrame(QtWidgets.QDialog):
 
     def __init__(self, parent, datax, datay, title = "I0 data"):    
         QtGui.QWidget.__init__(self, parent)
@@ -13344,7 +13348,7 @@ class PlotFrame(QtGui.QDialog):
         try: 
             wildcard = "CSV files (*.csv)"
 
-            filepath = QtGui.QFileDialog.getSaveFileName(self, 'Save plot as .csv (.csv)', '', wildcard)
+            filepath = QtWidgets.QFileDialog.getSaveFileName(self, 'Save plot as .csv (.csv)', '', wildcard)
 
             filepath = str(filepath)
             if filepath == '':
@@ -13405,7 +13409,7 @@ class PlotFrame(QtGui.QDialog):
         
 
 #---------------------------------------------------------------------- 
-class ColorTableFrame(QtGui.QDialog):
+class ColorTableFrame(QtWidgets.QDialog):
 
     def __init__(self, parent):    
         QtGui.QWidget.__init__(self, parent)
@@ -13530,7 +13534,7 @@ class ColorTableFrame(QtGui.QDialog):
                                                         
 
 """ ------------------------------------------------------------------------------------------------"""
-class PageLoadData(QtGui.QWidget):
+class PageLoadData(QtWidgets.QWidget):
     def __init__(self, common, data_struct, stack):
         super(PageLoadData, self).__init__()
 
@@ -13551,16 +13555,16 @@ class PageLoadData(QtGui.QWidget):
         self.initMatplotlib()
 
         #panel 1
-        sizer1 = QtGui.QGroupBox('Load Data Stack')
-        vbox1 = QtGui.QVBoxLayout()
+        sizer1 = QtWidgets.QGroupBox('Load Data Stack')
+        vbox1 = QtWidgets.QVBoxLayout()
         
-        self.button_multiload = QtGui.QPushButton('  Load XANES Stack  ')
+        self.button_multiload = QtWidgets.QPushButton('  Load XANES Stack  ')
         self.button_multiload.clicked.connect( self.OnLoadMulti)
         self.button_multiload.setToolTip('Supported Formats .hdf .hdf5 .ncb .nxs .hdr .stk .tif .tiff .txrm')
         vbox1.addWidget(self.button_multiload)
         
         
-        self.button_4d = QtGui.QPushButton( 'Load 4D stack TOMO-XANES')
+        self.button_4d = QtWidgets.QPushButton( 'Load 4D stack TOMO-XANES')
         self.button_4d.setToolTip('Supported Formats .hdf5 .ncb')
         self.button_4d.clicked.connect( self.OnLoad4D)
         vbox1.addWidget(self.button_4d) 
@@ -13568,10 +13572,10 @@ class PageLoadData(QtGui.QWidget):
         sizer1.setLayout(vbox1)
 
         #panel 2
-        sizer2 = QtGui.QGroupBox('Build a stack from a set of files')
-        vbox2 = QtGui.QVBoxLayout()
+        sizer2 = QtWidgets.QGroupBox('Build a stack from a set of files')
+        vbox2 = QtWidgets.QVBoxLayout()
 
-        button_sm = QtGui.QPushButton( ' Select a directory with stack files  [.sm, .xrm] ')
+        button_sm = QtWidgets.QPushButton( ' Select a directory with stack files  [.sm, .xrm] ')
         button_sm.setToolTip('Supported Formats .sm, .xrm')
         button_sm.clicked.connect( self.OnBuildStack)
         vbox2.addWidget(button_sm)
@@ -13580,11 +13584,11 @@ class PageLoadData(QtGui.QWidget):
 
 
         #panel 3
-        sizer3 = QtGui.QGroupBox('File')
-        vbox3 = QtGui.QVBoxLayout()
+        sizer3 = QtWidgets.QGroupBox('File')
+        vbox3 = QtWidgets.QVBoxLayout()
  
   
-        self.tc_file = QtGui.QLabel(self)
+        self.tc_file = QtWidgets.QLabel(self)
         vbox3.addWidget(self.tc_file)
         self.tc_file.setText('File name')
         
@@ -13593,10 +13597,10 @@ class PageLoadData(QtGui.QWidget):
         
 
         #panel 4
-        sizer4 = QtGui.QGroupBox('Path')
-        vbox4 = QtGui.QVBoxLayout()
+        sizer4 = QtWidgets.QGroupBox('Path')
+        vbox4 = QtWidgets.QVBoxLayout()
   
-        self.tc_path = QtGui.QLabel(self)
+        self.tc_path = QtWidgets.QLabel(self)
         vbox4.addWidget(self.tc_path)
         self.tc_path.setText('D:/')
        
@@ -13605,19 +13609,19 @@ class PageLoadData(QtGui.QWidget):
                 
  
         #panel 5     
-        vbox5 = QtGui.QVBoxLayout()
+        vbox5 = QtWidgets.QVBoxLayout()
         
-        self.tc_imageeng = QtGui.QLabel(self)
+        self.tc_imageeng = QtWidgets.QLabel(self)
         self.tc_imageeng.setText("Image at energy: ")
         vbox5.addWidget(self.tc_imageeng)
         
         
 
-        gridsizertop = QtGui.QGridLayout()
+        gridsizertop = QtWidgets.QGridLayout()
         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.absimgfig = Figure((PlotH, PlotH))
 
@@ -13631,7 +13635,7 @@ class PageLoadData(QtGui.QWidget):
         gridsizertop.addWidget(frame, 0, 0, QtCore .Qt. AlignLeft)
         
 
-        self.slider_eng = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slider_eng = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slider_eng.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_eng.valueChanged[int].connect(self.OnScrollEng)
         self.slider_eng.setRange(0, 100)
@@ -13639,15 +13643,15 @@ class PageLoadData(QtGui.QWidget):
         gridsizertop.addWidget(self.slider_eng, 0, 1, QtCore .Qt. AlignLeft)
         
         
-        self.slider_theta = QtGui.QScrollBar(QtCore.Qt.Horizontal)
+        self.slider_theta = QtWidgets.QScrollBar(QtCore.Qt.Horizontal)
         self.slider_theta.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_theta.valueChanged[int].connect(self.OnScrollTheta)
         self.slider_theta.setRange(0, 100)     
         self.slider_theta.setVisible(False)  
-        self.tc_imagetheta = QtGui.QLabel(self)
+        self.tc_imagetheta = QtWidgets.QLabel(self)
         self.tc_imagetheta.setText("4D Data Angle: ")
         self.tc_imagetheta.setVisible(False)
-        hbox51 = QtGui.QHBoxLayout()
+        hbox51 = QtWidgets.QHBoxLayout()
         hbox51.addWidget(self.tc_imagetheta) 
         hbox51.addWidget(self.slider_theta)
         gridsizertop.addLayout(hbox51, 1, 0)
@@ -13657,10 +13661,10 @@ class PageLoadData(QtGui.QWidget):
         vbox5.addStretch(1)
         
        
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QVBoxLayout()
         
-        hboxtop = QtGui.QHBoxLayout()
-        vboxt1 = QtGui.QVBoxLayout()
+        hboxtop = QtWidgets.QHBoxLayout()
+        vboxt1 = QtWidgets.QVBoxLayout()
         vboxt1.addStretch (1)
         vboxt1.addWidget(sizer1)
         vboxt1.addStretch (1)
@@ -13783,7 +13787,7 @@ class PageLoadData(QtGui.QWidget):
         self.tc_path.setText(filepath)
         
 #---------------------------------------------------------------------- 
-class StackListFrame(QtGui.QDialog):
+class StackListFrame(QtWidgets.QDialog):
 
     def __init__(self, parent, filepath, com, stack, data_struct):    
         QtGui.QWidget.__init__(self, parent)
@@ -14087,7 +14091,7 @@ class StackListFrame(QtGui.QDialog):
         
                 
 #----------------------------------------------------------------------  
-class InputRegionDialog(QtGui.QDialog):
+class InputRegionDialog(QtWidgets.QDialog):
 
     def __init__(self, parent, nregions, title='Multi Region Stack'):
     
@@ -14134,7 +14138,7 @@ class InputRegionDialog(QtGui.QDialog):
         
         
 #---------------------------------------------------------------------- 
-class AboutFrame(QtGui.QDialog):
+class AboutFrame(QtWidgets.QDialog):
 
     def __init__(self, parent = None, title='About'):    
         QtGui.QWidget.__init__(self, parent)
@@ -14220,7 +14224,7 @@ http://www.gnu.org/licenses/.''')
         self.setLayout(vbox)
         
 """ ------------------------------------------------------------------------------------------------"""
-class MainFrame(QtGui.QMainWindow):
+class MainFrame(QtWidgets.QMainWindow):
     
     def __init__(self):
         super(MainFrame, self).__init__()
@@ -14248,7 +14252,7 @@ class MainFrame(QtGui.QMainWindow):
         ico = QtGui.QIcon(resource_path(os.path.join('images','logo-2l-32.ico')))
         self.setWindowIcon(ico)  
         
-        tabs = QtGui.QTabWidget()
+        tabs = QtWidgets.QTabWidget()
         
 
 
@@ -14318,7 +14322,7 @@ class MainFrame(QtGui.QMainWindow):
         layout.addWidget(tabs)
         #self.setCentralWidget(tabs)
         
-        self.scrollArea = QtGui.QScrollArea()
+        self.scrollArea = QtWidgets.QScrollArea()
         #self.scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
         self.scrollArea.setWidget(tabs)
         #self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
@@ -14327,7 +14331,7 @@ class MainFrame(QtGui.QMainWindow):
         self.setCentralWidget(self.scrollArea)
         
         
-        screen = QtGui.QDesktopWidget().screenGeometry()
+        screen = QtWidgets.QDesktopWidget().screenGeometry()
         
         
         if screen.height() < Winsizey - 50:
@@ -14344,27 +14348,27 @@ class MainFrame(QtGui.QMainWindow):
 #----------------------------------------------------------------------   
     def initToolbar(self):   
         
-        self.actionOpen = QtGui.QAction(self)
+        self.actionOpen = QtWidgets.QAction(self)
         self.actionOpen.setObjectName('actionOpen')
         self.actionOpen.setIcon(QtGui.QIcon(resource_path(os.path.join('images','document-open.png'))))
         self.toolbar = self.addToolBar('actionOpen') 
         self.toolbar.addAction(self.actionOpen)
         self.actionOpen.triggered.connect(self.LoadStack)
         
-        self.actionOpenSL = QtGui.QAction(self)
+        self.actionOpenSL = QtWidgets.QAction(self)
         self.actionOpenSL.setObjectName('actionOpenSL')
         self.actionOpenSL.setIcon(QtGui.QIcon(resource_path(os.path.join('images','open-sl.png'))))
         self.toolbar.addAction(self.actionOpenSL)
         self.actionOpenSL.triggered.connect(self.BuildStack)
         
-        self.actionSave = QtGui.QAction(self)
+        self.actionSave = QtWidgets.QAction(self)
         self.actionSave.setObjectName('actionSave')
         self.actionSave.setIcon(QtGui.QIcon(resource_path(os.path.join('images','media-floppy.png'))))
         self.toolbar.addAction(self.actionSave)
         self.actionSave.triggered.connect(self.onSaveResultsToH5)
         self.actionSave.setEnabled(False)
 
-        self.actionInfo = QtGui.QAction(self)
+        self.actionInfo = QtWidgets.QAction(self)
         self.actionInfo.setObjectName('actionInfo')
         self.actionInfo.setIcon(QtGui.QIcon(resource_path(os.path.join('images','help-browser.png'))))
         self.toolbar.addAction(self.actionInfo)
@@ -14459,7 +14463,7 @@ class MainFrame(QtGui.QMainWindow):
         
         #try:
         if True:
-            directory = QtGui.QFileDialog.getExistingDirectory(self, "Choose a directory", '', QtGui.QFileDialog.ShowDirsOnly|QtGui.QFileDialog.ReadOnly )       
+            directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose a directory", '', QtWidgets.QFileDialog.ShowDirsOnly|QtWidgets.QFileDialog.ReadOnly )       
                                                         
         
        
@@ -14490,7 +14494,7 @@ class MainFrame(QtGui.QMainWindow):
 
             wildcard =  "Supported 4D formats (*.hdf5 *.ncb);;HDF5 files (*.hdf5);;NCB files (*.ncb);;"  
 
-            filepath = QtGui.QFileDialog.getOpenFileNames(self, 'Open files', '', wildcard)
+            filepath = QtWidgets.QFileDialog.getOpenFileNames(self, 'Open files', '', wildcard)
 
             
             if filepath == '':
@@ -14530,7 +14534,7 @@ class MainFrame(QtGui.QMainWindow):
                 self.stk.read_ncb4D(filenames)    
                 #Get energy list
                 wildcard =  "Text file (*.txt);;"  
-                engfilepath = QtGui.QFileDialog.getOpenFileName(self, 'Open file', directory, wildcard)
+                engfilepath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', directory, wildcard)
                 self.stk.read_ncb4Denergy(str(engfilepath))
                 
             
@@ -14629,7 +14633,7 @@ class MainFrame(QtGui.QMainWindow):
             #wildcard = "HDF5 file (*.hdf5);;aXis2000 NCB file (*.ncb);;TIFF file (.tif);;STK file (*.stk);;"
             wildcard = "HDF5 file (*.hdf5);;aXis2000 NCB file (*.ncb);;TIFF file (.tif)"
 
-            filepath = QtGui.QFileDialog.getSaveFileName(self, 'Save processed stack', '', wildcard)
+            filepath = QtWidgets.QFileDialog.getSaveFileName(self, 'Save processed stack', '', wildcard)
 
             filepath = str(filepath)
             if filepath == '':
@@ -14684,7 +14688,7 @@ class MainFrame(QtGui.QMainWindow):
 
             wildcard = "HDF5 files (*.hdf5)"
 
-            filepath = QtGui.QFileDialog.getSaveFileName(self, 'Save as .hdf5', '', wildcard)
+            filepath = QtWidgets.QFileDialog.getSaveFileName(self, 'Save as .hdf5', '', wildcard)
 
             filepath = str(filepath)
             if filepath == '':
@@ -15005,7 +15009,7 @@ class MainFrame(QtGui.QMainWindow):
 def main():
     
     
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     frame = MainFrame()
     sys.exit(app.exec_())
 
