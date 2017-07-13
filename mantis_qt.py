@@ -245,8 +245,8 @@ class PageTomo(QWidget):
         vbox2.addWidget(line) 
         vbox2.addStretch(1)  
         
-#         hbox21 = QtGui.QHBoxLayout()
-#         tc1 = QtGui.QLabel(self)
+#         hbox21 = QtWidgets.QHBoxLayout()
+#         tc1 = QtWidgets.QLabel(self)
 #         hbox21.addWidget(tc1)
 #         tc1.setText('Choose Tomo Dataset: ')
         self.comboalgos = QtWidgets.QComboBox(self)
@@ -697,7 +697,7 @@ class PageTomo(QWidget):
 #----------------------------------------------------------------------          
     def OnCalcTomoFull(self, event):
         
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         
         
         value = self.ntc_niterations.text()
@@ -834,12 +834,12 @@ class PageTomo(QWidget):
         
         self.ShowImage()
         
-        QtGui.QApplication.restoreOverrideCursor()    
+        QtWidgets.QApplication.restoreOverrideCursor()    
         
 #----------------------------------------------------------------------          
     def OnCalcTomo1(self, event):
         
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         
         
         value = self.ntc_niterations.text()
@@ -901,7 +901,7 @@ class PageTomo(QWidget):
         
         self.ShowImage()
         
-        QtGui.QApplication.restoreOverrideCursor()    
+        QtWidgets.QApplication.restoreOverrideCursor()    
         
        
 #----------------------------------------------------------------------           
@@ -1426,11 +1426,11 @@ class ROIHistogram(QtWidgets.QDialog):
         self.histmax = 0.6*imgmax
         
 
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
                
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.histfig = Figure((6.0, 4.2))
         self.HistogramPanel = FigureCanvas(self.histfig)
@@ -1443,20 +1443,20 @@ class ROIHistogram(QtWidgets.QDialog):
         frame.setLayout(fbox)
         vbox.addWidget(frame)
                         
-        hbox = QtGui.QHBoxLayout()
-        vbox1 = QtGui.QVBoxLayout()
-        sizer1 = QtGui.QGroupBox('ROI selection')
+        hbox = QtWidgets.QHBoxLayout()
+        vbox1 = QtWidgets.QHBoxLayout()
+        sizer1 = QtWidgets.QGroupBox('ROI selection')
         
         
-        tc1 = QtGui.QLabel(self)
+        tc1 = QtWidgets.QLabel(self)
         tc1.setText('Select an ROI region by clicking and dragging a mouse on the histogram.')
         vbox1.addWidget(tc1)
 
-        self.textctrl1 = QtGui.QLabel(self)
+        self.textctrl1 = QtWidgets.QLabel(self)
         self.textctrl1.setText('Min =  {0:04.3f}'.format(float(self.histmin)))
         vbox1.addWidget(self.textctrl1)
         
-        self.textctrl2 = QtGui.QLabel(self)
+        self.textctrl2 = QtWidgets.QLabel(self)
         self.textctrl2.setText('Max =  {0:04.3f}'.format( float(self.histmax)))
         vbox1.addWidget(self.textctrl2)
 
@@ -1471,12 +1471,12 @@ class ROIHistogram(QtWidgets.QDialog):
         
         vbox.addLayout(hbox)
                 
-        hbox2 = QtGui.QHBoxLayout()
-        button_ok = QtGui.QPushButton('Accept')
+        hbox2 = QtWidgets.QHBoxLayout()
+        button_ok = QtWidgets.QPushButton('Accept')
         button_ok.clicked.connect(self.OnAccept)
         hbox2.addWidget(button_ok)
                 
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox2.addWidget(button_cancel)
         
@@ -1632,8 +1632,8 @@ class File_GUI():
         if action == "write":
             dlg.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
         dlg.setDirectory(self.last_path[action][data_type])
-        dlg.setFilter(self.filter_list[action][data_type])
-        dlg.selectFilter(self.filter_list[action][data_type][self.last_filter[action][data_type]])
+        dlg.setNameFilters(self.filter_list[action][data_type])
+        dlg.selectNameFilter(self.filter_list[action][data_type][self.last_filter[action][data_type]])
         if dlg.exec_(): #if not cancelled
             self.last_path[action][data_type] = os.path.split(str(dlg.selectedFiles()[0]))[0]
             chosen_plugin = None
@@ -1661,23 +1661,23 @@ class File_GUI():
             self.setWindowTitle('Choose Dataset')
             
             # A vertical box layout containing rows
-            self.MainSizer = QtGui.QVBoxLayout()
-            hbox1 = QtGui.QHBoxLayout()
-            hbox2 = QtGui.QHBoxLayout()
-            hbox3 = QtGui.QHBoxLayout()
-            hbox4 = QtGui.QHBoxLayout()
+            self.MainSizer = QtWidgets.QVBoxLayout()
+            hbox1 = QtWidgets.QHBoxLayout()
+            hbox2 = QtWidgets.QHBoxLayout()
+            hbox3 = QtWidgets.QHBoxLayout()
+            hbox4 = QtWidgets.QHBoxLayout()
             
             # Add the widgets to the first row
-            hbox1.addWidget(QtGui.QLabel("Path:"))
-            self.Path_text = QtGui.QLabel("")
+            hbox1.addWidget(QtWidgets.QLabel("Path:"))
+            self.Path_text = QtWidgets.QLabel("")
             hbox1.addWidget(self.Path_text,stretch=1)
             self.MainSizer.addLayout(hbox1)
             
             # Add the widgets to the second row
-            hbox2.addWidget(QtGui.QLabel('File:'))
+            hbox2.addWidget(QtWidgets.QLabel('File:'))
             self.File_text = QtGui.QLineEdit(self)
             hbox2.addWidget(self.File_text,stretch=1)
-            browse_button = QtGui.QPushButton('Browse...')
+            browse_button = QtWidgets.QPushButton('Browse...')
             browse_button.clicked.connect(self.OnBrowse)
             hbox2.addWidget(browse_button)
             self.MainSizer.addLayout(hbox2)
@@ -1688,11 +1688,11 @@ class File_GUI():
             
             # Add widgets for the fourth row - just OK, cancel buttons
             hbox4.addStretch(1)
-            self.button_ok = QtGui.QPushButton('Accept')
+            self.button_ok = QtWidgets.QPushButton('Accept')
             self.button_ok.clicked.connect(self.OnAccept)
             self.button_ok.setEnabled(False)
             hbox4.addWidget(self.button_ok)
-            button_cancel = QtGui.QPushButton('Cancel')
+            button_cancel = QtWidgets.QPushButton('Cancel')
             button_cancel.clicked.connect(self.close)
             hbox4.addWidget(button_cancel)
             self.MainSizer.addLayout(hbox4)
@@ -1750,13 +1750,13 @@ class File_GUI():
             self.checkbox.clicked.connect(self.setChecked)
             self.addWidget(self.checkbox)
             self.addStretch(1)
-            self.addWidget(QtGui.QLabel('Channels:'))
-            self.channel_combobox = QtGui.QComboBox()
+            self.addWidget(QtWidgets.QLabel('Channels:'))
+            self.channel_combobox = QtWidgets.QComboBox()
             for c in contents:
                 self.channel_combobox.addItem(c)
             self.addWidget(self.channel_combobox)
             self.addStretch(1)
-            Data_Size_Label = QtGui.QLabel('Points: '+str(contents.data_shape))
+            Data_Size_Label = QtWidgets.QLabel('Points: '+str(contents.data_shape))
             if contents.data_axes is not None:
                 Data_Size_Label.setToolTip(' | '.join(contents.data_axes))
             self.addWidget(Data_Size_Label)
@@ -1789,7 +1789,7 @@ class File_GUI():
         '''Widgets giving a summary of the contents of a file via an InfoItem object per file entry.'''
         def __init__(self):
             super(File_GUI.EntryInfoBox, self).__init__('File Summary')
-            self.vbox = QtGui.QVBoxLayout()
+            self.vbox = QtWidgets.QHBoxLayout()
             self.setLayout(self.vbox)
             self.valid_entry_flag = False
             self.selection = (0,0)
@@ -2221,11 +2221,11 @@ class PageNNMA(QtWidgets.QWidget):
             self.ntc_lamsim.setText(str(self.lambdaClusterSim))
                                     
                     
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
 #         except:
-#             QtGui.QApplication.restoreOverrideCursor()  
-#             QtGui.QMessageBox.warning(self, 'Error', 'Spectra files not loaded.')
+#             QtWidgets.QApplication.restoreOverrideCursor()  
+#             QtWidgets.QMessageBox.warning(self, 'Error', 'Spectra files not loaded.')
 
         
             self.tc_initspectra.setText('Initial Spectra: ' + self.initMatrices)
@@ -2236,7 +2236,7 @@ class PageNNMA(QtWidgets.QWidget):
 #----------------------------------------------------------------------          
     def OnCalcNNMA(self, event):
         
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
 
         value = self.ntc_niterations.text()
         self.maxIters = int(value)  
@@ -2272,7 +2272,7 @@ class PageNNMA(QtWidgets.QWidget):
         self.ShowCostFunction()
         self.updatewidgets()
         
-        QtGui.QApplication.restoreOverrideCursor()    
+        QtWidgets.QApplication.restoreOverrideCursor()    
         
         
         
@@ -2542,7 +2542,7 @@ class PageNNMA(QtWidgets.QWidget):
             else: 
                 err = e 
     
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
 #         
 
     
@@ -2718,7 +2718,7 @@ class SaveWinP5(QtWidgets.QDialog):
         self.filename = filename
                           
         
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
         gridtop = QtGui.QGridLayout()
@@ -2727,26 +2727,26 @@ class SaveWinP5(QtWidgets.QDialog):
         fontb = QtGui.QFont()
         fontb.setBold(True)            
         
-        st1 = QtGui.QLabel(self)
+        st1 = QtWidgets.QLabel(self)
         st1.setText('Save')
         st1.setFont(fontb)
-        st2 = QtGui.QLabel(self)
+        st2 = QtWidgets.QLabel(self)
         st2.setText('.pdf')
         st2.setFont(fontb)
-        st3 = QtGui.QLabel(self)
+        st3 = QtWidgets.QLabel(self)
         st3.setText('.png')
         st3.setFont(fontb)
-        st4 = QtGui.QLabel(self)
+        st4 = QtWidgets.QLabel(self)
         st4.setText('.svg')
         st4.setFont(fontb)
-        st5 = QtGui.QLabel(self)
+        st5 = QtWidgets.QLabel(self)
         st5.setText('.csv')
         st5.setFont(fontb)        
-        st9 = QtGui.QLabel(self)
+        st9 = QtWidgets.QLabel(self)
         st9.setText('.tif (data)')
         st9.setFont(fontb)             
         
-        st6 = QtGui.QLabel(self)
+        st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
         self.cb11 = QtGui.QCheckBox('', self)
@@ -2755,7 +2755,7 @@ class SaveWinP5(QtWidgets.QDialog):
         self.cb13 = QtGui.QCheckBox('', self)   
         self.cb14 = QtGui.QCheckBox('', self)
         
-        st7 = QtGui.QLabel(self)
+        st7 = QtWidgets.QLabel(self)
         st7.setText('_map')
         
         self.cb21 = QtGui.QCheckBox('', self)
@@ -2764,7 +2764,7 @@ class SaveWinP5(QtWidgets.QDialog):
         self.cb23 = QtGui.QCheckBox('', self)
         self.cb24 = QtGui.QCheckBox('', self)
         
-        st8 = QtGui.QLabel(self)
+        st8 = QtWidgets.QLabel(self)
         st8.setText('_costfunction')   
         self.cb31 = QtGui.QCheckBox('', self)
         self.cb32 = QtGui.QCheckBox('', self)
@@ -2800,9 +2800,9 @@ class SaveWinP5(QtWidgets.QDialog):
         vboxtop.addStretch(1)
         
          
-        hbox0 = QtGui.QHBoxLayout()
+        hbox0 = QtWidgets.QHBoxLayout()
          
-        stf = QtGui.QLabel(self)
+        stf = QtWidgets.QLabel(self)
         stf.setText('Filename:\t')
         self.tc_savefn = QtGui.QLineEdit(self)
         self.tc_savefn.setText(self.filename)
@@ -2810,9 +2810,9 @@ class SaveWinP5(QtWidgets.QDialog):
         hbox0.addWidget(stf)
         hbox0.addWidget(self.tc_savefn)         
                   
-        hbox1 = QtGui.QHBoxLayout()
+        hbox1 = QtWidgets.QHBoxLayout()
                  
-        stp = QtGui.QLabel(self)
+        stp = QtWidgets.QLabel(self)
         stp.setText('Path:  \t')
         self.tc_savepath = QtGui.QLineEdit(self)
         self.tc_savepath.setReadOnly(True)
@@ -2821,17 +2821,17 @@ class SaveWinP5(QtWidgets.QDialog):
         hbox1.addWidget(stp)
         hbox1.addWidget(self.tc_savepath)  
          
-        button_path = QtGui.QPushButton('Browse...')
+        button_path = QtWidgets.QPushButton('Browse...')
         button_path.clicked.connect(self.OnBrowseDir)
         hbox1.addWidget(button_path)
          
          
-        hbox2 = QtGui.QHBoxLayout()
-        button_save = QtGui.QPushButton('Save')
+        hbox2 = QtWidgets.QHBoxLayout()
+        button_save = QtWidgets.QPushButton('Save')
         button_save.clicked.connect(self.OnSave)
         hbox2.addWidget(button_save)
          
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox2.addWidget(button_cancel)
         
@@ -3431,7 +3431,7 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
         vbox4.addLayout(hbox42)
 
         
-#         self.button_initfitparams = QtGui.QPushButton('Initialize Fit Parameters')
+#         self.button_initfitparams = QtWidgets.QPushButton('Initialize Fit Parameters')
 #         self.button_initfitparams.clicked.connect( self.OnInitFitParams)   
 #         self.button_initfitparams.setEnabled(False)
 #         vbox4.addWidget(self.button_initfitparams)
@@ -3499,7 +3499,7 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
             directory =  os.path.dirname(str(filepath))
             self.com.path = directory            
                                                         
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))    
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))    
                                             
             self.anlz.load_xraypeakfit_spectrum(filename=filepath)
 
@@ -3521,11 +3521,11 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
             self.loadSpectrum()
             self.updatewidgets()
                     
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
-            QtGui.QApplication.restoreOverrideCursor()  
-            QtGui.QMessageBox.warning(self, 'Error', 'Spectrum file not loaded.')
+            QtWidgets.QApplication.restoreOverrideCursor()  
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Spectrum file not loaded.')
                                    
                                  
         
@@ -3537,7 +3537,7 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
         
         try:
 
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
             
 
             for i in range(self.anlz.nclusters):
@@ -3563,11 +3563,11 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
             self.loadSpectrum()
             #self.ShowSpectraList()
                     
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
-            QtGui.QApplication.restoreOverrideCursor()  
-            QtGui.QMessageBox.warning(self, 'Error', 'Cluster spectra not loaded.')
+            QtWidgets.QApplication.restoreOverrideCursor()  
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Cluster spectra not loaded.')
                                    
                                  
         
@@ -3604,7 +3604,7 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
 #----------------------------------------------------------------------
     def OnFitSpectrum(self, event):
         
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         
         self.SetFitParams()
         
@@ -3617,7 +3617,7 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
         
         self.loadSpectrum()
         
-        QtGui.QApplication.restoreOverrideCursor() 
+        QtWidgets.QApplication.restoreOverrideCursor() 
         self.updatewidgets()
         
        
@@ -3644,7 +3644,7 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
                   'Only the PNG, PDF and SVG image formats are supported.\n' 
                  'A file extension of `png\' or `pdf\' must be used.') 
 
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % error_message)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % error_message)
             return 
    
    
@@ -3664,7 +3664,7 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
                 err = e 
    
             
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
             
             
         #Save text file with fit info
@@ -3929,84 +3929,84 @@ class FitParams(QtWidgets.QDialog):
         self.setPalette(pal) 
                 
              
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QHBoxLayout()
         
         #panel 
-        sizer = QtGui.QGroupBox('Fit Parameters')
-        vbox = QtGui.QVBoxLayout()
+        sizer = QtWidgets.QGroupBox('Fit Parameters')
+        vbox = QtWidgets.QHBoxLayout()
                 
 
         fgs1 = QtGui.QGridLayout()
         
 
         
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Amplitude')  
         fgs1.addWidget(textctrl, 0, 1)      
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Position')  
         fgs1.addWidget(textctrl, 0, 2)   
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('FWHM')  
         fgs1.addWidget(textctrl, 0, 3)   
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Base')  
         fgs1.addWidget(textctrl, 0, 4)   
 
 
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Step 1')
         fgs1.addWidget(textctrl, 1, 0)
         
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Step 2')
         fgs1.addWidget(textctrl, 2, 0)
 
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Amplitude')  
         fgs1.addWidget(textctrl, 3, 1)      
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Mu')  
         fgs1.addWidget(textctrl, 3, 2)   
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Sigma')  
         fgs1.addWidget(textctrl, 3, 3)   
          
 
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 1')
         fgs1.addWidget(textctrl, 4, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 2')
         fgs1.addWidget(textctrl, 5, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 3')
         fgs1.addWidget(textctrl, 6, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 4')
         fgs1.addWidget(textctrl, 7, 0)        
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 5')
         fgs1.addWidget(textctrl, 8, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 6')
         fgs1.addWidget(textctrl, 9, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 7')
         fgs1.addWidget(textctrl, 10, 0)                
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 8')
         fgs1.addWidget(textctrl, 11, 0)    
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 9')
         fgs1.addWidget(textctrl, 12, 0)
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 10')
         fgs1.addWidget(textctrl, 13, 0)        
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 11')
         fgs1.addWidget(textctrl, 14, 0)                    
-        textctrl =  QtGui.QLabel(self)
+        textctrl =  QtWidgets.QLabel(self)
         textctrl.setText('Gauss 12')
         fgs1.addWidget(textctrl, 15, 0)
         
@@ -4258,7 +4258,7 @@ class FitParams(QtWidgets.QDialog):
             bname = 'Confirm'
         else:
             bname = 'Close'
-        self.button_close = QtGui.QPushButton(bname)
+        self.button_close = QtWidgets.QPushButton(bname)
         self.button_close.clicked.connect( self.OnClose)   
         vboxtop.addWidget(self.button_close)
         
@@ -4481,7 +4481,7 @@ class PagePeakID(QtWidgets.QWidget):
             directory =  os.path.dirname(str(filepath))
             self.com.path = directory            
                                                         
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))    
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))    
                                             
             self.anlz.load_xraypeakfit_spectrum(filename=filepath)
 
@@ -4507,11 +4507,11 @@ class PagePeakID(QtWidgets.QWidget):
             self.updatewidgets()
             
             
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
-            QtGui.QApplication.restoreOverrideCursor()  
-            QtGui.QMessageBox.warning(self, 'Error', 'Spectrum file not loaded.')
+            QtWidgets.QApplication.restoreOverrideCursor()  
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Spectrum file not loaded.')
                                    
                                  
         
@@ -4528,7 +4528,7 @@ class PagePeakID(QtWidgets.QWidget):
         
         try:
 
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
             
 
             for i in range(self.anlz.nclusters):
@@ -4558,11 +4558,11 @@ class PagePeakID(QtWidgets.QWidget):
                 self.window().page6.updatewidgets()
 
                     
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
-            QtGui.QApplication.restoreOverrideCursor()  
-            QtGui.QMessageBox.warning(self, 'Error', 'Cluster spectra not loaded.')
+            QtWidgets.QApplication.restoreOverrideCursor()  
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Cluster spectra not loaded.')
                                    
                                  
         
@@ -4756,7 +4756,7 @@ class PagePeakID(QtWidgets.QWidget):
                   'Only the PNG and PDF image formats are supported.\n' 
                  'A file extension of `png\' or `pdf\' must be used.') 
 
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % error_message)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % error_message)
             return 
    
    
@@ -4776,7 +4776,7 @@ class PagePeakID(QtWidgets.QWidget):
                 err = e 
    
             
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
             
               
             
@@ -5059,7 +5059,7 @@ class PageSpectral(QtWidgets.QWidget):
             self.com.path = directory
                        
                                                         
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))    
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))    
                                             
             self.anlz.read_target_spectrum(filename=filepath)
             self.com.spec_anl_calculated = 1
@@ -5075,11 +5075,11 @@ class PageSpectral(QtWidgets.QWidget):
             self.loadTargetMap()    
             self.ShowSpectraList()
                     
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
-            QtGui.QApplication.restoreOverrideCursor()  
-            QtGui.QMessageBox.warning(self, 'Error', 'Spectrum file not loaded.')
+            QtWidgets.QApplication.restoreOverrideCursor()  
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Spectrum file not loaded.')
                                    
                                  
         self.window().refresh_widgets()
@@ -5089,7 +5089,7 @@ class PageSpectral(QtWidgets.QWidget):
     def OnFlatTSpec(self, event):
 
         try: 
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
             self.anlz.read_target_spectrum(flat=True)
             self.com.spec_anl_calculated = 1
             
@@ -5104,11 +5104,11 @@ class PageSpectral(QtWidgets.QWidget):
             self.loadTargetMap()
             self.ShowSpectraList()
         
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
-            QtGui.QApplication.restoreOverrideCursor()  
-            QtGui.QMessageBox.warning(self, 'Error', 'Flat spectrum not loaded.')
+            QtWidgets.QApplication.restoreOverrideCursor()  
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Flat spectrum not loaded.')
             
                                                       
         self.window().refresh_widgets()
@@ -5118,7 +5118,7 @@ class PageSpectral(QtWidgets.QWidget):
 
         try:
 
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
             self.anlz.add_cluster_target_spectra()
             self.com.spec_anl_calculated = 1
             
@@ -5132,11 +5132,11 @@ class PageSpectral(QtWidgets.QWidget):
             self.loadTargetMap()  
              
         
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
-            QtGui.QApplication.restoreOverrideCursor()  
-            QtGui.QMessageBox.warning(self, 'Error', 'Cluster spectra not loaded.')
+            QtWidgets.QApplication.restoreOverrideCursor()  
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Cluster spectra not loaded.')
  
                                                         
         self.window().refresh_widgets()
@@ -5167,7 +5167,7 @@ class PageSpectral(QtWidgets.QWidget):
         #if True:
         try:
 
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
             self.anlz.calculate_targetmaps_4D()
             self.com.spec_anl4D_calculated = 1
             
@@ -5199,11 +5199,11 @@ class PageSpectral(QtWidgets.QWidget):
             
                      
         
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
-            QtGui.QApplication.restoreOverrideCursor()  
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not calculate 4D spectra.')
+            QtWidgets.QApplication.restoreOverrideCursor()  
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not calculate 4D spectra.')
  
                                                         
         self.window().refresh_widgets()
@@ -5243,7 +5243,7 @@ class PageSpectral(QtWidgets.QWidget):
                 err = e.strerror 
             else: 
                 err = e 
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
 
             
 #----------------------------------------------------------------------
@@ -5514,7 +5514,7 @@ class PageSpectral(QtWidgets.QWidget):
             
 #----------------------------------------------------------------------           
     def OnRemoveSpectrum(self, event):
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor)) 
         self.anlz.remove_spectrum(self.i_tspec-1)
         self.com.spec_anl_calculated = 1
             
@@ -5536,7 +5536,7 @@ class PageSpectral(QtWidgets.QWidget):
             self.com.spec_anl4D_calculated = 0
             self.ClearWidgets()
         
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         
 #----------------------------------------------------------------------           
     def OnMoveSpectrumDown(self, event):
@@ -5772,26 +5772,26 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         self.b_spec = 2
         
 
-        sizer1 = QtGui.QGroupBox('Red spectrum')
+        sizer1 = QtWidgets.QGroupBox('Red spectrum')
 
         fgs1 = QtGui.QGridLayout()
         
-        r = QtGui.QLabel(self) 
+        r = QtWidgets.QLabel(self) 
         r.setText('Red')
-        rl = QtGui.QLabel(self) 
+        rl = QtWidgets.QLabel(self) 
         rl.setText('Limits')
-        rw = QtGui.QLabel(self) 
+        rw = QtWidgets.QLabel(self) 
         rw.setText('Weight')     
         
         
-        self.combor = QtGui.QComboBox(self)
+        self.combor = QtWidgets.QComboBox(self)
         self.combor.addItems(self.anlz.tspec_names)
         self.combor.activated[int].connect(self.OnSelectR) 
 
         #self.combor.SetToolTip(wx.ToolTip("select spectrum from dropdown-list"))
         self.combor.setCurrentIndex(self.r_spec)
         
-        hbox12 = QtGui.QHBoxLayout() 
+        hbox12 = QtWidgets.QHBoxLayout() 
         
         
         self.tcrmin = QtGui.QSpinBox()
@@ -5823,26 +5823,26 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         
         
   
-        sizer2 = QtGui.QGroupBox('Green spectrum')
+        sizer2 = QtWidgets.QGroupBox('Green spectrum')
 
         fgs2 = QtGui.QGridLayout()
         
-        g = QtGui.QLabel(self) 
+        g = QtWidgets.QLabel(self) 
         g.setText('Green')
-        gl = QtGui.QLabel(self) 
+        gl = QtWidgets.QLabel(self) 
         gl.setText('Limits')
-        gw = QtGui.QLabel(self) 
+        gw = QtWidgets.QLabel(self) 
         gw.setText('Weight')     
         
         
-        self.combog = QtGui.QComboBox(self)
+        self.combog = QtWidgets.QComboBox(self)
         self.combog.addItems(self.anlz.tspec_names)
         self.combog.activated[int].connect(self.OnSelectG) 
 
         #self.combor.SetToolTip(wx.ToolTip("select spectrum from dropdown-list"))
         self.combog.setCurrentIndex(self.g_spec)
         
-        hbox12 = QtGui.QHBoxLayout() 
+        hbox12 = QtWidgets.QHBoxLayout() 
         
         
         self.tcgmin = QtGui.QSpinBox()
@@ -5876,26 +5876,26 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
                  
 
 
-        sizer3 = QtGui.QGroupBox('Blue spectrum')
+        sizer3 = QtWidgets.QGroupBox('Blue spectrum')
 
         fgs3 = QtGui.QGridLayout()
         
-        b = QtGui.QLabel(self) 
+        b = QtWidgets.QLabel(self) 
         b.setText('Blue')
-        bl = QtGui.QLabel(self) 
+        bl = QtWidgets.QLabel(self) 
         bl.setText('Limits')
-        bw = QtGui.QLabel(self) 
+        bw = QtWidgets.QLabel(self) 
         bw.setText('Weight')     
         
         
-        self.combob = QtGui.QComboBox(self)
+        self.combob = QtWidgets.QComboBox(self)
         self.combob.addItems(self.anlz.tspec_names)
         self.combob.activated[int].connect(self.OnSelectB) 
 
         #self.combor.SetToolTip(wx.ToolTip("select spectrum from dropdown-list"))
         self.combob.setCurrentIndex(self.b_spec)
         
-        hbox12 = QtGui.QHBoxLayout() 
+        hbox12 = QtWidgets.QHBoxLayout() 
         
         
         self.tcbmin = QtGui.QSpinBox()
@@ -5930,9 +5930,9 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
           
 
         
-        vbox = QtGui.QVBoxLayout()
-        hbox1 = QtGui.QHBoxLayout()
-        vbox1 = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
+        hbox1 = QtWidgets.QHBoxLayout()
+        vbox1 = QtWidgets.QHBoxLayout()
                        
         vbox1.addWidget(sizer1)
         vbox1.addWidget(sizer2)
@@ -5948,7 +5948,7 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
         self.RGBImagefig = Figure((PlotH, PlotH))
         self.RGBImagePanel = FigureCanvas(self.RGBImagefig)
         fbox.addWidget(self.RGBImagePanel)
@@ -5960,13 +5960,13 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         vbox.addLayout(hbox1) 
         
              
-        hbox2 = QtGui.QHBoxLayout()
+        hbox2 = QtWidgets.QHBoxLayout()
         
-        button_save = QtGui.QPushButton('Save image')
+        button_save = QtWidgets.QPushButton('Save image')
         button_save.clicked.connect( self.OnSave)   
         hbox2.addWidget(button_save)
         
-        button_close = QtGui.QPushButton('Dismiss')
+        button_close = QtWidgets.QPushButton('Dismiss')
         button_close.clicked.connect( self.close)   
         hbox2.addWidget(button_close)
     
@@ -6223,7 +6223,7 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
                   'Only the PNG and PDF image formats are supported.\n' 
                  'A file extension of `png\' or `pdf\' must be used.') 
 
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % error_message)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % error_message)
             return 
    
 
@@ -6259,11 +6259,11 @@ class ShowMapHistogram(QtWidgets.QDialog):
         self.com = common 
         self.anlz = analz
       
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
                
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.histfig = Figure((6.0, 4.2))
         self.HistogramPanel = FigureCanvas(self.histfig)
@@ -6277,17 +6277,17 @@ class ShowMapHistogram(QtWidgets.QDialog):
         
         
                         
-        vbox1 = QtGui.QVBoxLayout()
-        sizer1 = QtGui.QGroupBox('Histogram Cutoff')
+        vbox1 = QtWidgets.QHBoxLayout()
+        sizer1 = QtWidgets.QGroupBox('Histogram Cutoff')
         
-        st = QtGui.QLabel(self) 
+        st = QtWidgets.QLabel(self) 
         st.setText('Select a cutoff values on the histogram. All the values outside the defined limits will be set to cutoff limit value.')
      
         vbox1.addWidget(st)
            
-        hbox1 = QtGui.QHBoxLayout()
-        self.rb_min = QtGui.QRadioButton( 'Lower Limit', self)
-        self.rb_max = QtGui.QRadioButton('Upper Limit',self)
+        hbox1 = QtWidgets.QHBoxLayout()
+        self.rb_min = QtWidgets.QRadioButton( 'Lower Limit', self)
+        self.rb_max = QtWidgets.QRadioButton('Upper Limit',self)
         self.rb_min.setChecked(True)
         self.rb_min.toggled.connect(self.OnRb_limit)
         
@@ -6297,24 +6297,24 @@ class ShowMapHistogram(QtWidgets.QDialog):
         hbox1.addStretch (1)
         vbox1.addLayout(hbox1)
         
-        self.tl_cutmin = QtGui.QLabel(self) 
+        self.tl_cutmin = QtWidgets.QLabel(self) 
         self.tl_cutmin.setText('Lower Cutoff Value: ')
         vbox1.addWidget(self.tl_cutmin)
         
-        self.tl_cutmax = QtGui.QLabel(self) 
+        self.tl_cutmax = QtWidgets.QLabel(self) 
         self.tl_cutmax.setText('Upper Cutoff Value: ')
         vbox1.addWidget(self.tl_cutmax)
 
         sizer1.setLayout(vbox1)
         vbox.addWidget(sizer1)
                 
-        hbox2 = QtGui.QHBoxLayout()
-        self.button_ok = QtGui.QPushButton('Accept')
+        hbox2 = QtWidgets.QHBoxLayout()
+        self.button_ok = QtWidgets.QPushButton('Accept')
         self.button_ok.clicked.connect(self.OnAccept)
         self.button_ok.setEnabled(False)
         hbox2.addWidget(self.button_ok)
                 
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox2.addWidget(button_cancel)
         
@@ -6454,7 +6454,7 @@ class SaveWinP4(QtWidgets.QDialog):
         self.filename = filename
                           
         
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
         gridtop = QtGui.QGridLayout()
@@ -6463,26 +6463,26 @@ class SaveWinP4(QtWidgets.QDialog):
         fontb = QtGui.QFont()
         fontb.setBold(True)            
         
-        st1 = QtGui.QLabel(self)
+        st1 = QtWidgets.QLabel(self)
         st1.setText('Save')
         st1.setFont(fontb)
-        st2 = QtGui.QLabel(self)
+        st2 = QtWidgets.QLabel(self)
         st2.setText('.pdf')
         st2.setFont(fontb)
-        st3 = QtGui.QLabel(self)
+        st3 = QtWidgets.QLabel(self)
         st3.setText('.png')
         st3.setFont(fontb)
-        st4 = QtGui.QLabel(self)
+        st4 = QtWidgets.QLabel(self)
         st4.setText('.svg')
         st4.setFont(fontb)
-        st5 = QtGui.QLabel(self)
+        st5 = QtWidgets.QLabel(self)
         st5.setText('.csv')
         st5.setFont(fontb)        
-        st8 = QtGui.QLabel(self)
+        st8 = QtWidgets.QLabel(self)
         st8.setText('.tif (data)')
         st8.setFont(fontb)          
         
-        st6 = QtGui.QLabel(self)
+        st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
         self.cb11 = QtGui.QCheckBox('', self)
@@ -6491,7 +6491,7 @@ class SaveWinP4(QtWidgets.QDialog):
         self.cb13 = QtGui.QCheckBox('', self)   
         self.cb14 = QtGui.QCheckBox('', self)
         
-        st7 = QtGui.QLabel(self)
+        st7 = QtWidgets.QLabel(self)
         st7.setText('_images')
         
         self.cb21 = QtGui.QCheckBox('', self)
@@ -6528,9 +6528,9 @@ class SaveWinP4(QtWidgets.QDialog):
         vboxtop.addStretch(1)
         
          
-        hbox0 = QtGui.QHBoxLayout()
+        hbox0 = QtWidgets.QHBoxLayout()
          
-        stf = QtGui.QLabel(self)
+        stf = QtWidgets.QLabel(self)
         stf.setText('Filename:\t')
         self.tc_savefn = QtGui.QLineEdit(self)
         self.tc_savefn.setText(self.filename)
@@ -6538,9 +6538,9 @@ class SaveWinP4(QtWidgets.QDialog):
         hbox0.addWidget(stf)
         hbox0.addWidget(self.tc_savefn)         
                   
-        hbox1 = QtGui.QHBoxLayout()
+        hbox1 = QtWidgets.QHBoxLayout()
                  
-        stp = QtGui.QLabel(self)
+        stp = QtWidgets.QLabel(self)
         stp.setText('Path:  \t')
         self.tc_savepath = QtGui.QLineEdit(self)
         self.tc_savepath.setReadOnly(True)
@@ -6549,17 +6549,17 @@ class SaveWinP4(QtWidgets.QDialog):
         hbox1.addWidget(stp)
         hbox1.addWidget(self.tc_savepath)  
          
-        button_path = QtGui.QPushButton('Browse...')
+        button_path = QtWidgets.QPushButton('Browse...')
         button_path.clicked.connect(self.OnBrowseDir)
         hbox1.addWidget(button_path)
          
          
-        hbox2 = QtGui.QHBoxLayout()
-        button_save = QtGui.QPushButton('Save')
+        hbox2 = QtWidgets.QHBoxLayout()
+        button_save = QtWidgets.QPushButton('Save')
         button_save.clicked.connect(self.OnSave)
         hbox2.addWidget(button_save)
          
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox2.addWidget(button_cancel)
         
@@ -6907,7 +6907,7 @@ class PageCluster(QtWidgets.QWidget):
 #----------------------------------------------------------------------
     def OnCalcClusters(self, event):
        
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         self.calcclusters = False  
         
 
@@ -6934,11 +6934,11 @@ class PageCluster(QtWidgets.QWidget):
             self.showIndvClusterImage()     
             self.showClusterDistanceMap()
             self.com.cluster_calculated = 1       
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
             self.com.cluster_calculated = 0
-            QtGui.QApplication.restoreOverrideCursor()     
+            QtWidgets.QApplication.restoreOverrideCursor()     
             
         self.window().refresh_widgets()
             
@@ -7464,7 +7464,7 @@ class PageCluster(QtWidgets.QWidget):
             else: 
                 err = e 
    
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
 
   
   
@@ -7491,7 +7491,7 @@ class PageCluster(QtWidgets.QWidget):
         
    
         try: 
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             
             suffix = "." + ext
             
@@ -7544,17 +7544,17 @@ class PageCluster(QtWidgets.QWidget):
             matplotlib.rcParams['pdf.fonttype'] = 42
             fig.savefig(fileName_sct)
             
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
      
             
         except IOError, e:
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
             if e.strerror:
                 err = e.strerror 
             else: 
                 err = e 
    
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
 
             
                 
@@ -7606,13 +7606,13 @@ class Scatterplots(QtWidgets.QDialog):
          
  
                  
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
            
         grid1 = QtGui.QGridLayout()
 
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
         self.scattplfig = Figure((5.0, 4.8))
         self.ScatterPPanel = FigureCanvas(self.scattplfig)
         self.ScatterPPanel.setParent(self)
@@ -7638,9 +7638,9 @@ class Scatterplots(QtWidgets.QDialog):
         #grid1.addWidget(wx.StaticText(panel, -1, ''))
         grid1.addWidget(self.slidershow_x, 1,  1)
          
-        hbox = QtGui.QVBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
          
-        button_close = QtGui.QPushButton('Close')
+        button_close = QtWidgets.QPushButton('Close')
         button_close.clicked.connect( self.close)
                 
         hbox.addStretch(1)
@@ -7720,7 +7720,7 @@ class SaveWinP3(QtWidgets.QDialog):
         self.filename = filename
                           
         
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
         gridtop = QtGui.QGridLayout()
@@ -7729,26 +7729,26 @@ class SaveWinP3(QtWidgets.QDialog):
         fontb = QtGui.QFont()
         fontb.setBold(True)            
         
-        st1 = QtGui.QLabel(self)
+        st1 = QtWidgets.QLabel(self)
         st1.setText('Save')
         st1.setFont(fontb)
-        st2 = QtGui.QLabel(self)
+        st2 = QtWidgets.QLabel(self)
         st2.setText('.pdf')
         st2.setFont(fontb)
-        st3 = QtGui.QLabel(self)
+        st3 = QtWidgets.QLabel(self)
         st3.setText('.png')
         st3.setFont(fontb)
-        st4 = QtGui.QLabel(self)
+        st4 = QtWidgets.QLabel(self)
         st4.setText('.svg')
         st4.setFont(fontb)
-        st5 = QtGui.QLabel(self)
+        st5 = QtWidgets.QLabel(self)
         st5.setText('.csv')
         st5.setFont(fontb)        
-        st10 = QtGui.QLabel(self)
+        st10 = QtWidgets.QLabel(self)
         st10.setText('.tif (data)')
         st10.setFont(fontb)                
         
-        st6 = QtGui.QLabel(self)
+        st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
         self.cb11 = QtGui.QCheckBox('', self)
@@ -7757,7 +7757,7 @@ class SaveWinP3(QtWidgets.QDialog):
         self.cb13 = QtGui.QCheckBox('', self)   
         self.cb14 = QtGui.QCheckBox('', self)
         
-        st7 = QtGui.QLabel(self)
+        st7 = QtWidgets.QLabel(self)
         st7.setText('_composite_images')
         
         self.cb21 = QtGui.QCheckBox('', self)
@@ -7766,7 +7766,7 @@ class SaveWinP3(QtWidgets.QDialog):
         self.cb23 = QtGui.QCheckBox('', self)
         self.cb24 = QtGui.QCheckBox('', self)
         
-        st8 = QtGui.QLabel(self)
+        st8 = QtWidgets.QLabel(self)
         st8.setText('_individual_images')  
         
         self.cb31 = QtGui.QCheckBox('', self)
@@ -7775,7 +7775,7 @@ class SaveWinP3(QtWidgets.QDialog):
         self.cb33 = QtGui.QCheckBox('', self)
         self.cb34 = QtGui.QCheckBox('', self)
 
-        st9 = QtGui.QLabel(self)
+        st9 = QtWidgets.QLabel(self)
         st9.setText('_scatter_plots')  
         
         self.cb41 = QtGui.QCheckBox('', self)
@@ -7820,9 +7820,9 @@ class SaveWinP3(QtWidgets.QDialog):
         vboxtop.addStretch(1)
         
          
-        hbox0 = QtGui.QHBoxLayout()
+        hbox0 = QtWidgets.QHBoxLayout()
          
-        stf = QtGui.QLabel(self)
+        stf = QtWidgets.QLabel(self)
         stf.setText('Filename:\t')
         self.tc_savefn = QtGui.QLineEdit(self)
         self.tc_savefn.setText(self.filename)
@@ -7830,9 +7830,9 @@ class SaveWinP3(QtWidgets.QDialog):
         hbox0.addWidget(stf)
         hbox0.addWidget(self.tc_savefn)         
                   
-        hbox1 = QtGui.QHBoxLayout()
+        hbox1 = QtWidgets.QHBoxLayout()
                  
-        stp = QtGui.QLabel(self)
+        stp = QtWidgets.QLabel(self)
         stp.setText('Path:  \t')
         self.tc_savepath = QtGui.QLineEdit(self)
         self.tc_savepath.setReadOnly(True)
@@ -7841,17 +7841,17 @@ class SaveWinP3(QtWidgets.QDialog):
         hbox1.addWidget(stp)
         hbox1.addWidget(self.tc_savepath)  
          
-        button_path = QtGui.QPushButton('Browse...')
+        button_path = QtWidgets.QPushButton('Browse...')
         button_path.clicked.connect(self.OnBrowseDir)
         hbox1.addWidget(button_path)
          
          
-        hbox2 = QtGui.QHBoxLayout()
-        button_save = QtGui.QPushButton('Save')
+        hbox2 = QtWidgets.QHBoxLayout()
+        button_save = QtWidgets.QPushButton('Save')
         button_save.clicked.connect(self.OnSave)
         hbox2.addWidget(button_save)
          
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox2.addWidget(button_cancel)
         
@@ -8118,7 +8118,7 @@ class PagePCA(QtWidgets.QWidget):
 #----------------------------------------------------------------------
     def OnCalcPCA(self, event):
        
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         self.calcpca = False  
         self.selpca = 1       
         self.numsigpca = 2
@@ -8134,11 +8134,11 @@ class PagePCA(QtWidgets.QWidget):
             self.loadPCASpectrum()
             self.showEvals()
             self.com.pca_calculated = 1
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
         except:
             self.com.pca_calculated = 0
-            QtGui.QApplication.restoreOverrideCursor()
-            QtGui.QMessageBox.warning(self, 'Error', 'PCA not calculated.')
+            QtWidgets.QApplication.restoreOverrideCursor()
+            QtWidgets.QMessageBox.warning(self, 'Error', 'PCA not calculated.')
         
         self.window().refresh_widgets()
         
@@ -8146,7 +8146,7 @@ class PagePCA(QtWidgets.QWidget):
 #----------------------------------------------------------------------
     def OnCalcPCA4D(self, event):
        
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         self.calcpca = False  
         self.selpca = 1       
         self.numsigpca = 2
@@ -8178,11 +8178,11 @@ class PagePCA(QtWidgets.QWidget):
             self.anlz.variance = self.anlz.variance4D[self.itheta]  
             self.anlz.pcaimagebounds = self.anlz.pcaimagebounds4D[self.itheta]        
 
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
         except:
             self.com.pca_calculated = 0
-            QtGui.QApplication.restoreOverrideCursor()
-            QtGui.QMessageBox.warning(self, 'Error', 'PCA not calculated.')
+            QtWidgets.QApplication.restoreOverrideCursor()
+            QtWidgets.QMessageBox.warning(self, 'Error', 'PCA not calculated.')
             
             
 
@@ -8503,7 +8503,7 @@ class PagePCA(QtWidgets.QWidget):
             else: 
                 err = e 
    
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err)
 
             
         
@@ -8612,7 +8612,7 @@ class SaveWinP2(QtWidgets.QDialog):
         self.filename = filename
                           
         
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
         gridtop = QtGui.QGridLayout()
@@ -8621,27 +8621,27 @@ class SaveWinP2(QtWidgets.QDialog):
         fontb = QtGui.QFont()
         fontb.setBold(True)            
         
-        st1 = QtGui.QLabel(self)
+        st1 = QtWidgets.QLabel(self)
         st1.setText('Save')
         st1.setFont(fontb)
-        st2 = QtGui.QLabel(self)
+        st2 = QtWidgets.QLabel(self)
         st2.setText('.pdf')
         st2.setFont(fontb)
-        st3 = QtGui.QLabel(self)
+        st3 = QtWidgets.QLabel(self)
         st3.setText('.png')
         st3.setFont(fontb)
-        st4 = QtGui.QLabel(self)
+        st4 = QtWidgets.QLabel(self)
         st4.setText('.svg')
         st4.setFont(fontb)
-        st9 = QtGui.QLabel(self)
+        st9 = QtWidgets.QLabel(self)
         st9.setText('.tif (data)')
         st9.setFont(fontb)    
-        st5 = QtGui.QLabel(self)
+        st5 = QtWidgets.QLabel(self)
         st5.setText('.csv')
         st5.setFont(fontb)        
         
         
-        st6 = QtGui.QLabel(self)
+        st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
         self.cb11 = QtGui.QCheckBox('', self)
@@ -8650,7 +8650,7 @@ class SaveWinP2(QtWidgets.QDialog):
         self.cb13 = QtGui.QCheckBox('', self)   
         self.cb14 = QtGui.QCheckBox('', self)
         
-        st7 = QtGui.QLabel(self)
+        st7 = QtWidgets.QLabel(self)
         st7.setText('_image')
         
         self.cb21 = QtGui.QCheckBox('', self)
@@ -8659,7 +8659,7 @@ class SaveWinP2(QtWidgets.QDialog):
         self.cb23 = QtGui.QCheckBox('', self)
         self.cb24 = QtGui.QCheckBox('', self)
         
-        st8 = QtGui.QLabel(self)
+        st8 = QtWidgets.QLabel(self)
         st8.setText('_eigenvals')   
         self.cb31 = QtGui.QCheckBox('', self)
         self.cb32 = QtGui.QCheckBox('', self)
@@ -8695,9 +8695,9 @@ class SaveWinP2(QtWidgets.QDialog):
         vboxtop.addStretch(1)
         
          
-        hbox0 = QtGui.QHBoxLayout()
+        hbox0 = QtWidgets.QHBoxLayout()
          
-        stf = QtGui.QLabel(self)
+        stf = QtWidgets.QLabel(self)
         stf.setText('Filename:\t')
         self.tc_savefn = QtGui.QLineEdit(self)
         self.tc_savefn.setText(self.filename)
@@ -8705,9 +8705,9 @@ class SaveWinP2(QtWidgets.QDialog):
         hbox0.addWidget(stf)
         hbox0.addWidget(self.tc_savefn)         
                   
-        hbox1 = QtGui.QHBoxLayout()
+        hbox1 = QtWidgets.QHBoxLayout()
                  
-        stp = QtGui.QLabel(self)
+        stp = QtWidgets.QLabel(self)
         stp.setText('Path:  \t')
         self.tc_savepath = QtGui.QLineEdit(self)
         self.tc_savepath.setReadOnly(True)
@@ -8716,17 +8716,17 @@ class SaveWinP2(QtWidgets.QDialog):
         hbox1.addWidget(stp)
         hbox1.addWidget(self.tc_savepath)  
          
-        button_path = QtGui.QPushButton('Browse...')
+        button_path = QtWidgets.QPushButton('Browse...')
         button_path.clicked.connect(self.OnBrowseDir)
         hbox1.addWidget(button_path)
          
          
-        hbox2 = QtGui.QHBoxLayout()
-        button_save = QtGui.QPushButton('Save')
+        hbox2 = QtWidgets.QHBoxLayout()
+        button_save = QtWidgets.QPushButton('Save')
         button_save.clicked.connect(self.OnSave)
         hbox2.addWidget(button_save)
          
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox2.addWidget(button_cancel)
         
@@ -9211,7 +9211,7 @@ class PageStack(QtWidgets.QWidget):
             
             
             if extension == '.hdr':
-                QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                           
+                QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                           
 
                 x=self.stk.n_cols
                 y=self.stk.n_rows
@@ -9224,11 +9224,11 @@ class PageStack(QtWidgets.QWidget):
                 self.loadSpectrum(self.ix, self.iy)
                 self.loadImage()
                 
-                QtGui.QApplication.restoreOverrideCursor()
+                QtWidgets.QApplication.restoreOverrideCursor()
                 
                 
             elif extension == '.xas':
-                QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                          
+                QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                          
 
                 x=self.stk.n_cols
                 y=self.stk.n_rows
@@ -9243,10 +9243,10 @@ class PageStack(QtWidgets.QWidget):
                 self.loadSpectrum(self.ix, self.iy)
                 self.loadImage()
                 
-                QtGui.QApplication.restoreOverrideCursor()
+                QtWidgets.QApplication.restoreOverrideCursor()
 
             elif extension == '.csv':
-                QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                          
+                QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                          
 
                 x=self.stk.n_cols
                 y=self.stk.n_rows
@@ -9261,13 +9261,13 @@ class PageStack(QtWidgets.QWidget):
                 self.loadSpectrum(self.ix, self.iy)
                 self.loadImage()
                 
-                QtGui.QApplication.restoreOverrideCursor()
+                QtWidgets.QApplication.restoreOverrideCursor()
             
         except:
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))  
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))  
             self.com.i0_loaded = 0        
-            QtGui.QApplication.restoreOverrideCursor()
-            QtGui.QMessageBox.warning(self,'Error',"I0 file not loaded.")
+            QtWidgets.QApplication.restoreOverrideCursor()
+            QtWidgets.QMessageBox.warning(self,'Error',"I0 file not loaded.")
             import sys; print sys.exc_info()
                        
                           
@@ -9331,10 +9331,10 @@ class PageStack(QtWidgets.QWidget):
                         
             #Check reference files
             if len(filepaths) != self.stk.n_ev:
-                QtGui.QMessageBox.warning(self,'Error',"Wrong number of Reference image files.")
+                QtWidgets.QMessageBox.warning(self,'Error',"Wrong number of Reference image files.")
                 return
 
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                           
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                           
             
 
             self.stk.read_xrm_ReferenceImages(filepaths)
@@ -9347,14 +9347,14 @@ class PageStack(QtWidgets.QWidget):
             self.loadSpectrum(self.ix, self.iy)
             self.loadImage()
             self.com.i0_loaded = 1
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
                           
             
         except:
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))  
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))  
             self.com.i0_loaded = 0        
-            QtGui.QApplication.restoreOverrideCursor()
-            QtGui.QMessageBox.warning(self,'Error',"Reference image file not loaded.")
+            QtWidgets.QApplication.restoreOverrideCursor()
+            QtWidgets.QMessageBox.warning(self,'Error',"Reference image file not loaded.")
             import sys; print sys.exc_info()
                        
                           
@@ -9424,7 +9424,7 @@ class PageStack(QtWidgets.QWidget):
                 
             #Save all images in the stack
             if img_all:
-                QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+                QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
                 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
                 matplotlib.rcParams['pdf.fonttype'] = 42
 
@@ -9446,11 +9446,11 @@ class PageStack(QtWidgets.QWidget):
                                 
                     fileName_img = self.SaveFileName+"_imnum_" +str(i+1)+"."+ext
                     fig.savefig(fileName_img,  dpi=ImgDpi, pad_inches = 0.0)
-                QtGui.QApplication.restoreOverrideCursor()
+                QtWidgets.QApplication.restoreOverrideCursor()
                 
             #Save all images in the stack
             if img_all_tif:
-                QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+                QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
      
                 for i in range (self.stk.n_ev):
                     if self.showflux:
@@ -9464,7 +9464,7 @@ class PageStack(QtWidgets.QWidget):
                     img1 = Image.fromarray(image)
                     img1.save(fileName_img)
                                 
-                QtGui.QApplication.restoreOverrideCursor()
+                QtWidgets.QApplication.restoreOverrideCursor()
                     
             ext = 'pdf'
             suffix = "." + ext
@@ -9512,7 +9512,7 @@ class PageStack(QtWidgets.QWidget):
             else: 
                 err = e 
    
-            QtGui.QMessageBox.warning(self,'Error','Could not save file: %s' % err)
+            QtWidgets.QMessageBox.warning(self,'Error','Could not save file: %s' % err)
 
 
 #----------------------------------------------------------------------    
@@ -9535,20 +9535,20 @@ class PageStack(QtWidgets.QWidget):
             
             directory =  os.path.dirname(str(filepath))
         
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             
             
             self.stk.write_tif(filepath, self.stk.od3d) 
                 
  
          
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
 
         except:
      
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
                 
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save OD stack file.')
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save OD stack file.')
                    
 
         
@@ -10071,7 +10071,7 @@ class PageStack(QtWidgets.QWidget):
         
 #----------------------------------------------------------------------    
     def OnAcceptROI(self, evt):    
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         self.roixdata.append(self.start_point[0])
         self.roiydata.append(self.start_point[1])
         self.line.set_data(self.roixdata,self.roiydata)
@@ -10115,7 +10115,7 @@ class PageStack(QtWidgets.QWidget):
         if (self.com.i0_loaded == 1):
             self.ShowROISpectrum()
             
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         
         
         
@@ -10161,7 +10161,7 @@ class PageStack(QtWidgets.QWidget):
         if (self.com.i0_loaded == 1):
             self.ShowROISpectrum()
             
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         
     
 #----------------------------------------------------------------------    
@@ -10273,7 +10273,7 @@ class PageStack(QtWidgets.QWidget):
             else: 
                 err = e 
    
-            QtGui.QMessageBox.warning(self,'Error','Could not save file: %s' % err)
+            QtWidgets.QMessageBox.warning(self,'Error','Could not save file: %s' % err)
             
 
 #----------------------------------------------------------------------        
@@ -10311,7 +10311,7 @@ class SaveWinP1(QtWidgets.QDialog):
         self.filename = filename
                           
         
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
         gridtop = QtGui.QGridLayout()
@@ -10320,27 +10320,27 @@ class SaveWinP1(QtWidgets.QDialog):
         fontb = QtGui.QFont()
         fontb.setBold(True)            
         
-        st1 = QtGui.QLabel(self)
+        st1 = QtWidgets.QLabel(self)
         st1.setText('Save')
         st1.setFont(fontb)
-        st2 = QtGui.QLabel(self)
+        st2 = QtWidgets.QLabel(self)
         st2.setText('.pdf')
         st2.setFont(fontb)
-        st3 = QtGui.QLabel(self)
+        st3 = QtWidgets.QLabel(self)
         st3.setText('.png')
         st3.setFont(fontb)
-        st4 = QtGui.QLabel(self)
+        st4 = QtWidgets.QLabel(self)
         st4.setText('.svg')
         st4.setFont(fontb)
-        st9 = QtGui.QLabel(self)
+        st9 = QtWidgets.QLabel(self)
         st9.setText('.tif (data)')
         st9.setFont(fontb)
-        st5 = QtGui.QLabel(self)
+        st5 = QtWidgets.QLabel(self)
         st5.setText('.csv')
         st5.setFont(fontb)        
         
         
-        st6 = QtGui.QLabel(self)
+        st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
         self.cb11 = QtGui.QCheckBox('', self)
@@ -10352,7 +10352,7 @@ class SaveWinP1(QtWidgets.QDialog):
         
         self.cb14 = QtGui.QCheckBox('', self)
         
-        st7 = QtGui.QLabel(self)
+        st7 = QtWidgets.QLabel(self)
         st7.setText('_image')
         
         self.cb21 = QtGui.QCheckBox('', self)
@@ -10364,7 +10364,7 @@ class SaveWinP1(QtWidgets.QDialog):
         
         self.cb24 = QtGui.QCheckBox('', self)
         
-        st8 = QtGui.QLabel(self)
+        st8 = QtWidgets.QLabel(self)
         st8.setText('all images')   
         
         self.cb32 = QtGui.QCheckBox('', self)
@@ -10400,9 +10400,9 @@ class SaveWinP1(QtWidgets.QDialog):
         vboxtop.addStretch(1)
         
          
-        hbox0 = QtGui.QHBoxLayout()
+        hbox0 = QtWidgets.QHBoxLayout()
          
-        stf = QtGui.QLabel(self)
+        stf = QtWidgets.QLabel(self)
         stf.setText('Filename:\t')
         self.tc_savefn = QtGui.QLineEdit(self)
         self.tc_savefn.setText(self.filename)
@@ -10410,9 +10410,9 @@ class SaveWinP1(QtWidgets.QDialog):
         hbox0.addWidget(stf)
         hbox0.addWidget(self.tc_savefn)         
                   
-        hbox1 = QtGui.QHBoxLayout()
+        hbox1 = QtWidgets.QHBoxLayout()
                  
-        stp = QtGui.QLabel(self)
+        stp = QtWidgets.QLabel(self)
         stp.setText('Path:  \t')
         self.tc_savepath = QtGui.QLineEdit(self)
         self.tc_savepath.setReadOnly(True)
@@ -10421,17 +10421,17 @@ class SaveWinP1(QtWidgets.QDialog):
         hbox1.addWidget(stp)
         hbox1.addWidget(self.tc_savepath)  
          
-        button_path = QtGui.QPushButton('Browse...')
+        button_path = QtWidgets.QPushButton('Browse...')
         button_path.clicked.connect(self.OnBrowseDir)
         hbox1.addWidget(button_path)
          
          
-        hbox2 = QtGui.QHBoxLayout()
-        button_save = QtGui.QPushButton('Save')
+        hbox2 = QtWidgets.QHBoxLayout()
+        button_save = QtWidgets.QPushButton('Save')
         button_save.clicked.connect(self.OnSave)
         hbox2.addWidget(button_save)
          
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox2.addWidget(button_cancel)
         
@@ -10521,11 +10521,11 @@ class ShowHistogram(QtWidgets.QDialog):
         self.histmax = averagefluxmax
         
 
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
                
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.histfig = Figure((6.0, 4.2))
         self.HistogramPanel = FigureCanvas(self.histfig)
@@ -10538,10 +10538,10 @@ class ShowHistogram(QtWidgets.QDialog):
         frame.setLayout(fbox)
         vbox.addWidget(frame)
                         
-        vbox1 = QtGui.QVBoxLayout()
-        sizer1 = QtGui.QGroupBox('I0 pixels')
+        vbox1 = QtWidgets.QHBoxLayout()
+        sizer1 = QtWidgets.QGroupBox('I0 pixels')
 
-        self.textctrl = QtGui.QLabel(self)
+        self.textctrl = QtWidgets.QLabel(self)
         self.textctrl.setText('Selection: [ {0:5.2f} kHz, {1:5.2f} kHz ]'.format(float(self.histmin), float(self.histmax)))
         vbox1.addWidget(self.textctrl)
 
@@ -10554,12 +10554,12 @@ class ShowHistogram(QtWidgets.QDialog):
         sizer1.setLayout(vbox1)
         vbox.addWidget(sizer1)
                 
-        hbox2 = QtGui.QHBoxLayout()
-        button_ok = QtGui.QPushButton('Accept')
+        hbox2 = QtWidgets.QHBoxLayout()
+        button_ok = QtWidgets.QPushButton('Accept')
         button_ok.clicked.connect(self.OnAccept)
         hbox2.addWidget(button_ok)
                 
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox2.addWidget(button_cancel)
         
@@ -10724,12 +10724,12 @@ class LimitEv(QtWidgets.QDialog):
         
         self.patch = None
         
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
         
         
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.specfig = Figure((6.0, 4.2))
         self.SpectrumPanel = FigureCanvas(self.specfig)
@@ -10743,22 +10743,22 @@ class LimitEv(QtWidgets.QDialog):
         vbox.addWidget(frame)
                 
        
-        hbox2 = QtGui.QHBoxLayout()
-        sizer2 = QtGui.QGroupBox('Energy')
-        self.textctrl = QtGui.QLabel(self)
+        hbox2 = QtWidgets.QHBoxLayout()
+        sizer2 = QtWidgets.QGroupBox('Energy')
+        self.textctrl = QtWidgets.QLabel(self)
         self.textctrl.setText(' ')
         hbox2.addWidget(self.textctrl, 0)
         sizer2.setLayout(hbox2)
         vbox.addWidget(sizer2)
         
-        hbox = QtGui.QHBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
         
         
-        button_ok = QtGui.QPushButton('Accept')
+        button_ok = QtWidgets.QPushButton('Accept')
         button_ok.clicked.connect(self.OnAccept)
         hbox.addWidget(button_ok)
         
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox.addWidget(button_cancel)
         
@@ -10934,19 +10934,19 @@ class CliptoSubregion(QtWidgets.QDialog):
         
 
         
-        vbox = QtGui.QVBoxLayout()             
+        vbox = QtWidgets.QHBoxLayout()             
         
-        sizer = QtGui.QGroupBox('Select new stack size')
-        vbox1 = QtGui.QVBoxLayout()   
-        self.textctrl1 = QtGui.QLabel(self)
+        sizer = QtWidgets.QGroupBox('Select new stack size')
+        vbox1 = QtWidgets.QHBoxLayout()   
+        self.textctrl1 = QtWidgets.QLabel(self)
         self.textctrl1.setText('Original stack size:\t{0:5d}   x{1:5d} '.format(self.stack.n_cols, self.stack.n_rows))
         vbox1.addWidget(self.textctrl1)
  
-        self.textctrl2 = QtGui.QLabel(self)
+        self.textctrl2 = QtWidgets.QLabel(self)
         self.textctrl2.setText('New stack size:\t{0:5d}   x{1:5d} '.format(self.new_ncols, self.new_nrows))
         vbox1.addWidget(self.textctrl2)
         
-        self.textctrl3 = QtGui.QLabel(self)
+        self.textctrl3 = QtWidgets.QLabel(self)
         self.textctrl3.setText('Clip coordinates [[x1, x2], [y1, y2]] : [[{0:5d},{1:5d}], [{2:5d},{3:5d}]]'.format(
                                     self.new_x1, self.new_x2, self.new_y1, self.new_y2))
         vbox1.addWidget(self.textctrl3)  
@@ -10963,13 +10963,13 @@ class CliptoSubregion(QtWidgets.QDialog):
         vbox.addWidget(sizer)
          
          
-        hbox = QtGui.QHBoxLayout() 
+        hbox = QtWidgets.QHBoxLayout() 
               
-        button_ok = QtGui.QPushButton('Accept')
+        button_ok = QtWidgets.QPushButton('Accept')
         button_ok.clicked.connect(self.OnAccept)
         hbox.addWidget(button_ok)
         
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect(self.close)
         hbox.addWidget(button_cancel)
         
@@ -11227,16 +11227,16 @@ class ImageRegistration(QtWidgets.QDialog):
                                   
         
         #panel 1        
-        vbox1 = QtGui.QVBoxLayout()
+        vbox1 = QtWidgets.QHBoxLayout()
         
-        self.tc_imageeng = QtGui.QLabel(self)
+        self.tc_imageeng = QtWidgets.QLabel(self)
         self.tc_imageeng.setText("Image at energy: ")
        
         gridsizertop = QtGui.QGridLayout()
         
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.absimgfig = Figure((4.0, 4.0))
         self.AbsImagePanel = FigureCanvas(self.absimgfig)
@@ -11263,12 +11263,12 @@ class ImageRegistration(QtWidgets.QDialog):
         self.slider_theta.valueChanged[int].connect(self.OnScrollTheta)
         self.slider_theta.setRange(0, self.stack.n_theta-1)     
           
-        self.tc_imagetheta = QtGui.QLabel(self)
+        self.tc_imagetheta = QtWidgets.QLabel(self)
         self.tc_imagetheta.setText("4D Data Angle: ")
         if self.com.stack_4d == 0 : 
             self.tc_imagetheta.setVisible(False)
             self.slider_theta.setVisible(False)
-        hbox51 = QtGui.QHBoxLayout()
+        hbox51 = QtWidgets.QHBoxLayout()
         hbox51.addWidget(self.tc_imagetheta) 
         hbox51.addWidget(self.slider_theta)
         gridsizertop.addLayout(hbox51, 1, 0) 
@@ -11276,8 +11276,8 @@ class ImageRegistration(QtWidgets.QDialog):
         vbox1.addWidget(self.tc_imageeng)        
         vbox1.addLayout(gridsizertop)
 
-        self.tc_shift1 = QtGui.QLabel(self)
-        self.tc_shift2 = QtGui.QLabel(self)
+        self.tc_shift1 = QtWidgets.QLabel(self)
+        self.tc_shift2 = QtWidgets.QLabel(self)
         vbox1.addWidget(self.tc_shift1)
         vbox1.addWidget(self.tc_shift2)
         vbox1.addStretch(1)
@@ -11291,14 +11291,14 @@ class ImageRegistration(QtWidgets.QDialog):
         
         
         #panel 2        
-        vbox2 = QtGui.QVBoxLayout()
+        vbox2 = QtWidgets.QHBoxLayout()
         
-        tc2 = QtGui.QLabel(self)
+        tc2 = QtWidgets.QLabel(self)
         tc2.setText('Cross-correlation')
 
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.cscorrfig = Figure((2.4, 2.4))
         self.CscorrPanel = FigureCanvas(self.cscorrfig)
@@ -11313,14 +11313,14 @@ class ImageRegistration(QtWidgets.QDialog):
         
         
         #panel 3
-        vbox3 = QtGui.QVBoxLayout()
+        vbox3 = QtWidgets.QHBoxLayout()
          
-        tc3= QtGui.QLabel(self)
+        tc3= QtWidgets.QLabel(self)
         tc3.setText('Image shifts')
          
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
     
         self.shiftsfig = Figure((4.0, 2.4))
         self.ShiftsPanel = FigureCanvas(self.shiftsfig)
@@ -11336,12 +11336,12 @@ class ImageRegistration(QtWidgets.QDialog):
          
          
         #panel 9
-        vbox9 = QtGui.QVBoxLayout()
+        vbox9 = QtWidgets.QHBoxLayout()
         vbox9.setSpacing(0)
          
-        groupBox9 = QtGui.QGroupBox()
-        self.rb_auto = QtGui.QRadioButton( 'Automatic Alignment')
-        self.rb_man = QtGui.QRadioButton('Manual Alignment')
+        groupBox9 = QtWidgets.QGroupBox()
+        self.rb_auto = QtWidgets.QRadioButton( 'Automatic Alignment')
+        self.rb_man = QtWidgets.QRadioButton('Manual Alignment')
         self.rb_auto.setChecked(True)
         self.rb_auto.toggled.connect(self.Onrb_automanual)
          
@@ -11352,21 +11352,21 @@ class ImageRegistration(QtWidgets.QDialog):
                 
          
         #panel 8
-        sizer8 = QtGui.QGroupBox('This Image')
-        vbox8 = QtGui.QVBoxLayout()
+        sizer8 = QtWidgets.QGroupBox('This Image')
+        vbox8 = QtWidgets.QHBoxLayout()
         vbox8.setSpacing(0)
  
          
-        self.button_refimg = QtGui.QPushButton('Set as Reference Image')
+        self.button_refimg = QtWidgets.QPushButton('Set as Reference Image')
         self.button_refimg.clicked.connect(self.SetRefImage)
         vbox8.addWidget(self.button_refimg)
         
-        self.button_refimgsave = QtGui.QPushButton('Save Reference Image')
+        self.button_refimgsave = QtWidgets.QPushButton('Save Reference Image')
         self.button_refimgsave.clicked.connect(self.SaveRefImage)
         self.button_refimgsave.setEnabled(False)
         vbox8.addWidget(self.button_refimgsave)
         
-        self.button_refimgsload = QtGui.QPushButton('Load Reference Image')
+        self.button_refimgsload = QtWidgets.QPushButton('Load Reference Image')
         self.button_refimgsload.clicked.connect(self.LoadRefImage)
         vbox8.addWidget(self.button_refimgsload)
         
@@ -11380,7 +11380,7 @@ class ImageRegistration(QtWidgets.QDialog):
         vbox8.addSpacing(5)  
         
          
-        self.button_remove = QtGui.QPushButton('Remove energy from stack')
+        self.button_remove = QtWidgets.QPushButton('Remove energy from stack')
         self.button_remove.clicked.connect(self.OnRemoveImage)    
         vbox8.addWidget(self.button_remove)
                
@@ -11389,35 +11389,35 @@ class ImageRegistration(QtWidgets.QDialog):
             
          
         #panel 4
-        sizer4 = QtGui.QGroupBox('Automatic Alignment')
-        vbox4 = QtGui.QVBoxLayout()
+        sizer4 = QtWidgets.QGroupBox('Automatic Alignment')
+        vbox4 = QtWidgets.QHBoxLayout()
    
          
-        self.button_register = QtGui.QPushButton('Calculate image shifts')
+        self.button_register = QtWidgets.QPushButton('Calculate image shifts')
         self.button_register.clicked.connect(self.OnCalcRegistration)   
         self.button_register.setEnabled(False)     
         vbox4.addWidget(self.button_register)
         #vbox4.addStretch(1)
          
-        self.button_subregion = QtGui.QPushButton('Select subregion on reference')
+        self.button_subregion = QtWidgets.QPushButton('Select subregion on reference')
         self.button_subregion.clicked.connect(self.OnSelectSubregion)   
         self.button_subregion.setEnabled(False)     
         vbox4.addWidget(self.button_subregion)
           
-        self.button_delsubregion = QtGui.QPushButton('Remove subregion selection')
+        self.button_delsubregion = QtWidgets.QPushButton('Remove subregion selection')
         self.button_delsubregion.clicked.connect(self.OnDeleteSubregion)   
         self.button_delsubregion.setEnabled(False)     
         vbox4.addWidget(self.button_delsubregion)
         vbox4.addStretch(1)
 
-        groupBox4 = QtGui.QGroupBox()      
-        hbox43 = QtGui.QHBoxLayout()    
+        groupBox4 = QtWidgets.QGroupBox()      
+        hbox43 = QtWidgets.QHBoxLayout()    
         self.cb_edgeenh = QtGui.QCheckBox('Edge Enhancement', self) 
         self.cb_edgeenh.stateChanged.connect(self.OnEdgeE)
         hbox43.addWidget(self.cb_edgeenh)
         
-        self.rb_sobel = QtGui.QRadioButton( 'Sobel')
-        self.rb_prewitt = QtGui.QRadioButton('Prewitt')
+        self.rb_sobel = QtWidgets.QRadioButton( 'Sobel')
+        self.rb_prewitt = QtWidgets.QRadioButton('Prewitt')
         self.rb_prewitt.setChecked(True)
         self.rb_sobel.setEnabled(False)
         self.rb_prewitt.setEnabled(False)
@@ -11429,8 +11429,8 @@ class ImageRegistration(QtWidgets.QDialog):
         vbox4.addWidget(groupBox4)
         
           
-        hbox42 = QtGui.QHBoxLayout()
-        text1 = QtGui.QLabel(self)
+        hbox42 = QtWidgets.QHBoxLayout()
+        text1 = QtWidgets.QLabel(self)
         text1.setText(' Max shift [pixels]: ')
           
         self.tc_maxshift = QtGui.QSpinBox()
@@ -11453,14 +11453,14 @@ class ImageRegistration(QtWidgets.QDialog):
          
          
         #panel 5        
-        vbox5 = QtGui.QVBoxLayout()
+        vbox5 = QtWidgets.QHBoxLayout()
          
-        self.tc_refimg = QtGui.QLabel(self)
+        self.tc_refimg = QtWidgets.QLabel(self)
         self.tc_refimg.setText('Reference image')
          
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
     
         self.refimgfig = Figure((4.0, 4.0))
         self.RefImagePanel = FigureCanvas(self.refimgfig)
@@ -11482,29 +11482,29 @@ class ImageRegistration(QtWidgets.QDialog):
          
          
         #panel 6
-        sizer6 = QtGui.QGroupBox('Manual Alignment')
-        vbox6 = QtGui.QVBoxLayout()
+        sizer6 = QtWidgets.QGroupBox('Manual Alignment')
+        vbox6 = QtWidgets.QHBoxLayout()
         vbox6.setSpacing(0)
              
                  
-        self.button_manalign = QtGui.QPushButton('Pick a point on reference image')
+        self.button_manalign = QtWidgets.QPushButton('Pick a point on reference image')
         self.button_manalign.clicked.connect(self.OnPickRefPoint)
         self.button_manalign.setEnabled(False)
         vbox6.addWidget(self.button_manalign)
          
-        self.button_pick2ndpoint = QtGui.QPushButton('This image: click on same point')
+        self.button_pick2ndpoint = QtWidgets.QPushButton('This image: click on same point')
         self.button_pick2ndpoint.clicked.connect(self.OnPickCorrPoint)
         self.button_pick2ndpoint.setEnabled(False)
         vbox6.addWidget(self.button_pick2ndpoint)
          
-        self.button_applyman = QtGui.QPushButton('Apply manual shifts')
+        self.button_applyman = QtWidgets.QPushButton('Apply manual shifts')
         self.button_applyman.clicked.connect(self.OnApplyManShifts)
         self.button_applyman.setEnabled(False)
         vbox6.addWidget(self.button_applyman)
          
          
-        self.textctrl_ms1 = QtGui.QLabel(self)
-        self.textctrl_ms2 = QtGui.QLabel(self)
+        self.textctrl_ms1 = QtWidgets.QLabel(self)
+        self.textctrl_ms2 = QtWidgets.QLabel(self)
         vbox6.addWidget(self.textctrl_ms1)
         vbox6.addWidget(self.textctrl_ms2)
          
@@ -11518,36 +11518,36 @@ class ImageRegistration(QtWidgets.QDialog):
          
          
         #panel 7
-        vbox7 = QtGui.QVBoxLayout()
+        vbox7 = QtWidgets.QHBoxLayout()
         vbox7.setSpacing(0)
          
-        self.button_saveimg = QtGui.QPushButton('Save image shifts plot')
+        self.button_saveimg = QtWidgets.QPushButton('Save image shifts plot')
         self.button_saveimg.clicked.connect(self.OnSaveShiftsPlot)   
         self.button_saveimg.setEnabled(False)
         vbox7.addWidget(self.button_saveimg)
          
 
  
-        self.button_saveshifts = QtGui.QPushButton('Save image shifts')
+        self.button_saveshifts = QtWidgets.QPushButton('Save image shifts')
         self.button_saveshifts.clicked.connect(self.OnSaveShifts)
         self.button_saveshifts.setEnabled(False)
         vbox7.addWidget(self.button_saveshifts)
          
-        self.button_loadshifts = QtGui.QPushButton('Load image shifts')
+        self.button_loadshifts = QtWidgets.QPushButton('Load image shifts')
         self.button_loadshifts.clicked.connect(self.OnLoadShifts)
         vbox7.addWidget(self.button_loadshifts)
         
-        self.button_crop = QtGui.QPushButton('Crop aligned images')
+        self.button_crop = QtWidgets.QPushButton('Crop aligned images')
         self.button_crop.clicked.connect(self.OnCropShifts)   
         self.button_crop.setEnabled(False)
         vbox7.addWidget(self.button_crop)    
                  
-        self.button_accept = QtGui.QPushButton('Apply Alignment')
+        self.button_accept = QtWidgets.QPushButton('Apply Alignment')
         self.button_accept.clicked.connect(self.OnAccept)
         self.button_accept.setEnabled(False)
         vbox7.addWidget(self.button_accept)
          
-        self.button_close = QtGui.QPushButton('Dismiss')
+        self.button_close = QtWidgets.QPushButton('Dismiss')
         self.button_close.clicked.connect(self.close)
         vbox7.addWidget(self.button_close)
          
@@ -11555,10 +11555,10 @@ class ImageRegistration(QtWidgets.QDialog):
          
                
         
-        hboxtop = QtGui.QHBoxLayout()
+        hboxtop = QtWidgets.QHBoxLayout()
         
-        vboxL = QtGui.QVBoxLayout()
-        vboxR = QtGui.QVBoxLayout()
+        vboxL = QtWidgets.QHBoxLayout()
+        vboxR = QtWidgets.QHBoxLayout()
         
 
         vboxL.addWidget(sizer8)
@@ -11571,8 +11571,8 @@ class ImageRegistration(QtWidgets.QDialog):
         vboxL.addStretch(1)
         vboxL.addLayout(vbox7)
         
-        hboxRT = QtGui.QHBoxLayout()
-        hboxRB = QtGui.QHBoxLayout()
+        hboxRT = QtWidgets.QHBoxLayout()
+        hboxRB = QtWidgets.QHBoxLayout()
         
         hboxRT.addLayout(vbox1)
         hboxRT.addLayout(vbox5)
@@ -11933,7 +11933,7 @@ class ImageRegistration(QtWidgets.QDialog):
             self.CalcRegistration4D()
             return
         
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         
         #Get Edge enhancement info
         edge = 0
@@ -12020,12 +12020,12 @@ class ImageRegistration(QtWidgets.QDialog):
         if max_yshift > self.maxys : self.maxys = max_yshift
         
                     
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         
 #----------------------------------------------------------------------            
     def CalcRegistration4D(self):
         
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         
         #Get Edge enhancement info
         edge = 0
@@ -12118,12 +12118,12 @@ class ImageRegistration(QtWidgets.QDialog):
         if max_yshift > self.maxys : self.maxys = max_yshift
         
                     
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         
 #----------------------------------------------------------------------            
     def OnCropShifts(self, event):
         
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         
         self.aligned_stack, self.xleft, self.xright, self.ybottom, self.ytop, = self.stack.crop_registed_images(self.aligned_stack, 
                                                              self.minxs, self.maxxs, self.minys, self.maxys)
@@ -12133,7 +12133,7 @@ class ImageRegistration(QtWidgets.QDialog):
         self.ShowImage()
         self.slider_eng.setValue(self.iev)
         
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         
         
 #----------------------------------------------------------------------            
@@ -12767,14 +12767,14 @@ class SpectralROI(QtWidgets.QDialog):
         
 
         
-        vbox = QtGui.QVBoxLayout()
-        text = QtGui.QLabel(self)
+        vbox = QtWidgets.QHBoxLayout()
+        text = QtWidgets.QLabel(self)
         text.setText('First select I0 region below the edge, then select I region above the edge:')
         vbox.addWidget(text)
         
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.specfig = Figure((6.0, 4.2))
         self.SpectrumPanel = FigureCanvas(self.specfig)
@@ -12787,34 +12787,34 @@ class SpectralROI(QtWidgets.QDialog):
         vbox.addWidget(frame)
        
        
-        hbox2 = QtGui.QHBoxLayout()
+        hbox2 = QtWidgets.QHBoxLayout()
                
         
-        sizer2 =QtGui.QGroupBox('Selected Spectral Regions')
+        sizer2 =QtWidgets.QGroupBox('Selected Spectral Regions')
         sizer2.setMinimumWidth(350)
-        vbox2 = QtGui.QVBoxLayout()
-        text = QtGui.QLabel(self)
+        vbox2 = QtWidgets.QHBoxLayout()
+        text = QtWidgets.QLabel(self)
         text.setText('I Selection (red): ')
-        self.textctrl1 = QtGui.QLabel(self)
+        self.textctrl1 = QtWidgets.QLabel(self)
         self.textctrl1.setText('[  ]' )
         vbox2.addWidget(text)
         vbox2.addWidget(self.textctrl1)
         
-        text = QtGui.QLabel(self)
+        text = QtWidgets.QLabel(self)
         text.setText('I0 Selection (green): ')
-        self.textctrl2 = QtGui.QLabel(self)
+        self.textctrl2 = QtWidgets.QLabel(self)
         self.textctrl2.setText('[  ]' )
         vbox2.addWidget(text)
         vbox2.addWidget(self.textctrl2)
         sizer2.setLayout(vbox2)
         
-        text = QtGui.QLabel(self)
+        text = QtWidgets.QLabel(self)
         text.setText('Optical density map')
         vbox.addWidget(text)
 
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.odmfig = Figure((2.4,2.4))
         self.ODMImagePanel = FigureCanvas(self.odmfig)
@@ -12828,13 +12828,13 @@ class SpectralROI(QtWidgets.QDialog):
         
         vbox.addLayout(hbox2)    
           
-        hbox = QtGui.QHBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
         
-        button_save = QtGui.QPushButton('Save')
+        button_save = QtWidgets.QPushButton('Save')
         button_save.clicked.connect(self.OnSave)
         hbox.addWidget(button_save)
         
-        button_cancel = QtGui.QPushButton('Dismiss')
+        button_cancel = QtWidgets.QPushButton('Dismiss')
         button_cancel.clicked.connect(self.close)
         hbox.addWidget(button_cancel)
         
@@ -13014,7 +13014,7 @@ class SpectralROI(QtWidgets.QDialog):
             error_message = ( 
                   'Only the PNG and PDF image formats are supported.\n' 
                  'A file extension of `png\' or `pdf\' must be used.') 
-            QtGui.QMessageBox.warning(self, 'Error', 'Error - Could not save file.') 
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Error - Could not save file.') 
             return 
         
         
@@ -13037,7 +13037,7 @@ class SpectralROI(QtWidgets.QDialog):
                 else: 
                     err = e 
        
-                QtGui.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err) 
+                QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save file: %s' % err) 
             
 
 
@@ -13063,7 +13063,7 @@ class DoseCalculation(QtWidgets.QDialog):
                
 
         
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QHBoxLayout()
         
         
         gridtop = QtGui.QGridLayout()
@@ -13073,15 +13073,15 @@ class DoseCalculation(QtWidgets.QDialog):
         #fontb.SetWeight(wx.BOLD)
         
         
-        st1 = QtGui.QLabel(self)
+        st1 = QtWidgets.QLabel(self)
         st1.setText('Detector efficiency [%]:')
         #st1.SetFont(fontb)
-        st2 = QtGui.QLabel(self)
+        st2 = QtWidgets.QLabel(self)
         st2.setText('I region composition:')
         #st2.SetFont(fontb)
-#        st3 = QtGui.QLabel(self,'Xray absorption length:')
+#        st3 = QtWidgets.QLabel(self,'Xray absorption length:')
 #        st3.SetFont(fontb)
-        st4 = QtGui.QLabel(self)
+        st4 = QtWidgets.QLabel(self)
         st4.setText('Dose [Gray]:')
         #st4.SetFont(fontb)
 
@@ -13094,7 +13094,7 @@ class DoseCalculation(QtWidgets.QDialog):
 #        self.tc_3 = wx.TextCtrl(panel1, -1, size=((200,-1)), style=wx.TE_RICH|wx.VSCROLL|wx.TE_READONLY, 
 #                                         value=' ')   
         
-        self.tc_4 = QtGui.QLabel(self)
+        self.tc_4 = QtWidgets.QLabel(self)
         
 
         gridtop.addWidget(st1, 0,0)
@@ -13108,10 +13108,10 @@ class DoseCalculation(QtWidgets.QDialog):
           
 
 
-        button_calcdose = QtGui.QPushButton('Calculate Dose')
+        button_calcdose = QtWidgets.QPushButton('Calculate Dose')
         button_calcdose.clicked.connect(self.OnCalcDose)
                 
-        button_cancel = QtGui.QPushButton('Dismiss')
+        button_cancel = QtWidgets.QPushButton('Dismiss')
         button_cancel.clicked.connect(self.close)
 
 
@@ -13129,7 +13129,7 @@ class DoseCalculation(QtWidgets.QDialog):
         try:
             detector_eff = 0.01*float(self.tc_1.text())
         except:
-            QtGui.QMessageBox.warning(self, 'Error', 'Please enter numeric number for detector efficiency.')
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Please enter numeric number for detector efficiency.')
             print 'Please enter numeric number for detector efficiency.'
             return
             
@@ -13144,13 +13144,13 @@ class DoseCalculation(QtWidgets.QDialog):
         try:
             z_array, atwt = Chenke.compound(i_composition,1.0)
         except:
-            QtGui.QMessageBox.warning(self, 'Error', "Please enter new compound.")
+            QtWidgets.QMessageBox.warning(self, 'Error', "Please enter new compound.")
             return
         
         try:
             dose = Chenke.dose_calc(self.stack, i_composition, self.ROIspectrum, self.stack.i0data, detector_eff)
         except:
-            QtGui.QMessageBox.warning(self, 'Error', "Could not calculate dose. Please enter new compound.")
+            QtWidgets.QMessageBox.warning(self, 'Error', "Could not calculate dose. Please enter new compound.")
             return            
         
         self.tc_4.setText(str(dose))
@@ -13161,9 +13161,9 @@ class DoseCalculation(QtWidgets.QDialog):
 #---------------------------------------------------------------------- 
     def OnCalcDose(self, evt):
 
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         self.CalcDose()
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         
         
 #---------------------------------------------------------------------- 
@@ -13186,7 +13186,7 @@ class DarkSignal(QtWidgets.QDialog):
         self.setPalette(pal) 
                 
         
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QHBoxLayout()
         
         
         gridtop = QtGui.QGridLayout()
@@ -13196,7 +13196,7 @@ class DarkSignal(QtWidgets.QDialog):
         #fontb.SetWeight(wx.BOLD)
         
         
-        st1 = QtGui.QLabel(self)
+        st1 = QtWidgets.QLabel(self)
         st1.setText('Dark Signal Value:')
 
         
@@ -13212,10 +13212,10 @@ class DarkSignal(QtWidgets.QDialog):
         gridtop.addWidget(self.ntc_ds, 0,1)
         
 
-        button_dscalc = QtGui.QPushButton('Subtract Dark Signal')
+        button_dscalc = QtWidgets.QPushButton('Subtract Dark Signal')
         button_dscalc.clicked.connect(self.OnDSCalc)
                 
-        button_cancel = QtGui.QPushButton('Dismiss')
+        button_cancel = QtWidgets.QPushButton('Dismiss')
         button_cancel.clicked.connect(self.close)
 
 
@@ -13229,7 +13229,7 @@ class DarkSignal(QtWidgets.QDialog):
 #---------------------------------------------------------------------- 
     def OnDSCalc(self):
                       
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         
         darksig = 0.0
         
@@ -13237,8 +13237,8 @@ class DarkSignal(QtWidgets.QDialog):
             value = self.ntc_ds.text()
             darksig = float(value)
         except:
-            QtGui.QApplication.restoreOverrideCursor()
-            QtGui.QMessageBox.warning(self, 'Error', 'Please enter numeric number for dark signal.')
+            QtWidgets.QApplication.restoreOverrideCursor()
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Please enter numeric number for dark signal.')
             return
             
 
@@ -13257,7 +13257,7 @@ class DarkSignal(QtWidgets.QDialog):
         
         
         
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         
         self.close()
         
@@ -13289,11 +13289,11 @@ class PlotFrame(QtWidgets.QDialog):
                 
         
 
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
         
         frame = QtGui.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        fbox = QtGui.QHBoxLayout()
+        fbox = QtWidgets.QHBoxLayout()
    
         self.plotfig = Figure((6.0, 4.2))
         self.PlotPanel = FigureCanvas(self.plotfig)
@@ -13304,13 +13304,13 @@ class PlotFrame(QtWidgets.QDialog):
         vbox.addWidget(frame)
         
 
-        hbox = QtGui.QHBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
         
-        button_save = QtGui.QPushButton('Save Spectrum')
+        button_save = QtWidgets.QPushButton('Save Spectrum')
         button_save.clicked.connect(self.OnSave)
         hbox.addWidget(button_save)        
                 
-        button_close = QtGui.QPushButton('Close')
+        button_close = QtWidgets.QPushButton('Close')
         button_close.clicked.connect(self.close)
         hbox.addWidget(button_close)
         
@@ -13355,14 +13355,14 @@ class PlotFrame(QtWidgets.QDialog):
                 return
         
                             
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                 
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))                 
             self.Save(filepath)    
-            QtGui.QApplication.restoreOverrideCursor()    
+            QtWidgets.QApplication.restoreOverrideCursor()    
 
         except:
  
-            QtGui.QApplication.restoreOverrideCursor()
-            QtGui.QMessageBox.warning(self, 'Error', "Could not save .csv file.")
+            QtWidgets.QApplication.restoreOverrideCursor()
+            QtWidgets.QMessageBox.warning(self, 'Error', "Could not save .csv file.")
                    
         self.close()
 
@@ -13428,28 +13428,28 @@ class ColorTableFrame(QtWidgets.QDialog):
         self.colors= ["gray","jet","autumn","bone", "cool","copper", "flag","hot","hsv","pink",
                       "prism","spring","summer","winter", "spectral"]
         
-        vboxtop = QtGui.QVBoxLayout()
+        vboxtop = QtWidgets.QHBoxLayout()
         
         
                
-        sizer1 = QtGui.QGroupBox('Color Tables')
-        vbox = QtGui.QVBoxLayout()
+        sizer1 = QtWidgets.QGroupBox('Color Tables')
+        vbox = QtWidgets.QHBoxLayout()
         
-        self.rb_grey = QtGui.QRadioButton(self.colors[0], self)
-        self.rb_jet  = QtGui.QRadioButton(self.colors[1], self)
-        self.rb_autumn = QtGui.QRadioButton(self.colors[2], self)
-        self.rb_bone = QtGui.QRadioButton(self.colors[3], self)
-        self.rb_cool = QtGui.QRadioButton(self.colors[4], self)
-        self.rb_copper = QtGui.QRadioButton(self.colors[5], self)
-        self.rb_flag = QtGui.QRadioButton(self.colors[6], self)
-        self.rb_hot = QtGui.QRadioButton(self.colors[7], self)
-        self.rb_hsv = QtGui.QRadioButton(self.colors[8], self)
-        self.rb_pink = QtGui.QRadioButton(self.colors[9], self)
-        self.rb_prism = QtGui.QRadioButton(self.colors[10], self)
-        self.rb_spring = QtGui.QRadioButton(self.colors[11], self)
-        self.rb_summer = QtGui.QRadioButton(self.colors[12], self)
-        self.rb_winter = QtGui.QRadioButton(self.colors[13], self)
-        self.rb_spectral = QtGui.QRadioButton(self.colors[14], self)
+        self.rb_grey = QtWidgets.QRadioButton(self.colors[0], self)
+        self.rb_jet  = QtWidgets.QRadioButton(self.colors[1], self)
+        self.rb_autumn = QtWidgets.QRadioButton(self.colors[2], self)
+        self.rb_bone = QtWidgets.QRadioButton(self.colors[3], self)
+        self.rb_cool = QtWidgets.QRadioButton(self.colors[4], self)
+        self.rb_copper = QtWidgets.QRadioButton(self.colors[5], self)
+        self.rb_flag = QtWidgets.QRadioButton(self.colors[6], self)
+        self.rb_hot = QtWidgets.QRadioButton(self.colors[7], self)
+        self.rb_hsv = QtWidgets.QRadioButton(self.colors[8], self)
+        self.rb_pink = QtWidgets.QRadioButton(self.colors[9], self)
+        self.rb_prism = QtWidgets.QRadioButton(self.colors[10], self)
+        self.rb_spring = QtWidgets.QRadioButton(self.colors[11], self)
+        self.rb_summer = QtWidgets.QRadioButton(self.colors[12], self)
+        self.rb_winter = QtWidgets.QRadioButton(self.colors[13], self)
+        self.rb_spectral = QtWidgets.QRadioButton(self.colors[14], self)
         
         
         self.radios = [] 
@@ -13509,7 +13509,7 @@ class ColorTableFrame(QtWidgets.QDialog):
         vboxtop.addWidget(sizer1)
 
         
-        button_close = QtGui.QPushButton('Close')
+        button_close = QtWidgets.QPushButton('Close')
         button_close.clicked.connect(self.close)
         vboxtop.addWidget(button_close)
         
@@ -13521,7 +13521,7 @@ class ColorTableFrame(QtWidgets.QDialog):
 #----------------------------------------------------------------------          
     def OnColorTable(self, event):
     
-        for radioButton in self.findChildren(QtGui.QRadioButton):
+        for radioButton in self.findChildren(QtWidgets.QRadioButton):
             if radioButton.isChecked():
                 radioButtonText = radioButton.text()
                 break
@@ -13815,16 +13815,16 @@ class StackListFrame(QtWidgets.QDialog):
         
         self.filetype = ''
         
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
                 
-        self.textt = QtGui.QLabel(self)
+        self.textt = QtWidgets.QLabel(self)
         self.textt.setText('Select first stack file')    
       
         vbox.addStretch(1)
         vbox.addWidget(self.textt)  
         
 
-        self.filelist = QtGui.QTableWidget()
+        self.filelist = QtWidgets.QTableWidget()
         self.filelist.setMinimumHeight(450)
         self.filelist.setColumnCount(4)
         self.filelist.setHorizontalHeaderLabels(('File list', 'X', 'Y', 'eV'))
@@ -13845,9 +13845,9 @@ class StackListFrame(QtWidgets.QDialog):
         vbox.addWidget(self.filelist)
         vbox.addStretch(1) 
         
-        self.tc_first = QtGui.QLabel(self)
+        self.tc_first = QtWidgets.QLabel(self)
         self.tc_first.setText('First stack file: ')
-        self.tc_last = QtGui.QLabel(self)
+        self.tc_last = QtWidgets.QLabel(self)
         self.tc_last.setText('Last stack file: ')
 
         
@@ -13856,15 +13856,15 @@ class StackListFrame(QtWidgets.QDialog):
         vbox.addStretch(1)
         
         
-        hbox = QtGui.QHBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
         
         
-        self.button_accept = QtGui.QPushButton('Accept')
+        self.button_accept = QtWidgets.QPushButton('Accept')
         #self.button_accept.setEnabled(False)
         self.button_accept.clicked.connect( self.OnAccept)
         hbox.addWidget(self.button_accept)
         
-        button_cancel = QtGui.QPushButton('Cancel')
+        button_cancel = QtWidgets.QPushButton('Cancel')
         button_cancel.clicked.connect( self.close)
         hbox.addWidget(button_cancel)
         
@@ -13917,7 +13917,7 @@ class StackListFrame(QtWidgets.QDialog):
                 from file_plugins import file_sm_netcdf
             
             except:
-                QtGui.QMessageBox.warning(self, 'Error', "Could not import netCDF4 library.")
+                QtWidgets.QMessageBox.warning(self, 'Error', "Could not import netCDF4 library.")
                 return
 
             count = 0
@@ -13933,10 +13933,10 @@ class StackListFrame(QtWidgets.QDialog):
                     self.filelist.insertRow(count)
                     self.filelist.setRowHeight(count,20)
 
-                    self.filelist.setItem(count, 0, QtGui.QTableWidgetItem(filename))
-                    self.filelist.setItem(count, 1, QtGui.QTableWidgetItem(str(ncols)))
-                    self.filelist.setItem(count, 2, QtGui.QTableWidgetItem(str(nrows)))
-                    self.filelist.setItem(count, 3, QtGui.QTableWidgetItem('{0:5.2f}'.format(iev)))
+                    self.filelist.setItem(count, 0, QtWidgets.QTableWidgetItem(filename))
+                    self.filelist.setItem(count, 1, QtWidgets.QTableWidgetItem(str(ncols)))
+                    self.filelist.setItem(count, 2, QtWidgets.QTableWidgetItem(str(nrows)))
+                    self.filelist.setItem(count, 3, QtWidgets.QTableWidgetItem('{0:5.2f}'.format(iev)))
                                      
                     count += 1
                 else:
@@ -13965,10 +13965,10 @@ class StackListFrame(QtWidgets.QDialog):
                     self.filelist.insertRow(count)
                     self.filelist.setRowHeight(count,20)
 
-                    self.filelist.setItem(count, 0, QtGui.QTableWidgetItem(filename))
-                    self.filelist.setItem(count, 1, QtGui.QTableWidgetItem(str(ncols)))
-                    self.filelist.setItem(count, 2, QtGui.QTableWidgetItem(str(nrows)))
-                    self.filelist.setItem(count, 3, QtGui.QTableWidgetItem('{0:5.2f}'.format(iev)))
+                    self.filelist.setItem(count, 0, QtWidgets.QTableWidgetItem(filename))
+                    self.filelist.setItem(count, 1, QtWidgets.QTableWidgetItem(str(ncols)))
+                    self.filelist.setItem(count, 2, QtWidgets.QTableWidgetItem(str(nrows)))
+                    self.filelist.setItem(count, 3, QtWidgets.QTableWidgetItem('{0:5.2f}'.format(iev)))
                             
                     count += 1
 
@@ -13998,10 +13998,10 @@ class StackListFrame(QtWidgets.QDialog):
                     self.filelist.insertRow(count)
                     self.filelist.setRowHeight(count,20)
     
-                    self.filelist.setItem(count, 0, QtGui.QTableWidgetItem(filename))
-                    self.filelist.setItem(count, 1, QtGui.QTableWidgetItem(str(ncols)))
-                    self.filelist.setItem(count, 2, QtGui.QTableWidgetItem(str(nrows)))
-                    self.filelist.setItem(count, 3, QtGui.QTableWidgetItem('{0:5.2f}'.format(iev)))
+                    self.filelist.setItem(count, 0, QtWidgets.QTableWidgetItem(filename))
+                    self.filelist.setItem(count, 1, QtWidgets.QTableWidgetItem(str(ncols)))
+                    self.filelist.setItem(count, 2, QtWidgets.QTableWidgetItem(str(nrows)))
+                    self.filelist.setItem(count, 3, QtWidgets.QTableWidgetItem('{0:5.2f}'.format(iev)))
                                      
                     count += 1
 
@@ -14015,7 +14015,7 @@ class StackListFrame(QtWidgets.QDialog):
 #----------------------------------------------------------------------        
     def OnAccept(self, evt):
         
-        QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         
         self.parent.new_stack_refresh()
         self.stk.new_data()
@@ -14086,7 +14086,7 @@ class StackListFrame(QtWidgets.QDialog):
         
         self.parent.page0.ShowInfo(filelist[0], self.filepath)
         
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         self.close()
         
                 
@@ -14099,13 +14099,13 @@ class InputRegionDialog(QtWidgets.QDialog):
         
         self.parent = parent
     
-        mainLayout = QtGui.QVBoxLayout()
+        mainLayout = QtWidgets.QHBoxLayout()
     
-        layout = QtGui.QHBoxLayout()
-        label = QtGui.QLabel()
+        layout = QtWidgets.QHBoxLayout()
+        label = QtWidgets.QLabel()
         label.setText('Select Region to load:')
         layout.addWidget(label)
-        combo = QtGui.QComboBox(self)
+        combo = QtWidgets.QComboBox(self)
         combo.addItem("All")
         for i in range(nregions):
             combo.addItem(str(i+1))
@@ -14118,8 +14118,8 @@ class InputRegionDialog(QtWidgets.QDialog):
         mainLayout.addLayout(layout)
     
 
-        layout = QtGui.QHBoxLayout()
-        button = QtGui.QPushButton("Submit") #string or icon
+        layout = QtWidgets.QHBoxLayout()
+        button = QtWidgets.QPushButton("Submit") #string or icon
         self.connect(button, QtCore.SIGNAL("clicked()"), self.close)
         layout.addWidget(button)
     
@@ -14151,13 +14151,13 @@ class AboutFrame(QtWidgets.QDialog):
         pal.setColor(QtGui.QPalette.Window,QtGui.QColor('white'))
         self.setPalette(pal)
         
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QHBoxLayout()
         
        
 
         self.image = QtGui.QImage(resource_path(os.path.join('images','Mantis_logo_about.png')))
         
-        self.imageLabel = QtGui.QLabel()
+        self.imageLabel = QtWidgets.QLabel()
         self.imageLabel.setBackgroundRole(QtGui.QPalette.Base)
         
         self.imageLabel.setPixmap(QtGui.QPixmap.fromImage(self.image))
@@ -14165,19 +14165,19 @@ class AboutFrame(QtWidgets.QDialog):
         
 
 
-        text1 = QtGui.QLabel(self)
+        text1 = QtWidgets.QLabel(self)
         text1.setText("www.2ndlookconsulting.com")
         text1.setStyleSheet('color: rgb(53,159,217);font-size: 14pt; font-family: SansSerif;')
         #text1.setFont(QtGui.QFont('SansSerif', 14))
         
         #font2 = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL)
-        text2 = QtGui.QLabel(self)
+        text2 = QtWidgets.QLabel(self)
         text2.setText('Mantis '+version)  
         text2.setStyleSheet('font-size: 12pt')
         #text2.SetFont(font2)        
 
         #font3 = wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL)
-        text3 = QtGui.QLabel(self)
+        text3 = QtWidgets.QLabel(self)
         text3.setText( '''
 Developed by Mirna Lerotic, based on earlier programs by Mirna 
 Lerotic and Chris Jacobsen. Initial development supported by 
@@ -14186,7 +14186,7 @@ Argonne National Laboratory LDRD 2010-193-R1 9113. ''')
 
         
         #font4 = wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL)
-        text4 = QtGui.QLabel(self)
+        text4 = QtWidgets.QLabel(self)
         text4.setText( '''        
 Mantis is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published 
@@ -14201,9 +14201,9 @@ http://www.gnu.org/licenses/.''')
         #text4.SetFont(font4)          
 
         vbox.addStretch(1)
-        hbox = QtGui.QHBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
         hbox.addStretch(1)
-        vbox2 = QtGui.QVBoxLayout()
+        vbox2 = QtWidgets.QHBoxLayout()
         vbox2.addWidget(text1)  
         vbox2.addStretch(0.5)
         vbox2.addWidget(text2)   
@@ -14214,7 +14214,7 @@ http://www.gnu.org/licenses/.''')
         vbox.addLayout(hbox)
         vbox.addStretch(1) 
         
-        button_close = QtGui.QPushButton('Close')
+        button_close = QtWidgets.QPushButton('Close')
         button_close.clicked.connect( self.close)
         vbox.addWidget(button_close)
         vbox.addStretch(0.5)
@@ -14396,7 +14396,7 @@ class MainFrame(QtWidgets.QMainWindow):
                     plugin = file_plugins.identify(dlg.filepath)
                     
                     
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             
             if self.common.stack_loaded == 1:
                 self.new_stack_refresh()
@@ -14450,7 +14450,7 @@ class MainFrame(QtWidgets.QMainWindow):
             
             self.page5.updatewidgets()
 
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
                  
         self.refresh_widgets()
 
@@ -14463,7 +14463,7 @@ class MainFrame(QtWidgets.QMainWindow):
         
         #try:
         if True:
-            directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose a directory", '', QtWidgets.QFileDialog.ShowDirsOnly|QtWidgets.QFileDialog.ReadOnly )       
+            directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose a directory", '', QtWidgets.QFileDialog.ShowDirsOnly|QtWidgets.QFileDialog.ReadOnly )
                                                         
         
        
@@ -14482,7 +14482,7 @@ class MainFrame(QtWidgets.QMainWindow):
 #             self.new_stack_refresh()
 #             self.refresh_widgets()
 #                                    
-#             QtGui.QMessageBox.warning(self,'Error',"Error could not build stack list")
+#             QtWidgets.QMessageBox.warning(self,'Error',"Error could not build stack list")
 #             import sys; print sys.exc_info()
             
             
@@ -14508,7 +14508,7 @@ class MainFrame(QtWidgets.QMainWindow):
             directory =  os.path.dirname(str(filenames[0]))
             self.page1.filename =  os.path.basename(str(filenames[0]))
         
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             basename, extension = os.path.splitext(self.page1.filename)      
             
             self.common.path = directory
@@ -14599,7 +14599,7 @@ class MainFrame(QtWidgets.QMainWindow):
             
             self.page5.updatewidgets()
 
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
                  
         except:
           
@@ -14607,8 +14607,8 @@ class MainFrame(QtWidgets.QMainWindow):
             self.common.i0_loaded = 0
             self.new_stack_refresh()
                                          
-            QtGui.QApplication.restoreOverrideCursor()
-            QtGui.QMessageBox.warning(self, 'Error', 'Image stack not loaded.')
+            QtWidgets.QApplication.restoreOverrideCursor()
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Image stack not loaded.')
          
             import sys
             print sys.exc_info()
@@ -14641,7 +14641,7 @@ class MainFrame(QtWidgets.QMainWindow):
                
             directory =  os.path.dirname(str(filepath))
         
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
 
             
             basename, extension = os.path.splitext(filepath)      
@@ -14657,13 +14657,13 @@ class MainFrame(QtWidgets.QMainWindow):
                  
             
          
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
 
         except:
        
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
                   
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save processed stack file.')
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save processed stack file.')
                    
 
         self.refresh_widgets()
@@ -14698,7 +14698,7 @@ class MainFrame(QtWidgets.QMainWindow):
             directory =  os.path.dirname(str(filepath))
             self.page1.filename =  os.path.basename(str(filepath))
         
-            QtGui.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+            QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             
             self.common.path = directory
             self.common.filename = self.page1.filename
@@ -14706,12 +14706,12 @@ class MainFrame(QtWidgets.QMainWindow):
 
             file_dataexch_hdf5.write_results_h5(filepath, self.data_struct, self.anlz)   
 
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
 
         except:
    
-            QtGui.QApplication.restoreOverrideCursor()
-            QtGui.QMessageBox.warning(self, 'Error', 'Could not save HDF5 file.')
+            QtWidgets.QApplication.restoreOverrideCursor()
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Could not save HDF5 file.')
                    
 
         self.refresh_widgets()
