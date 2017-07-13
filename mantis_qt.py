@@ -1402,7 +1402,7 @@ class PageTomo(QWidget):
 class ROIHistogram(QtWidgets.QDialog):
 
     def __init__(self, parent, image, n_cols, n_rows):   
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -1428,7 +1428,7 @@ class ROIHistogram(QtWidgets.QDialog):
 
         vbox = QtWidgets.QHBoxLayout()
                
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
    
@@ -1746,7 +1746,7 @@ class File_GUI():
             self.populate(name,contents)
             
         def populate(self,name,contents):
-            self.checkbox = QtGui.QCheckBox(name+' ('+str(contents.definition)+':'+str(contents.scan_type)+')')
+            self.checkbox = QtWidgets.QCheckBox(name+' ('+str(contents.definition)+':'+str(contents.scan_type)+')')
             self.checkbox.clicked.connect(self.setChecked)
             self.addWidget(self.checkbox)
             self.addStretch(1)
@@ -2692,7 +2692,7 @@ class PageNNMA(QtWidgets.QWidget):
 class SaveWinP5(QtWidgets.QDialog):
 
     def __init__(self, parent):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -2721,7 +2721,7 @@ class SaveWinP5(QtWidgets.QDialog):
         vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
-        gridtop = QtGui.QGridLayout()
+        gridtop = QtWidgets.QGridLayout()
         gridtop.setVerticalSpacing(20)
     
         fontb = QtGui.QFont()
@@ -2749,26 +2749,26 @@ class SaveWinP5(QtWidgets.QDialog):
         st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
-        self.cb11 = QtGui.QCheckBox('', self)
+        self.cb11 = QtWidgets.QCheckBox('', self)
         self.cb11.setChecked(True)
-        self.cb12 = QtGui.QCheckBox('', self)
-        self.cb13 = QtGui.QCheckBox('', self)   
-        self.cb14 = QtGui.QCheckBox('', self)
+        self.cb12 = QtWidgets.QCheckBox('', self)
+        self.cb13 = QtWidgets.QCheckBox('', self)   
+        self.cb14 = QtWidgets.QCheckBox('', self)
         
         st7 = QtWidgets.QLabel(self)
         st7.setText('_map')
         
-        self.cb21 = QtGui.QCheckBox('', self)
+        self.cb21 = QtWidgets.QCheckBox('', self)
         self.cb21.setChecked(True)
-        self.cb22 = QtGui.QCheckBox('', self)
-        self.cb23 = QtGui.QCheckBox('', self)
-        self.cb24 = QtGui.QCheckBox('', self)
+        self.cb22 = QtWidgets.QCheckBox('', self)
+        self.cb23 = QtWidgets.QCheckBox('', self)
+        self.cb24 = QtWidgets.QCheckBox('', self)
         
         st8 = QtWidgets.QLabel(self)
         st8.setText('_costfunction')   
-        self.cb31 = QtGui.QCheckBox('', self)
-        self.cb32 = QtGui.QCheckBox('', self)
-        self.cb33 = QtGui.QCheckBox('', self)
+        self.cb31 = QtWidgets.QCheckBox('', self)
+        self.cb32 = QtWidgets.QCheckBox('', self)
+        self.cb33 = QtWidgets.QCheckBox('', self)
 
 
         gridtop.addWidget(st1, 0, 0)
@@ -3907,7 +3907,7 @@ class PageXrayPeakFitting(QtWidgets.QWidget):
 class FitParams(QtWidgets.QDialog):
 
     def __init__(self, parent, title, fitparams, readonly, initialization):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
         
@@ -3936,7 +3936,7 @@ class FitParams(QtWidgets.QDialog):
         vbox = QtWidgets.QHBoxLayout()
                 
 
-        fgs1 = QtGui.QGridLayout()
+        fgs1 = QtWidgets.QGridLayout()
         
 
         
@@ -5730,7 +5730,7 @@ class PageSpectral(QtWidgets.QWidget):
 class ShowCompositeRBGmap(QtWidgets.QDialog):
 
     def __init__(self, parent, common, analz):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -5774,7 +5774,7 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
 
         sizer1 = QtWidgets.QGroupBox('Red spectrum')
 
-        fgs1 = QtGui.QGridLayout()
+        fgs1 = QtWidgets.QGridLayout()
         
         r = QtWidgets.QLabel(self) 
         r.setText('Red')
@@ -5794,12 +5794,12 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         hbox12 = QtWidgets.QHBoxLayout() 
         
         
-        self.tcrmin = QtGui.QSpinBox()
+        self.tcrmin = QtWidgets.QSpinBox()
         self.tcrmin.setRange(0,100)
         self.tcrmin.setValue(0)
         self.tcrmin.valueChanged[int].connect(self.OnLimitMinR)
         
-        self.tcrmax = QtGui.QSpinBox()
+        self.tcrmax = QtWidgets.QSpinBox()
         self.tcrmax.setRange(0,100)
         self.tcrmax.setValue(100)
         self.tcrmax.valueChanged[int].connect(self.OnLimitMaxR)        
@@ -5807,7 +5807,7 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         hbox12.addWidget(self.tcrmin)
         hbox12.addWidget(self.tcrmax)
         
-        self.tcrweight = QtGui.QSpinBox()
+        self.tcrweight = QtWidgets.QSpinBox()
         self.tcrweight.setRange(0,100)
         self.tcrweight.setValue(100)
         self.tcrweight.valueChanged[int].connect(self.OnWeightR)
@@ -5825,7 +5825,7 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
   
         sizer2 = QtWidgets.QGroupBox('Green spectrum')
 
-        fgs2 = QtGui.QGridLayout()
+        fgs2 = QtWidgets.QGridLayout()
         
         g = QtWidgets.QLabel(self) 
         g.setText('Green')
@@ -5845,12 +5845,12 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         hbox12 = QtWidgets.QHBoxLayout() 
         
         
-        self.tcgmin = QtGui.QSpinBox()
+        self.tcgmin = QtWidgets.QSpinBox()
         self.tcgmin.setRange(0,100)
         self.tcgmin.setValue(0)
         self.tcgmin.valueChanged[int].connect(self.OnLimitMinG)
         
-        self.tcgmax = QtGui.QSpinBox()
+        self.tcgmax = QtWidgets.QSpinBox()
         self.tcgmax.setRange(0,100)
         self.tcgmax.setValue(100)
         self.tcgmax.valueChanged[int].connect(self.OnLimitMaxG)        
@@ -5858,7 +5858,7 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         hbox12.addWidget(self.tcgmin)
         hbox12.addWidget(self.tcgmax)
         
-        self.tcgweight = QtGui.QSpinBox()
+        self.tcgweight = QtWidgets.QSpinBox()
         self.tcgweight.setRange(0,100)
         self.tcgweight.setValue(100)
         self.tcgweight.valueChanged[int].connect(self.OnWeightG)
@@ -5878,7 +5878,7 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
 
         sizer3 = QtWidgets.QGroupBox('Blue spectrum')
 
-        fgs3 = QtGui.QGridLayout()
+        fgs3 = QtWidgets.QGridLayout()
         
         b = QtWidgets.QLabel(self) 
         b.setText('Blue')
@@ -5898,12 +5898,12 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         hbox12 = QtWidgets.QHBoxLayout() 
         
         
-        self.tcbmin = QtGui.QSpinBox()
+        self.tcbmin = QtWidgets.QSpinBox()
         self.tcbmin.setRange(0,100)
         self.tcbmin.setValue(0)
         self.tcbmin.valueChanged[int].connect(self.OnLimitMinB)
         
-        self.tcbmax = QtGui.QSpinBox()
+        self.tcbmax = QtWidgets.QSpinBox()
         self.tcbmax.setRange(0,100)
         self.tcbmax.setValue(100)
         self.tcbmax.valueChanged[int].connect(self.OnLimitMaxB)        
@@ -5911,7 +5911,7 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         hbox12.addWidget(self.tcbmin)
         hbox12.addWidget(self.tcbmax)
         
-        self.tcbweight = QtGui.QSpinBox()
+        self.tcbweight = QtWidgets.QSpinBox()
         self.tcbweight.setRange(0,100)
         self.tcbweight.setValue(100)
         self.tcbweight.valueChanged[int].connect(self.OnWeightB)
@@ -5940,13 +5940,13 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
         
         
         
-        self.show_info_cb = QtGui.QCheckBox( 'Show Info on the Image', self)
+        self.show_info_cb = QtWidgets.QCheckBox( 'Show Info on the Image', self)
         self.show_info_cb.stateChanged.connect(self.OnShowInfo)
         vbox1.addWidget(self.show_info_cb)
         
         hbox1.addLayout(vbox1)
         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
         self.RGBImagefig = Figure((PlotH, PlotH))
@@ -6239,7 +6239,7 @@ class ShowCompositeRBGmap(QtWidgets.QDialog):
 class ShowMapHistogram(QtWidgets.QDialog):
 
     def __init__(self, parent, common, analz):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
         
@@ -6261,7 +6261,7 @@ class ShowMapHistogram(QtWidgets.QDialog):
       
         vbox = QtWidgets.QHBoxLayout()
                
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
    
@@ -6428,7 +6428,7 @@ class ShowMapHistogram(QtWidgets.QDialog):
 class SaveWinP4(QtWidgets.QDialog):
 
     def __init__(self, parent):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -6457,7 +6457,7 @@ class SaveWinP4(QtWidgets.QDialog):
         vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
-        gridtop = QtGui.QGridLayout()
+        gridtop = QtWidgets.QGridLayout()
         gridtop.setVerticalSpacing(20)
     
         fontb = QtGui.QFont()
@@ -6485,20 +6485,20 @@ class SaveWinP4(QtWidgets.QDialog):
         st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
-        self.cb11 = QtGui.QCheckBox('', self)
+        self.cb11 = QtWidgets.QCheckBox('', self)
         self.cb11.setChecked(True)
-        self.cb12 = QtGui.QCheckBox('', self)
-        self.cb13 = QtGui.QCheckBox('', self)   
-        self.cb14 = QtGui.QCheckBox('', self)
+        self.cb12 = QtWidgets.QCheckBox('', self)
+        self.cb13 = QtWidgets.QCheckBox('', self)   
+        self.cb14 = QtWidgets.QCheckBox('', self)
         
         st7 = QtWidgets.QLabel(self)
         st7.setText('_images')
         
-        self.cb21 = QtGui.QCheckBox('', self)
+        self.cb21 = QtWidgets.QCheckBox('', self)
         self.cb21.setChecked(True)
-        self.cb22 = QtGui.QCheckBox('', self)
-        self.cb23 = QtGui.QCheckBox('', self)
-        self.cb24 = QtGui.QCheckBox('', self)
+        self.cb22 = QtWidgets.QCheckBox('', self)
+        self.cb23 = QtWidgets.QCheckBox('', self)
+        self.cb24 = QtWidgets.QCheckBox('', self)
         
 
         
@@ -7569,7 +7569,7 @@ class PageCluster(QtWidgets.QWidget):
 class Scatterplots(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, analz):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -7608,9 +7608,9 @@ class Scatterplots(QtWidgets.QDialog):
                  
         vbox = QtWidgets.QHBoxLayout()
            
-        grid1 = QtGui.QGridLayout()
+        grid1 = QtWidgets.QGridLayout()
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
         self.scattplfig = Figure((5.0, 4.8))
@@ -7694,7 +7694,7 @@ class Scatterplots(QtWidgets.QDialog):
 class SaveWinP3(QtWidgets.QDialog):
 
     def __init__(self, parent):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -7723,7 +7723,7 @@ class SaveWinP3(QtWidgets.QDialog):
         vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
-        gridtop = QtGui.QGridLayout()
+        gridtop = QtWidgets.QGridLayout()
         gridtop.setVerticalSpacing(20)
     
         fontb = QtGui.QFont()
@@ -7751,37 +7751,37 @@ class SaveWinP3(QtWidgets.QDialog):
         st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
-        self.cb11 = QtGui.QCheckBox('', self)
+        self.cb11 = QtWidgets.QCheckBox('', self)
         self.cb11.setChecked(True)
-        self.cb12 = QtGui.QCheckBox('', self)
-        self.cb13 = QtGui.QCheckBox('', self)   
-        self.cb14 = QtGui.QCheckBox('', self)
+        self.cb12 = QtWidgets.QCheckBox('', self)
+        self.cb13 = QtWidgets.QCheckBox('', self)   
+        self.cb14 = QtWidgets.QCheckBox('', self)
         
         st7 = QtWidgets.QLabel(self)
         st7.setText('_composite_images')
         
-        self.cb21 = QtGui.QCheckBox('', self)
+        self.cb21 = QtWidgets.QCheckBox('', self)
         self.cb21.setChecked(True)
-        self.cb22 = QtGui.QCheckBox('', self)
-        self.cb23 = QtGui.QCheckBox('', self)
-        self.cb24 = QtGui.QCheckBox('', self)
+        self.cb22 = QtWidgets.QCheckBox('', self)
+        self.cb23 = QtWidgets.QCheckBox('', self)
+        self.cb24 = QtWidgets.QCheckBox('', self)
         
         st8 = QtWidgets.QLabel(self)
         st8.setText('_individual_images')  
         
-        self.cb31 = QtGui.QCheckBox('', self)
+        self.cb31 = QtWidgets.QCheckBox('', self)
         self.cb31.setChecked(True) 
-        self.cb32 = QtGui.QCheckBox('', self)
-        self.cb33 = QtGui.QCheckBox('', self)
-        self.cb34 = QtGui.QCheckBox('', self)
+        self.cb32 = QtWidgets.QCheckBox('', self)
+        self.cb33 = QtWidgets.QCheckBox('', self)
+        self.cb34 = QtWidgets.QCheckBox('', self)
 
         st9 = QtWidgets.QLabel(self)
         st9.setText('_scatter_plots')  
         
-        self.cb41 = QtGui.QCheckBox('', self)
+        self.cb41 = QtWidgets.QCheckBox('', self)
         self.cb41.setChecked(True) 
-        self.cb42 = QtGui.QCheckBox('', self)
-        self.cb43 = QtGui.QCheckBox('', self)
+        self.cb42 = QtWidgets.QCheckBox('', self)
+        self.cb43 = QtWidgets.QCheckBox('', self)
         
         
         gridtop.addWidget(st1, 0, 0)
@@ -8038,9 +8038,9 @@ class PagePCA(QtWidgets.QWidget):
         vbox21.addWidget(self.button_movepcup)
         
 
-#         line = QtGui.QFrame()
-#         line.setFrameShape(QtGui.QFrame.HLine)
-#         line.setFrameShadow(QtGui.QFrame.Sunken)         
+#         line = QtWidgets.QFrame()
+#         line.setFrameShape(QtWidgets.QFrame.HLine)
+#         line.setFrameShadow(QtWidgets.QFrame.Sunken)         
 #         vbox21.addWidget(line) 
 
         
@@ -8586,7 +8586,7 @@ class PagePCA(QtWidgets.QWidget):
 class SaveWinP2(QtWidgets.QDialog):
 
     def __init__(self, parent):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -8615,7 +8615,7 @@ class SaveWinP2(QtWidgets.QDialog):
         vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
-        gridtop = QtGui.QGridLayout()
+        gridtop = QtWidgets.QGridLayout()
         gridtop.setVerticalSpacing(20)
     
         fontb = QtGui.QFont()
@@ -8644,26 +8644,26 @@ class SaveWinP2(QtWidgets.QDialog):
         st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
-        self.cb11 = QtGui.QCheckBox('', self)
+        self.cb11 = QtWidgets.QCheckBox('', self)
         self.cb11.setChecked(True)
-        self.cb12 = QtGui.QCheckBox('', self)
-        self.cb13 = QtGui.QCheckBox('', self)   
-        self.cb14 = QtGui.QCheckBox('', self)
+        self.cb12 = QtWidgets.QCheckBox('', self)
+        self.cb13 = QtWidgets.QCheckBox('', self)   
+        self.cb14 = QtWidgets.QCheckBox('', self)
         
         st7 = QtWidgets.QLabel(self)
         st7.setText('_image')
         
-        self.cb21 = QtGui.QCheckBox('', self)
+        self.cb21 = QtWidgets.QCheckBox('', self)
         self.cb21.setChecked(True)
-        self.cb22 = QtGui.QCheckBox('', self)
-        self.cb23 = QtGui.QCheckBox('', self)
-        self.cb24 = QtGui.QCheckBox('', self)
+        self.cb22 = QtWidgets.QCheckBox('', self)
+        self.cb23 = QtWidgets.QCheckBox('', self)
+        self.cb24 = QtWidgets.QCheckBox('', self)
         
         st8 = QtWidgets.QLabel(self)
         st8.setText('_eigenvals')   
-        self.cb31 = QtGui.QCheckBox('', self)
-        self.cb32 = QtGui.QCheckBox('', self)
-        self.cb33 = QtGui.QCheckBox('', self)
+        self.cb31 = QtWidgets.QCheckBox('', self)
+        self.cb32 = QtWidgets.QCheckBox('', self)
+        self.cb33 = QtWidgets.QCheckBox('', self)
 
 
         gridtop.addWidget(st1, 0, 0)
@@ -8845,7 +8845,6 @@ class PageStack(QtWidgets.QWidget):
         self.button_align.setEnabled(False)
         vbox1.addWidget(self.button_align) 
         
-  
         
         self.button_limitev = QtWidgets.QPushButton('Limit energy range...')
         self.button_limitev.clicked.connect( self.OnLimitEv)
@@ -9582,7 +9581,7 @@ class PageStack(QtWidgets.QWidget):
             self.movie_playing = 1
             
             for i in range(self.stk.n_ev):   
-                QtGui.qApp.processEvents()
+                QtWidgets.qApp.processEvents()
                 if self.movie_playing == 0:
                     break
                 self.iev = i                   
@@ -10285,7 +10284,7 @@ class PageStack(QtWidgets.QWidget):
 class SaveWinP1(QtWidgets.QDialog):
 
     def __init__(self, parent):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -10314,7 +10313,7 @@ class SaveWinP1(QtWidgets.QDialog):
         vboxtop = QtWidgets.QHBoxLayout()
         vboxtop.setContentsMargins(20,20,20,20)
         
-        gridtop = QtGui.QGridLayout()
+        gridtop = QtWidgets.QGridLayout()
         gridtop.setVerticalSpacing(20)
     
         fontb = QtGui.QFont()
@@ -10343,33 +10342,33 @@ class SaveWinP1(QtWidgets.QDialog):
         st6 = QtWidgets.QLabel(self)
         st6.setText('_spectrum')
         
-        self.cb11 = QtGui.QCheckBox('', self)
+        self.cb11 = QtWidgets.QCheckBox('', self)
         self.cb11.setChecked(True)
         
-        self.cb12 = QtGui.QCheckBox('', self)
+        self.cb12 = QtWidgets.QCheckBox('', self)
         
-        self.cb13 = QtGui.QCheckBox('', self)   
+        self.cb13 = QtWidgets.QCheckBox('', self)   
         
-        self.cb14 = QtGui.QCheckBox('', self)
+        self.cb14 = QtWidgets.QCheckBox('', self)
         
         st7 = QtWidgets.QLabel(self)
         st7.setText('_image')
         
-        self.cb21 = QtGui.QCheckBox('', self)
+        self.cb21 = QtWidgets.QCheckBox('', self)
         self.cb21.setChecked(True)
         
-        self.cb22 = QtGui.QCheckBox('', self)
+        self.cb22 = QtWidgets.QCheckBox('', self)
         
-        self.cb23 = QtGui.QCheckBox('', self)
+        self.cb23 = QtWidgets.QCheckBox('', self)
         
-        self.cb24 = QtGui.QCheckBox('', self)
+        self.cb24 = QtWidgets.QCheckBox('', self)
         
         st8 = QtWidgets.QLabel(self)
         st8.setText('all images')   
         
-        self.cb32 = QtGui.QCheckBox('', self)
+        self.cb32 = QtWidgets.QCheckBox('', self)
         
-        self.cb34 = QtGui.QCheckBox('', self)
+        self.cb34 = QtWidgets.QCheckBox('', self)
 
 
         gridtop.addWidget(st1, 0, 0)
@@ -10499,7 +10498,7 @@ class SaveWinP1(QtWidgets.QDialog):
 class ShowHistogram(QtWidgets.QDialog):
 
     def __init__(self, parent, stack):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -10523,7 +10522,7 @@ class ShowHistogram(QtWidgets.QDialog):
 
         vbox = QtWidgets.QHBoxLayout()
                
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
    
@@ -10702,7 +10701,7 @@ class ShowHistogram(QtWidgets.QDialog):
 class LimitEv(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, stack):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -10727,7 +10726,7 @@ class LimitEv(QtWidgets.QDialog):
         vbox = QtWidgets.QHBoxLayout()
         
         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
    
@@ -10909,7 +10908,7 @@ class LimitEv(QtWidgets.QDialog):
 class CliptoSubregion(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, stack):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -11155,7 +11154,7 @@ class CliptoSubregion(QtWidgets.QDialog):
 class ImageRegistration(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, stack):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
         
@@ -11227,14 +11226,14 @@ class ImageRegistration(QtWidgets.QDialog):
                                   
         
         #panel 1        
-        vbox1 = QtWidgets.QHBoxLayout()
+        vbox1 = QtWidgets.QVBoxLayout()
         
         self.tc_imageeng = QtWidgets.QLabel(self)
         self.tc_imageeng.setText("Image at energy: ")
        
-        gridsizertop = QtGui.QGridLayout()
+        gridsizertop = QtWidgets.QGridLayout()
         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
    
@@ -11250,7 +11249,7 @@ class ImageRegistration(QtWidgets.QDialog):
         gridsizertop.addWidget(frame, 0, 0, QtCore .Qt. AlignLeft)
         
 
-        self.slider_eng = QtGui.QScrollBar(QtCore.Qt.Vertical)
+        self.slider_eng = QtWidgets.QScrollBar(QtCore.Qt.Vertical)
         self.slider_eng.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_eng.valueChanged[int].connect(self.OnScrollEng)
         self.slider_eng.setRange(0, self.stack.n_ev-1)
@@ -11258,7 +11257,7 @@ class ImageRegistration(QtWidgets.QDialog):
         
         gridsizertop.addWidget(self.slider_eng, 0, 1, QtCore .Qt. AlignLeft)      
         
-        self.slider_theta = QtGui.QScrollBar(QtCore.Qt.Horizontal)
+        self.slider_theta = QtWidgets.QScrollBar(QtCore.Qt.Horizontal)
         self.slider_theta.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider_theta.valueChanged[int].connect(self.OnScrollTheta)
         self.slider_theta.setRange(0, self.stack.n_theta-1)     
@@ -11291,12 +11290,12 @@ class ImageRegistration(QtWidgets.QDialog):
         
         
         #panel 2        
-        vbox2 = QtWidgets.QHBoxLayout()
+        vbox2 = QtWidgets.QVBoxLayout()
         
         tc2 = QtWidgets.QLabel(self)
         tc2.setText('Cross-correlation')
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
    
@@ -11313,12 +11312,12 @@ class ImageRegistration(QtWidgets.QDialog):
         
         
         #panel 3
-        vbox3 = QtWidgets.QHBoxLayout()
+        vbox3 = QtWidgets.QVBoxLayout()
          
         tc3= QtWidgets.QLabel(self)
         tc3.setText('Image shifts')
          
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
     
@@ -11336,7 +11335,7 @@ class ImageRegistration(QtWidgets.QDialog):
          
          
         #panel 9
-        vbox9 = QtWidgets.QHBoxLayout()
+        vbox9 = QtWidgets.QVBoxLayout()
         vbox9.setSpacing(0)
          
         groupBox9 = QtWidgets.QGroupBox()
@@ -11353,7 +11352,7 @@ class ImageRegistration(QtWidgets.QDialog):
          
         #panel 8
         sizer8 = QtWidgets.QGroupBox('This Image')
-        vbox8 = QtWidgets.QHBoxLayout()
+        vbox8 = QtWidgets.QVBoxLayout()
         vbox8.setSpacing(0)
  
          
@@ -11370,9 +11369,9 @@ class ImageRegistration(QtWidgets.QDialog):
         self.button_refimgsload.clicked.connect(self.LoadRefImage)
         vbox8.addWidget(self.button_refimgsload)
         
-        line = QtGui.QFrame()
-        line.setFrameShape(QtGui.QFrame.HLine)
-        line.setFrameShadow(QtGui.QFrame.Sunken) 
+        line = QtWidgets.QFrame()
+        line.setFrameShape(QtWidgets.QFrame.HLine)
+        line.setFrameShadow(QtWidgets.QFrame.Sunken) 
         
         
         vbox8.addSpacing(5)
@@ -11390,7 +11389,8 @@ class ImageRegistration(QtWidgets.QDialog):
          
         #panel 4
         sizer4 = QtWidgets.QGroupBox('Automatic Alignment')
-        vbox4 = QtWidgets.QHBoxLayout()
+        vbox4 = QtWidgets.QVBoxLayout()
+        vbox4.setSpacing(0)
    
          
         self.button_register = QtWidgets.QPushButton('Calculate image shifts')
@@ -11412,7 +11412,7 @@ class ImageRegistration(QtWidgets.QDialog):
 
         groupBox4 = QtWidgets.QGroupBox()      
         hbox43 = QtWidgets.QHBoxLayout()    
-        self.cb_edgeenh = QtGui.QCheckBox('Edge Enhancement', self) 
+        self.cb_edgeenh = QtWidgets.QCheckBox('Edge Enhancement', self) 
         self.cb_edgeenh.stateChanged.connect(self.OnEdgeE)
         hbox43.addWidget(self.cb_edgeenh)
         
@@ -11433,7 +11433,7 @@ class ImageRegistration(QtWidgets.QDialog):
         text1 = QtWidgets.QLabel(self)
         text1.setText(' Max shift [pixels]: ')
           
-        self.tc_maxshift = QtGui.QSpinBox()
+        self.tc_maxshift = QtWidgets.QSpinBox()
         self.tc_maxshift.setMinimum(0)    
         self.tc_maxshift.valueChanged[int].connect(self.OnSetMaxShift)
           
@@ -11444,7 +11444,7 @@ class ImageRegistration(QtWidgets.QDialog):
         vbox4.addStretch(1)
           
   
-        self.showcscor_cb = QtGui.QCheckBox('Show Cross-correlation', self) 
+        self.showcscor_cb = QtWidgets.QCheckBox('Show Cross-correlation', self) 
         self.showcscor_cb.stateChanged.connect(self.OnShowCCorr)
         vbox4.addWidget(self.showcscor_cb)
  
@@ -11453,12 +11453,12 @@ class ImageRegistration(QtWidgets.QDialog):
          
          
         #panel 5        
-        vbox5 = QtWidgets.QHBoxLayout()
+        vbox5 = QtWidgets.QVBoxLayout()
          
         self.tc_refimg = QtWidgets.QLabel(self)
         self.tc_refimg.setText('Reference image')
          
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
     
@@ -11483,7 +11483,7 @@ class ImageRegistration(QtWidgets.QDialog):
          
         #panel 6
         sizer6 = QtWidgets.QGroupBox('Manual Alignment')
-        vbox6 = QtWidgets.QHBoxLayout()
+        vbox6 = QtWidgets.QVBoxLayout()
         vbox6.setSpacing(0)
              
                  
@@ -11518,7 +11518,7 @@ class ImageRegistration(QtWidgets.QDialog):
          
          
         #panel 7
-        vbox7 = QtWidgets.QHBoxLayout()
+        vbox7 = QtWidgets.QVBoxLayout()
         vbox7.setSpacing(0)
          
         self.button_saveimg = QtWidgets.QPushButton('Save image shifts plot')
@@ -11557,8 +11557,8 @@ class ImageRegistration(QtWidgets.QDialog):
         
         hboxtop = QtWidgets.QHBoxLayout()
         
-        vboxL = QtWidgets.QHBoxLayout()
-        vboxR = QtWidgets.QHBoxLayout()
+        vboxL = QtWidgets.QVBoxLayout()
+        vboxR = QtWidgets.QVBoxLayout()
         
 
         vboxL.addWidget(sizer8)
@@ -12731,7 +12731,7 @@ class ImageRegistration(QtWidgets.QDialog):
 class SpectralROI(QtWidgets.QDialog):
 
     def __init__(self, parent,  common, stack):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -12772,7 +12772,7 @@ class SpectralROI(QtWidgets.QDialog):
         text.setText('First select I0 region below the edge, then select I region above the edge:')
         vbox.addWidget(text)
         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
    
@@ -12812,7 +12812,7 @@ class SpectralROI(QtWidgets.QDialog):
         text.setText('Optical density map')
         vbox.addWidget(text)
 
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
    
@@ -13046,7 +13046,7 @@ class SpectralROI(QtWidgets.QDialog):
 class DoseCalculation(QtWidgets.QDialog):
 
     def __init__(self, parent,  stack, ROIspectrum):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
         
@@ -13066,7 +13066,7 @@ class DoseCalculation(QtWidgets.QDialog):
         vboxtop = QtWidgets.QHBoxLayout()
         
         
-        gridtop = QtGui.QGridLayout()
+        gridtop = QtWidgets.QGridLayout()
 
         
         #fontb = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -13170,7 +13170,7 @@ class DoseCalculation(QtWidgets.QDialog):
 class DarkSignal(QtWidgets.QDialog):
 
     def __init__(self, parent, common, stack):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -13189,7 +13189,7 @@ class DarkSignal(QtWidgets.QDialog):
         vboxtop = QtWidgets.QHBoxLayout()
         
         
-        gridtop = QtGui.QGridLayout()
+        gridtop = QtWidgets.QGridLayout()
 
         
         #fontb = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -13270,7 +13270,7 @@ class DarkSignal(QtWidgets.QDialog):
 class PlotFrame(QtWidgets.QDialog):
 
     def __init__(self, parent, datax, datay, title = "I0 data"):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
         
@@ -13291,7 +13291,7 @@ class PlotFrame(QtWidgets.QDialog):
 
         vbox = QtWidgets.QHBoxLayout()
         
-        frame = QtGui.QFrame()
+        frame = QtWidgets.QFrame()
         frame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         fbox = QtWidgets.QHBoxLayout()
    
@@ -13412,7 +13412,7 @@ class PlotFrame(QtWidgets.QDialog):
 class ColorTableFrame(QtWidgets.QDialog):
 
     def __init__(self, parent):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -13790,7 +13790,7 @@ class PageLoadData(QtWidgets.QWidget):
 class StackListFrame(QtWidgets.QDialog):
 
     def __init__(self, parent, filepath, com, stack, data_struct):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
 
@@ -14095,7 +14095,7 @@ class InputRegionDialog(QtWidgets.QDialog):
 
     def __init__(self, parent, nregions, title='Multi Region Stack'):
     
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         
         self.parent = parent
     
@@ -14141,7 +14141,7 @@ class InputRegionDialog(QtWidgets.QDialog):
 class AboutFrame(QtWidgets.QDialog):
 
     def __init__(self, parent = None, title='About'):    
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         self.resize(360, 660)
         self.setWindowTitle('About Mantis')
