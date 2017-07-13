@@ -1638,7 +1638,7 @@ class File_GUI():
             self.last_path[action][data_type] = os.path.split(str(dlg.selectedFiles()[0]))[0]
             chosen_plugin = None
             for i,filt in enumerate(self.filter_list[action][data_type][1:-1]):
-                if filt==dlg.selectedFilter():
+                if filt==dlg.selectedNameFilter():
                     chosen_plugin = file_plugins.plugins[i]
                     break
             if chosen_plugin is not None:
