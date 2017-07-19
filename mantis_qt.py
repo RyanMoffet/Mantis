@@ -2705,6 +2705,63 @@ class PageParticleAnalysis(QtWidgets.QWidget):
         
         self.iev = 0
         self.itheta = 0
+        
+        #panel 1
+        sizer1 = QtWidgets.QGroupBox("Raw Data Processing")
+        vbox1 = QtWidgets.QVBoxLayout()
+        
+        self.btn_processStackData = QtWidgets.QPushButton("Process Stack Data")        
+        vbox1.addWidget(self.btn_processStackData)
+        
+        self.btn_stackFromImages = QtWidgets.QPushButton("Stack from Images")
+        vbox1.addWidget(self.btn_stackFromImages)
+        
+        self.btn_deglitchStack = QtWidgets.QPushButton("Deglitch Stack")
+        vbox1.addWidget(self.btn_deglitchStack)
+        
+        sizer1.setLayout(vbox1)
+        
+        #panel 2
+        sizer2 = QtWidgets.QGroupBox("Processed Data Analysis")
+        vbox2 = QtWidgets.QVBoxLayout()
+        
+        self.btn_dirLabelStruct = QtWidgets.QPushButton("DirLabelStruct")
+        vbox2.addWidget(self.btn_dirLabelStruct)
+        
+        self.btn_stackLab = QtWidgets.QPushButton("StackLab")
+        vbox2.addWidget(self.btn_stackLab)
+        
+        self.btn_carbonMaps = QtWidgets.QPushButton("CarbonMaps")
+        vbox2.addWidget(self.btn_carbonMaps)
+        
+        self.btn_fullSpecCMaps = QtWidgets.QPushButton("FullSpecCMaps")
+        vbox2.addWidget(self.btn_fullSpecCMaps)
+        
+        sizer2.setLayout(vbox2)
+        
+        #panel 3
+        sizer3 = QtWidgets.QGroupBox("Dataset Exploration and QC")
+        vbox3 = QtWidgets.QVBoxLayout()
+        
+        self.btn_exploreParticles = QtWidgets.QPushButton("ExploreParticles")
+        vbox3.addWidget(self.btn_exploreParticles)
+        
+        self.btn_removeBadParticles = QtWidgets.QPushButton("Remove Bad Particles")
+        vbox3.addWidget(self.btn_removeBadParticles)
+        
+        sizer3.setLayout(vbox3)
+        
+        #Putting all of the smaller boxes together...
+        vbox = QtWidgets.QVBoxLayout()
+        vbox.addWidget(sizer1)
+        vbox.addStretch(1)
+        vbox.addWidget(sizer2)
+        vbox.addStretch(1)
+        vbox.addWidget(sizer3)
+        vbox.addStretch(1)
+        vbox.setContentsMargins(100, 100, 100, 100)
+        
+        self.setLayout(vbox)
 #----------------------------------------------------------------------
 class SaveWinP5(QtWidgets.QDialog):
 
