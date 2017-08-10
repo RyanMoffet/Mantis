@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\app\mainwindow.py", line 3011, in main
+    mainwindow = run_spyder(app, options, args)
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\app\mainwindow.py", line 2923, in run_spyder
+    main.post_visible_setup()
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\app\mainwindow.py", line 1224, in post_visible_setup
+    self.projects.reopen_last_project()
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\plugins\projects.py", line 309, in reopen_last_project
+    save_previous_files=False)
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\plugins\projects.py", line 262, in open_project
+    self.current_active_project = EmptyProject(path)
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\widgets\projects\type\__init__.py", line 63, in __init__
+    self.create_project_config_files()
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\widgets\projects\type\__init__.py", line 94, in create_project_config_files
+    version=version)
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\widgets\projects\config.py", line 97, in __init__
+    raw_mode=True, remove_obsolete=True)
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\config\user.py", line 202, in __init__
+    self.load_from_ini()
+  File "C:\Users\Daniel Hong\Anaconda2\lib\site-packages\spyder\config\user.py", line 247, in load_from_ini
+    self.readfp(configfile)
+  File "C:\Users\Daniel Hong\Anaconda2\lib\ConfigParser.py", line 324, in readfp
+    self._read(fp, filename)
+  File "C:\Users\Daniel Hong\Anaconda2\lib\ConfigParser.py", line 546, in _read
+    raise e
+ParsingError: File contains parsing errors: C:/Users/Daniel Hong/Desktop/MantisPA\.spyproject\workspace.ini
+	[line  9]: u'<<<<<<< HEAD\r\n'
+	[line 11]: u'=======\r\n'
+	[line 13]: u'>>>>>>> d54d9f13... Program can now recognize HDR and XIM files; removed data files\r\n'

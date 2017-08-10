@@ -19,6 +19,7 @@ from __future__ import division
 
 import sys
 import os
+import re
 import numpy as np
 import time
 import getopt
@@ -2690,6 +2691,19 @@ class PageNNMA(QtWidgets.QWidget):
 
 #---------------------------------------------------------------------- 
 class PageParticleAnalysis(QtWidgets.QWidget):
+    
+    def onProcessStackData(self):
+        folder = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Directories to Process", "Full_RAW", QtWidgets.QFileDialog.ShowDirsOnly)
+        dirlist = os.listdir(folder)
+        files = []
+        for f in dirlist:
+            pattern = re.compile(".*\.(hdr|xim)") # Check if the file name has a .hdr extention of .xim extension
+            if pattern.match(f):
+                files.append(f)
+        files = [str(files[x]) for x in range(len(files))]
+        print(files)
+    
+    
     def __init__(self, common, data_struct, stack, anlz, nnma):
         super(PageParticleAnalysis, self).__init__()
 
@@ -2712,6 +2726,7 @@ class PageParticleAnalysis(QtWidgets.QWidget):
         
         self.btn_processStackData = QtWidgets.QPushButton("Process Stack Data")        
         vbox1.addWidget(self.btn_processStackData)
+        self.btn_processStackData.clicked.connect(self.onProcessStackData)
         
         self.btn_stackFromImages = QtWidgets.QPushButton("Stack from Images")
         vbox1.addWidget(self.btn_stackFromImages)
@@ -13479,8 +13494,6 @@ class PlotFrame(QtWidgets.QDialog):
             print>>f, '{0:06.2f}, {1:06f}'.format(self.datax[ie], self.datay[ie])
         
         f.close()
-    
-        
 
 #---------------------------------------------------------------------- 
 class ColorTableFrame(QtWidgets.QDialog):
