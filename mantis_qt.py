@@ -64,6 +64,8 @@ from file_plugins import file_ncb
 from file_plugins import file_tif
 from file_plugins import file_stk
 
+from SingStackProc import SingStackProc
+
 
 version = '2.3.03'
 
@@ -2693,16 +2695,24 @@ class PageNNMA(QtWidgets.QWidget):
 class PageParticleAnalysis(QtWidgets.QWidget):
     
     def onProcessStackData(self):
-        folder = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Directories to Process", "Full_RAW", QtWidgets.QFileDialog.ShowDirsOnly)
-        dirlist = os.listdir(folder)
-        files = []
-        for f in dirlist:
-            pattern = re.compile(".*\.(hdr|xim)") # Check if the file name has a .hdr extention of .xim extension
-            if pattern.match(f):
-                files.append(f)
-        files = [str(files[x]) for x in range(len(files))]
-        print(files)
-    
+        dlg = QtWidgets.QFileDialog(None)
+        dlg.setWindowTitle('Choose File')
+        dlg.setViewMode(QtWidgets.QFileDialog.Detail)
+        dlg.setDirectory("MantisPA/Full_RAW")
+        dlg.setNameFilters(file_plugins.filter_list['write']['image'])
+        if dlg.exec_():
+            last_path = dlg.selectedFiles()[0]
+            
+            # Use SingStackProc
+            singStackProc = SingStackProc(last_path)
+            stk = singStackProc.align_stack(singStackProc.stk)
+            stk = singStackProc.od_part_stack(stk, 'O')
+            #print dir(stk);
+            singStackProc.show_image(80, stk)
+            self.window().SaveProcessedStack()
+            
+        else:
+            print "cancelled"
     
     def __init__(self, common, data_struct, stack, anlz, nnma):
         super(PageParticleAnalysis, self).__init__()
