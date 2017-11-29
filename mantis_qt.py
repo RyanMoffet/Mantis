@@ -65,7 +65,7 @@ from file_plugins import file_tif
 from file_plugins import file_stk
 
 from SingStackProc import SingStackProc
-
+from ast import literal_eval as make_tuple
 
 version = '2.3.03'
 
@@ -14743,10 +14743,14 @@ class MainFrame(QtWidgets.QMainWindow):
             QtWidgets.QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
 
             
-            basename, extension = os.path.splitext(filepath)      
+            basename, extension = os.path.splitext(filepath)   
+            extension = extension[:-3]
+            filepath = make_tuple(filepath)
+            filepath = filepath[0]
+            filepath = filepath[2:]
                        
-            if extension == '.hdf5':            
-                file_dataexch_hdf5.write_h5(filepath, self.data_struct) 
+            if extension == '.hdf5':
+                file_dataexch_hdf5.write_h5(filepath, self.data_struct)
                            
             elif extension == '.ncb':    
                 file_ncb.write_ncb(filepath, self.stk) 
@@ -14754,7 +14758,6 @@ class MainFrame(QtWidgets.QMainWindow):
             elif extension == '.tif':    
                 file_tif.write_tif(filepath, self.stk.absdata, energies=self.stk.ev) 
                  
-            
          
             QtWidgets.QApplication.restoreOverrideCursor()
 
